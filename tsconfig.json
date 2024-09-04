@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.jsx",
+    ".next/types/**/*.ts",
+    "src/app/dashboard/updateCatalogs/*.jsx",
+    "src/app/dashboard/updateCatalogs/*.tsx",
+    "src/presentation/genComponents/AlertsDinamic.jsx",
+    "middleware.ts",
+    "src/app/dashboard/editCatalogs/page.jsx",
+    "src/app/dashboard/PaymentTickets/DataTable.jsx",
+    "src/app/login/LoginPage.jsx",
+    "src/infraestructure/components/AlertasReact.jsx",
+
+    "src/middleware.js"
+  ],
+  "exclude": ["node_modules"]
+}

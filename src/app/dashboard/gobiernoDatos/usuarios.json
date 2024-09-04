@@ -1,0 +1,67 @@
+{
+  "perfiles": [
+    {
+      "lVigente": false,
+      "idUsuario": "1",
+      "cUser": "Carla Lora",
+      "idPerfil": "1",
+      "cPerfil": "Sub-Gerentes",
+      "idDashboards": [1],
+      "dUltimoAcceso": "Principal - 25/02/2024 09:36:00"
+    },
+    {
+      "lVigente": true,
+      "idUsuario": "2",
+      "cUser": "Marcos Maripangue",
+      "idPerfil": "1",
+      "cPerfil": "Sub-Gerentes",
+      "idDashboards": [1],
+      "dUltimoAcceso": "Principal - 25/02/2024 09:36:00"
+    },
+    {
+      "lVigente": true,
+      "idUsuario": "3",
+      "cUser": "Jaime Oyarzun",
+      "idPerfil": "1",
+      "cPerfil": "Sub-Gerentes",
+      "idDashboards": [1],
+      "dUltimoAcceso": "Principal - 25/02/2024 09:36:00"
+    },
+    {
+      "lVigente": true,
+      "idUsuario": "4",
+      "cUser": "Claudio Rodrigues",
+      "idPerfil": "2",
+      "cPerfil": "Gerentes",
+      "idDashboards": [1, 2],
+      "dUltimoAcceso": "Principal - 25/02/2024 09:36:00"
+    },
+    {
+      "lVigente": true,
+      "idUsuario": "5",
+      "cUser": "Carlos Rivero",
+      "idPerfil": "2",
+      "cPerfil": "Gerentes",
+      "idDashboards": [1, 2],
+      "dUltimoAcceso": "Principal - 25/02/2024 09:36:00"
+    },
+    {
+      "lVigente": true,
+      "idUsuario": "6",
+      "cUser": "Patricio Amaru",
+      "idPerfil": "3",
+      "cPerfil": "Seguridad TI",
+      "idDashboards": [3],
+      "dUltimoAcceso": "Principal - 25/02/2024 09:36:00"
+    },
+    {
+      "lVigente": true,
+      "idUsuario": "6",
+      "cUser": "Patricio Amaru",
+      "idPerfil": "3",
+      "cPerfil": "Operadora",
+      "idDashboards": [3],
+      "dUltimoAcceso": "Principal - 25/02/2024 09:36:00"
+    }
+  ]
+}

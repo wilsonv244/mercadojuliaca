@@ -1,0 +1,14 @@
+{
+  "ListDashboard": [
+    {
+      "cUrl": "https://us-east-1.quicksight.aws.amazon.com/embed/bba0cb77a50444e0a497723b31fc09de/dashboards/02599de2-83d0-45f9-8ed0-2fdd3ff7e8bd?code=AYABePhf0n9sBKU_SJdfMsqHzvMAAAABAAdhd3Mta21zAEthcm46YXdzOmttczp1cy1lYXN0LTE6MjU5NDgwNDYyMTMyOmtleS81NGYwMjdiYy03MDJhLTQxY2YtYmViNS0xNDViOTExNzFkYzMAuAECAQB4xtoTZf7IGoPQKGWjcNLglYg8fHKEoB_X6wbByfSPUT0BdtY5EZKL3DOcDtHzLwxl5wAAAH4wfAYJKoZIhvcNAQcGoG8wbQIBADBoBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDEOTn-6Oxu4T3EZriAIBEIA7jry4UCzlsFyYSZatsx7zXGbhqMShzu_NEAifcLijxhhGqpIYtT1Kk5lKzYbmYczYPWr6Ad74G0sKfRgCAAAAAAwAABAAAAAAAAAAAAAAAAAA1tVGD7DTb5LZFwxyD_11Zf____8AAAABAAAAAAAAAAAAAAABAAAAmxQ-Sg7TxL71uY-LfHLMqAhvIR-vnEKkyPTryI3fx6FvxisVoDmuv7-m7vRw17osl2avqfVs3TxrlUFgnEhi6HYmOaKhYtlflhuix7qV827DP8GDtYqDxijZY48r9Wm3-_T-ajfBQ6AfdYdzgksz7Q2GYzVQBY-ZotuDuAkA1l6NTEUDSCzsna_URlhlNZKOk2duTngzbTFudXWy-JmJwez1NW57c762fqejVg%3D%3D&identityprovider=quicksight&isauthcode=true",
+      "cName": "Tabla analisis",
+      "id": 1
+    },
+    {
+      "cUrl": "https://us-east-1.quicksight.aws.amazon.com/embed/2c72b0b6493347c88d62521263e62be9/dashboards/a8159a75-f131-4de7-b9d6-45573c7df1ae?code=AYABePNR8XHoNNXReCmW8isEptgAAAABAAdhd3Mta21zAEthcm46YXdzOmttczp1cy1lYXN0LTE6MjU5NDgwNDYyMTMyOmtleS81NGYwMjdiYy03MDJhLTQxY2YtYmViNS0xNDViOTExNzFkYzMAuAECAQB4xtoTZf7IGoPQKGWjcNLglYg8fHKEoB_X6wbByfSPUT0B45lnBo8qgv8LgdsHW2GaYgAAAH4wfAYJKoZIhvcNAQcGoG8wbQIBADBoBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDFCJJOO27QzKuaVNsAIBEIA7A94MC7Vr9-V5Yvc-He5GzXjylwP99Yn2VvX95YJgj26cq5NgwfmEJM2f7GH8E9BO-4TEnz7wsJ5QhfECAAAAAAwAABAAAAAAAAAAAAAAAAAA-OUWT55sZc9lhPbozT85o_____8AAAABAAAAAAAAAAAAAAABAAAAm98nMFv8kNL7Jl4x_YJn4Ij0FApIGBzY2A_hG_mbY6IsImZnm_G0nJjI73_R1Z3aS6bID_v5AHCZlzNuLKDcm3mRV6ohSJIP617rcjZs_TZUWUa5K5TfHIDeBxL0_MU3jwuxb0LveT3PPhgmtpn6fyPTMce1QlIlSirOetl-cCIKPccxWum0fnQbtpmJi8ncwhGjFe3WNr7K_Pn5kws27caoZOuEHw8AtaONnA%3D%3D&identityprovider=quicksight&isauthcode=true",
+      "cName": "Tabla Dinamica",
+      "id": 2
+    }
+  ]
+}

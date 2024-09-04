@@ -1,0 +1,29 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      nodejs: 18.x
+    commands:
+      - echo install process started
+      - ls
+      - ls 
+      - npm install
+      - echo $CLOUD_FRONT_ID
+      - echo $BUCKET_S3
+      - echo $AMBIENTE_NAME
+      - echo $RUTA_LATAM
+      - echo $CONFIG_BUILD
+  build:
+    commands:
+      - echo build process started now
+      - ls 
+      - npm run build
+      #--configuration=production
+  post_build:
+    commands:
+      - echo build process finished, we should uplload to S3 now
+      - ls 
+      - cd $RUTA_LATAM
+      - ls -la
+      - aws s3 sync . s3://${BUCKET_S3}/ 
+      - aws cloudfront create-invalidation --distribution-id=$CLOUD_FRONT_ID --paths "/*"

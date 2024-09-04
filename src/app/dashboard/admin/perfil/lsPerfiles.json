@@ -1,0 +1,28 @@
+{
+  "perfiles": [
+    {
+      "cName": "Sub-Gerentes",
+      "idPerfil": "1",
+      "lVigente": true,
+      "idUsuario": [1, 2, 3, 4]
+    },
+    {
+      "cName": "Gerentes",
+      "idPerfil": "2",
+      "lVigente": true,
+      "idUsuario": [1]
+    },
+    {
+      "cName": "Seguridad TI",
+      "idPerfil": "3",
+      "lVigente": true,
+      "idUsuario": [1]
+    },
+    {
+      "cName": "Admin",
+      "idPerfil": "4",
+      "lVigente": true,
+      "idUsuario": [1]
+    }
+  ]
+}
