@@ -1,0 +1,122 @@
+// schema.prisma
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Entity {
+  id_entity        Int       @id @default(autoincrement())
+  document_type    Int       @default(1) // 1: DNI, 2: RUC
+  document_number  String    @db.VarChar(11)
+  person_type      Int       @default(1) // 1: Natural, 2: Jurídico
+  last_name        String    @db.VarChar(200) // Apellidos/Razón Social
+  first_name       String    @db.VarChar(200) // Nombres/Nombre Comercial
+  address          String?   @db.VarChar(200)
+  phone_number     String?   @db.VarChar(15)
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @default(now()) @updatedAt
+
+  Clients          Client[]
+  Employees        Employee[]
+}
+
+model Channel {
+  id_channel       Int       @id @default(autoincrement())
+  channel_name     String    @db.VarChar(200)
+  channel_type     Int       @default(1) // 1: Cliente, 2: Trabajador
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @default(now()) @updatedAt
+
+  Clients          Client[]
+  Employees        Employee[]
+}
+
+model Client {
+  id_client        Int       @id @default(autoincrement())
+  id_entity        Int?
+  id_channel       Int
+  document_type    Int       @default(1) // 1: DNI, 2: RUC
+  document_number  String    @db.VarChar(11)
+  person_type      Int       @default(1) // 1: Natural, 2: Jurídico
+  last_name        String    @db.VarChar(200) // Apellidos/Razón Social
+  first_name       String?   @db.VarChar(200) // Nombres/Nombre Comercial
+  phone_number     String?   @db.VarChar(15)
+  phone_number2    String?   @db.VarChar(15)
+  zone             String?   @db.VarChar(200)
+  address          String?   @db.VarChar(200)
+  province         String?   @db.VarChar(200)
+  district         String?   @db.VarChar(200)
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @default(now()) @updatedAt
+
+  entity           Entity?   @relation(fields: [id_entity], references: [id_entity])
+  channel          Channel   @relation(fields: [id_channel], references: [id_channel])
+  Sales            Sale[]
+
+  @@index([id_channel])
+  @@index([id_entity])
+}
+
+model Employee {
+  id_employee      Int       @id @default(autoincrement())
+  id_entity        Int?
+  id_channel       Int
+  document_type    Int       @default(1) // 1: DNI, 2: RUC
+  document_number  String    @db.VarChar(11)
+  last_name        String    @db.VarChar(200) // Apellidos
+  first_name       String?   @db.VarChar(200) // Nombres
+  phone_number     String?   @db.VarChar(15)
+  phone_number2    String?   @db.VarChar(15)
+  address          String?   @db.VarChar(200)
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @default(now()) @updatedAt
+
+  entity           Entity?   @relation(fields: [id_entity], references: [id_entity])
+  channel          Channel   @relation(fields: [id_channel], references: [id_channel])
+  Sales            Sale[]
+  SalePayments     SalePayment[]
+
+  @@index([id_channel])
+  @@index([id_entity])
+}
+
+model Sale {
+  id_sale          Int       @id @default(autoincrement())
+  id_employee      Int
+  id_client        Int
+  receipt_type     String?   @db.VarChar(50) // Factura/Ticket, etc.
+  receipt_number   String    @db.VarChar(50) @unique
+  receipt_date     DateTime  @default(now())
+  total_amount     Decimal     @db.Decimal(14, 2)
+  status           Boolean   @default(false) // Si el monto total fue cancelado
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @default(now()) @updatedAt
+
+  employee         Employee  @relation(fields: [id_employee], references: [id_employee])
+  client           Client    @relation(fields: [id_client], references: [id_client])
+  SalePayments     SalePayment[]
+
+  @@index([id_employee])
+  @@index([id_client])
+}
+
+model SalePayment {
+  id_payment               Int       @id @default(autoincrement())
+  id_sale                  Int
+  id_employee              Int
+  payment_registration_date DateTime @default(now())
+  description              String?
+  payment_amount           Decimal     @db.Decimal(14, 2)
+  created_at               DateTime  @default(now())
+  updated_at               DateTime  @default(now()) @updatedAt
+
+  sale                     Sale      @relation(fields: [id_sale], references: [id_sale])
+  employee                 Employee  @relation(fields: [id_employee], references: [id_employee])
+
+  @@index([id_sale])
+  @@index([id_employee])
+}

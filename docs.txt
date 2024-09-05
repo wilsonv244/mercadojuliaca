@@ -1,0 +1,9 @@
+##documentacion de la migracion de las tablas
+npm install prisma @prisma/client
+
+##creamos el archivo de configuracion
+npx prisma init
+
+
+##Ejecutamos la migracion
+npx prisma migrate dev --name init

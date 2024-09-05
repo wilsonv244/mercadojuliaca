@@ -59,7 +59,7 @@ export default function LoginPage() {
         <div className="grid min-h-screen items-stretch text-center">
           <img
             className="w-full object-cover h-screen"
-            src="/img/image-welcome.11dce2f146529c9fe829.png"
+            src="/img/LaysPapitas.png"
             alt="Logo"
           />
         </div>
@@ -69,7 +69,7 @@ export default function LoginPage() {
           <div className="flex justify-center">
             <img
               className="w-48 lg:block hidden"
-              src="/img/logo-bancoripley.258fb24695985b4e9c0d.svg"
+              src="/img/logoAvalos2.png"
               alt="logo banco ripley"
             />
             <img

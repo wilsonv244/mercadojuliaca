@@ -18,9 +18,18 @@ const getOut: LogoutFunction = (label) => {
 };
 
 const LinkPage = [
-  { icon: "pi pi-spin pi-cog", label: "ADMIN", route: "/dashboard/admin" },
-  { icon: "pi pi-bookmark-fill", label: "DASHBOARD", route: "/dashboard/gobiernoDatos" },
-  { icon: "pi pi-power-off hover:font-bold", label: "", route: "#"},
+  { icon: "pi pi-spin pi-cog", label: "Sistematización", route: "/dashboard/Sistematizacion" },
+  {
+    icon: "pi pi-bookmark-fill",
+    label: "Ingresos",
+    route: "/dashboard/admin",
+  },
+  {
+    icon: "pi pi-bookmark-fill",
+    label: "Costos",
+    route: "/dashboard/gobiernoDatos",
+  },
+  { icon: "pi pi-power-off hover:font-bold", label: "", route: "#" },
 ];
 
 export default function PanelPrincipal() {
@@ -30,10 +39,10 @@ export default function PanelPrincipal() {
   const [perfil, setPerfil] = useState("");
   useEffect(() => {
     setUsuario(localStorage.getItem("cUsuario") ?? "usuario");
-    setPerfil(localStorage.getItem("cPerfil") ?? "cPerfil");
+    setPerfil(localStorage.getItem("cPerfil") ?? "Axel Daniel");
   }, []);
   return (
-    <header className="bg-[#4f2d7f] shadow-md mb-5">
+    <header className="bg-[#fbb517] shadow-md mb-5">
       <nav
         className="flex flex-col w-full items-center justify-between p-6 lg:px-40"
         aria-label="Global"
@@ -42,13 +51,13 @@ export default function PanelPrincipal() {
           <div className="flex lg:flex-1">
             <a href="#" className="-m-1">
               <img
-                className="w-36"
-                src="/img/logo-bancoripley-negative.36ae25c342b7b63a1eb2.svg"
+                className="w-12"
+                src="/img/logo-lays.png"
                 alt=""
               />
             </a>
           </div>
-          <Popover.Group className="hidden lg:flex lg:gap-x-12 lg:items-center text-white">
+          <Popover.Group className="hidden lg:flex lg:gap-x-12 lg:items-center text-black">
             <div className="card flex flex-wrap justify-content-center gap-2">
               <Tag className="mr-1" icon="pi pi-user" value={user}></Tag>
               <Tag
@@ -58,28 +67,28 @@ export default function PanelPrincipal() {
                 value={perfil}
               ></Tag>
             </div>
-              {LinkPage.map(({ icon, label, route }) => {
-                const isActive = pathRoute.startsWith(route);
+            {LinkPage.map(({ icon, label, route }) => {
+              const isActive = pathRoute.startsWith(route);
               console.log(route);
               const className = `${icon} ml-2`;
-                return (
-                  <>
-                    <Link
-                      key={label}
-                      href={route}
-                      onClick={() => getOut(label)}
+              return (
+                <>
+                  <Link
+                    key={label}
+                    href={route}
+                    onClick={() => getOut(label)}
                     className={
                       isActive
-                        ? "text-[#ffb946] font-extrabold text-sm"
-                        : "text-sm font-semibold leading-6 text-white hover:text-[#ffb946]"
+                        ? "text-[#ee3124] font-extrabold text-sm"
+                        : "text-sm font-semibold leading-6 text-black hover:text-[#ee3124]"
                     }
-                    >
+                  >
                     {label}
                     <i className={className} style={{ color: "#ffffff" }}></i>
-                    </Link>
-                  </>
-                );
-              })}
+                  </Link>
+                </>
+              );
+            })}
           </Popover.Group>
           <div className="flex lg:hidden">
             <button

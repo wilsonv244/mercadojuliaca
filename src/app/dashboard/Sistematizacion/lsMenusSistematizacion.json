@@ -1,0 +1,16 @@
+{
+  "Menus": [
+    {
+      "cName": "Clientes",
+      "id": 1
+    },
+    {
+      "cName": "Vendedores",
+      "id": 2
+    },
+    {
+      "cName": "Proveedor",
+      "id": 2
+    }
+  ]
+}

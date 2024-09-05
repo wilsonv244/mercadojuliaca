@@ -12,7 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "react-toastify/dist/ReactToastify.min.css";
 
 export const metadata = {
-  title: "Ripley",
+  title: "Avalos",
   description: "Agente de pagos procesados y no procesados de los canales.",
 };
 
