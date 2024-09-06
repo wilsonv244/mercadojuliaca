@@ -1,0 +1,10 @@
+/* Estilo personalizado para hacer los mensajes más pequeños y menos llamativos */
+.small-message {
+  margin-top: 5px;
+  font-size: 0.8rem; /* Reducir el tamaño de la fuente */
+  background-color: #f4f4f4; /* Color de fondo más neutral */
+  color: #d9534f; /* Color de texto más suave */
+  padding: 4px; /* Menos padding para que se vea más compacto */
+  border-radius: 3px; /* Bordes más redondeados y sutiles */
+  border: 1px solid #d9534f; /* Borde menos intenso */
+}

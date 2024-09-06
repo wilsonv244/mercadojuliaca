@@ -22,7 +22,7 @@ const LinkPage = [
   {
     icon: "pi pi-bookmark-fill",
     label: "Ingresos",
-    route: "/dashboard/admin",
+    route: "/dashboard/sales",
   },
   {
     icon: "pi pi-bookmark-fill",

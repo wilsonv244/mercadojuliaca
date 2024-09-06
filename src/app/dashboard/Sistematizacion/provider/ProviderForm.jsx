@@ -1,50 +1,32 @@
 import React, { useState } from "react";
 import { InputText } from "primereact/inputtext";
-import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 import { Message } from "primereact/message";
 import { classNames } from "primereact/utils";
 
-export default function VendedorForm() {
+export default function ProveedorForm() {
   const [formData, setFormData] = useState({
-    dni: "",
+    ruc: "",
     nombre: "",
+    razonSocial: "",
     telefono1: "",
     telefono2: "",
-    canal: null,
-    estatus: null,
   });
 
   const [submitted, setSubmitted] = useState(false);
-
-  const canales = [
-    { label: "Tradicional", value: "tradicional" },
-    { label: "Mayorista", value: "mayorista" },
-    { label: "Provincia", value: "provincia" },
-  ];
-
-  const estatus = [
-    { label: "ACTIVO", value: "activo" },
-    { label: "INACTIVO", value: "inactivo" },
-  ];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleDropdownChange = (e, name) => {
-    setFormData({ ...formData, [name]: e.value });
-  };
-
   const validateForm = () => {
     setSubmitted(true);
     return (
-      formData.dni &&
+      formData.ruc &&
       formData.nombre &&
-      formData.telefono1 &&
-      formData.canal &&
-      formData.estatus
+      formData.razonSocial &&
+      formData.telefono1
     );
   };
 
@@ -58,27 +40,30 @@ export default function VendedorForm() {
 
   return (
     <div className="card w-2/3 m-auto">
+      <h2 className="text-center mb-4 text-[#003462] font-black">
+        Crear nuevo proveedor
+      </h2>
       <form onSubmit={handleSubmit} className="p-fluid">
         <div className="field mb-3">
           <label
-            htmlFor="dni"
+            htmlFor="ruc"
             className="text-[#003462] font-black text-sm mb-3"
           >
-            DNI
+            RUC
           </label>
           <InputText
-            placeholder="Ingrese su Número de DNI"
-            id="dni"
-            name="dni"
-            value={formData.dni}
+            placeholder="Ingrese el RUC"
+            id="ruc"
+            name="ruc"
+            value={formData.ruc}
             onChange={handleInputChange}
-            className={classNames({ "p-invalid": submitted && !formData.dni })}
+            className={classNames({ "p-invalid": submitted && !formData.ruc })}
           />
-          {submitted && !formData.nombre && (
+          {submitted && !formData.ruc && (
             <Message
               className="small-message"
               severity="error"
-              text="Número de DNI es requerido"
+              text="RUC es requerido"
             />
           )}
         </div>
@@ -88,11 +73,11 @@ export default function VendedorForm() {
             htmlFor="nombre"
             className="text-[#003462] font-black text-sm mb-3"
           >
-            Nombre
+            Nombre Proveedor
           </label>
           <InputText
             id="nombre"
-            placeholder="Ingrese su nombre"
+            placeholder="Ingrese el nombre del proveedor"
             name="nombre"
             value={formData.nombre}
             onChange={handleInputChange}
@@ -104,7 +89,33 @@ export default function VendedorForm() {
             <Message
               className="small-message"
               severity="error"
-              text="Nombre es requerido"
+              text="Nombre del proveedor es requerido"
+            />
+          )}
+        </div>
+
+        <div className="field mb-3">
+          <label
+            htmlFor="razonSocial"
+            className="text-[#003462] font-black text-sm mb-3"
+          >
+            Razón Social
+          </label>
+          <InputText
+            id="razonSocial"
+            placeholder="Ingrese la razón social"
+            name="razonSocial"
+            value={formData.razonSocial}
+            onChange={handleInputChange}
+            className={classNames({
+              "p-invalid": submitted && !formData.razonSocial,
+            })}
+          />
+          {submitted && !formData.razonSocial && (
+            <Message
+              className="small-message"
+              severity="error"
+              text="Razón Social es requerida"
             />
           )}
         </div>
@@ -114,23 +125,23 @@ export default function VendedorForm() {
             htmlFor="telefono1"
             className="text-[#003462] font-black text-sm mb-3"
           >
-            Telefono 1
+            Teléfono 1
           </label>
           <InputText
             id="telefono1"
             name="telefono1"
-            placeholder="Ingrese su número de Telefono"
+            placeholder="Ingrese el número de teléfono"
             value={formData.telefono1}
             onChange={handleInputChange}
             className={classNames({
-              "p-invalid m-3": submitted && !formData.telefono1,
+              "p-invalid": submitted && !formData.telefono1,
             })}
           />
           {submitted && !formData.telefono1 && (
             <Message
               className="small-message"
               severity="error"
-              text="Telefono 1 es requerido"
+              text="Teléfono 1 es requerido"
             />
           )}
         </div>
@@ -140,69 +151,15 @@ export default function VendedorForm() {
             htmlFor="telefono2"
             className="text-[#003462] font-black text-sm mb-3"
           >
-            Telefono 2
+            Teléfono 2
           </label>
           <InputText
             id="telefono2"
-            placeholder="Ingrese su segundo número de Telefono"
+            placeholder="Ingrese el segundo número de teléfono"
             name="telefono2"
             value={formData.telefono2}
             onChange={handleInputChange}
           />
-        </div>
-
-        <div className="field mb-3">
-          <label
-            htmlFor="canal"
-            className="text-[#003462] font-black text-sm mb-3"
-          >
-            Canal
-          </label>
-          <Dropdown
-            id="canal"
-            name="canal"
-            value={formData.canal}
-            options={canales}
-            onChange={(e) => handleDropdownChange(e, "canal")}
-            placeholder="Seleccione un canal"
-            className={classNames({
-              "p-invalid": submitted && !formData.canal,
-            })}
-          />
-          {submitted && !formData.canal && (
-            <Message
-              className="small-message"
-              severity="error"
-              text="Canal es requerido"
-            />
-          )}
-        </div>
-
-        <div className="field mb-3">
-          <label
-            htmlFor="estatus"
-            className="text-[#003462] font-black text-sm mb-3"
-          >
-            Estatus
-          </label>
-          <Dropdown
-            id="estatus"
-            name="estatus"
-            value={formData.estatus}
-            options={estatus}
-            onChange={(e) => handleDropdownChange(e, "estatus")}
-            placeholder="Seleccione estatus"
-            className={classNames({
-              "p-invalid": submitted && !formData.estatus,
-            })}
-          />
-          {submitted && !formData.estatus && (
-            <Message
-              className="small-message"
-              severity="error"
-              text="Estatus es requerido"
-            />
-          )}
         </div>
 
         <Button label="Guardar" icon="pi pi-check" type="submit" />

@@ -1,20 +1,13 @@
 "use client";
 import { useState } from "react";
 import { DataTableLista } from "../tools/dataTable";
-import lsMenusSistematizacion from "../Sistematizacion/lsMenusSistematizacion.json";
-import dtUsuario from "../gobiernoDatos/usuarios.json";
+import lsOpciones from "../sales/lsMenus.json";
 import dtDashboard from "../gobiernoDatos/listDashboard.json";
-import { DataTableUsuario } from "../admin/usuario/dtUsuarios";
-import { DataTablePerfil } from "../admin/perfil/dtPerfil";
-import VendedorForm from "./vendedor/VendedorForm";
-import ClienteForm from "./profiles/ClienteForm";
-import ProveedorForm from "./provider/ProviderForm";
+import IngresoVentasForm from "./salesComponent/SalesForm";
 
-export default function PanelSistematizcion() {
+export default function AdminPanelMain() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectItem, setSelectItem] = useState(null);
-  const [dataDashboard, setDataDashboard] = useState(dtDashboard.ListDashboard);
-  const data = [];
   return (
     <>
       <div className="mx-auto w-11/12 lg:flex lg:gap-10 lg:justify-between">
@@ -24,7 +17,7 @@ export default function PanelSistematizcion() {
             setSelectItem={setSelectItem}
             setSelectedProduct={setSelectedProduct}
             nombreDashboard="Opciones"
-            data={lsMenusSistematizacion.Menus}
+            data={lsOpciones.Menus}
           />
         </div>
         <div className=" lg:w-4/5 w-11/12">
@@ -35,14 +28,8 @@ export default function PanelSistematizcion() {
             (() => {
               console.log(selectItem.cName);
               switch (selectItem.cName) {
-                case "Clientes":
-                  return <ClienteForm />;
-
-                case "Vendedores":
-                  return <VendedorForm />;
-
-                case "Proveedor":
-                  return <ProveedorForm />;
+                case "Ingresos":
+                  return <IngresoVentasForm />;
 
                 default:
                   return null;

@@ -7,3 +7,6 @@ npx prisma init
 
 ##Ejecutamos la migracion
 npx prisma migrate dev --name init
+
+##Levantar Prisma studio
+npx prisma studio

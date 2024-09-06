@@ -1,50 +1,34 @@
 import React, { useState } from "react";
 import { InputText } from "primereact/inputtext";
-import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 import { Message } from "primereact/message";
 import { classNames } from "primereact/utils";
 
-export default function VendedorForm() {
+export default function IngresoVentasForm() {
   const [formData, setFormData] = useState({
-    dni: "",
-    nombre: "",
-    telefono1: "",
-    telefono2: "",
-    canal: null,
-    estatus: null,
+    fechaRegistro: "",
+    idCliente: "",
+    idVendedor: "",
+    montoTotal: 1000,
+    tipoComprobante: "",
+    nroComprobante: "",
   });
 
   const [submitted, setSubmitted] = useState(false);
-
-  const canales = [
-    { label: "Tradicional", value: "tradicional" },
-    { label: "Mayorista", value: "mayorista" },
-    { label: "Provincia", value: "provincia" },
-  ];
-
-  const estatus = [
-    { label: "ACTIVO", value: "activo" },
-    { label: "INACTIVO", value: "inactivo" },
-  ];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleDropdownChange = (e, name) => {
-    setFormData({ ...formData, [name]: e.value });
-  };
-
   const validateForm = () => {
     setSubmitted(true);
     return (
-      formData.dni &&
-      formData.nombre &&
-      formData.telefono1 &&
-      formData.canal &&
-      formData.estatus
+      formData.fechaRegistro &&
+      formData.idCliente &&
+      formData.idVendedor &&
+      formData.tipoComprobante &&
+      formData.nroComprobante
     );
   };
 
@@ -61,146 +45,146 @@ export default function VendedorForm() {
       <form onSubmit={handleSubmit} className="p-fluid">
         <div className="field mb-3">
           <label
-            htmlFor="dni"
+            htmlFor="fechaRegistro"
             className="text-[#003462] font-black text-sm mb-3"
           >
-            DNI
+            Fecha de registro
           </label>
           <InputText
-            placeholder="Ingrese su Número de DNI"
-            id="dni"
-            name="dni"
-            value={formData.dni}
+            placeholder="Ingrese la fecha de registro"
+            id="fechaRegistro"
+            name="fechaRegistro"
+            value={formData.fechaRegistro}
             onChange={handleInputChange}
-            className={classNames({ "p-invalid": submitted && !formData.dni })}
+            className={classNames({
+              "p-invalid": submitted && !formData.fechaRegistro,
+            })}
           />
-          {submitted && !formData.nombre && (
+          {submitted && !formData.fechaRegistro && (
             <Message
               className="small-message"
               severity="error"
-              text="Número de DNI es requerido"
+              text="Fecha de registro es requerida"
             />
           )}
         </div>
 
         <div className="field mb-3">
           <label
-            htmlFor="nombre"
+            htmlFor="idCliente"
             className="text-[#003462] font-black text-sm mb-3"
           >
-            Nombre
+            Id Cliente
           </label>
           <InputText
-            id="nombre"
-            placeholder="Ingrese su nombre"
-            name="nombre"
-            value={formData.nombre}
+            id="idCliente"
+            placeholder="Ingrese el Id del cliente"
+            name="idCliente"
+            value={formData.idCliente}
             onChange={handleInputChange}
             className={classNames({
-              "p-invalid": submitted && !formData.nombre,
+              "p-invalid": submitted && !formData.idCliente,
             })}
           />
-          {submitted && !formData.nombre && (
+          {submitted && !formData.idCliente && (
             <Message
               className="small-message"
               severity="error"
-              text="Nombre es requerido"
+              text="Id Cliente es requerido"
             />
           )}
         </div>
 
         <div className="field mb-3">
           <label
-            htmlFor="telefono1"
+            htmlFor="idVendedor"
             className="text-[#003462] font-black text-sm mb-3"
           >
-            Telefono 1
+            Id Vendedor
           </label>
           <InputText
-            id="telefono1"
-            name="telefono1"
-            placeholder="Ingrese su número de Telefono"
-            value={formData.telefono1}
+            id="idVendedor"
+            placeholder="Ingrese el Id del vendedor"
+            name="idVendedor"
+            value={formData.idVendedor}
             onChange={handleInputChange}
             className={classNames({
-              "p-invalid m-3": submitted && !formData.telefono1,
+              "p-invalid": submitted && !formData.idVendedor,
             })}
           />
-          {submitted && !formData.telefono1 && (
+          {submitted && !formData.idVendedor && (
             <Message
               className="small-message"
               severity="error"
-              text="Telefono 1 es requerido"
+              text="Id Vendedor es requerido"
             />
           )}
         </div>
 
         <div className="field mb-3">
           <label
-            htmlFor="telefono2"
+            htmlFor="montoTotal"
             className="text-[#003462] font-black text-sm mb-3"
           >
-            Telefono 2
+            Monto Total
           </label>
           <InputText
-            id="telefono2"
-            placeholder="Ingrese su segundo número de Telefono"
-            name="telefono2"
-            value={formData.telefono2}
+            id="montoTotal"
+            name="montoTotal"
+            value={formData.montoTotal}
             onChange={handleInputChange}
+            disabled
           />
         </div>
 
         <div className="field mb-3">
           <label
-            htmlFor="canal"
+            htmlFor="tipoComprobante"
             className="text-[#003462] font-black text-sm mb-3"
           >
-            Canal
+            Tipo Comprobante
           </label>
-          <Dropdown
-            id="canal"
-            name="canal"
-            value={formData.canal}
-            options={canales}
-            onChange={(e) => handleDropdownChange(e, "canal")}
-            placeholder="Seleccione un canal"
+          <InputText
+            id="tipoComprobante"
+            placeholder="Ingrese el tipo de comprobante"
+            name="tipoComprobante"
+            value={formData.tipoComprobante}
+            onChange={handleInputChange}
             className={classNames({
-              "p-invalid": submitted && !formData.canal,
+              "p-invalid": submitted && !formData.tipoComprobante,
             })}
           />
-          {submitted && !formData.canal && (
+          {submitted && !formData.tipoComprobante && (
             <Message
               className="small-message"
               severity="error"
-              text="Canal es requerido"
+              text="Tipo Comprobante es requerido"
             />
           )}
         </div>
 
         <div className="field mb-3">
           <label
-            htmlFor="estatus"
+            htmlFor="nroComprobante"
             className="text-[#003462] font-black text-sm mb-3"
           >
-            Estatus
+            Nro Comprobante
           </label>
-          <Dropdown
-            id="estatus"
-            name="estatus"
-            value={formData.estatus}
-            options={estatus}
-            onChange={(e) => handleDropdownChange(e, "estatus")}
-            placeholder="Seleccione estatus"
+          <InputText
+            id="nroComprobante"
+            placeholder="Ingrese el número de comprobante"
+            name="nroComprobante"
+            value={formData.nroComprobante}
+            onChange={handleInputChange}
             className={classNames({
-              "p-invalid": submitted && !formData.estatus,
+              "p-invalid": submitted && !formData.nroComprobante,
             })}
           />
-          {submitted && !formData.estatus && (
+          {submitted && !formData.nroComprobante && (
             <Message
               className="small-message"
               severity="error"
-              text="Estatus es requerido"
+              text="Nro Comprobante es requerido"
             />
           )}
         </div>

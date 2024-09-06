@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 import { Calendar } from "primereact/calendar";
 import { Button } from "primereact/button";
 import { Message } from "primereact/message";
 import { classNames } from "primereact/utils";
+import { Toast } from "primereact/toast";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import "./ClienteForm.css";
 
 export default function ClienteForm() {
   const [formData, setFormData] = useState({
@@ -22,7 +25,9 @@ export default function ClienteForm() {
     fechaInicio: null,
   });
 
+  const toast = useRef(null); // Referencia para el Toast
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const canales = [
     { label: "Tradicional", value: "tradicional" },
@@ -56,20 +61,92 @@ export default function ClienteForm() {
     );
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const submitForm = async () => {
     if (validateForm()) {
-      console.log("Form submitted:", formData);
-      // Aquí iría la lógica para enviar el formulario
+      setLoading(true);
+      try {
+        const response = await fetch("/api/client/saveClient", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id_entity: 1,
+            id_channel: 1,
+            document_type: 1,
+            document_number: formData.dni,
+            person_type: 1,
+            last_name: formData.razonSocial,
+            first_name: formData.nombre,
+            phone_number: formData.telefono1,
+            phone_number2: formData.telefono2 || null,
+            zone: formData.zona,
+            address: formData.direccion,
+            province: formData.provincia,
+            district: formData.distrito,
+            created_at: new Date(),
+            updated_at: new Date(),
+          }),
+        });
+
+        const result = await response.json();
+        console.log(result);
+        if (response.ok) {
+          toast.current.show({
+            severity: "success",
+            summary: "Éxito",
+            detail: "Cliente registrado correctamente",
+          });
+        } else {
+          toast.current.show({
+            severity: "error",
+            summary: "Error",
+            detail: result.error || "Error al registrar el cliente",
+          });
+        }
+      } catch (error) {
+        toast.current.show({
+          severity: "error",
+          summary: "Error",
+          detail: "Error de conexión con el servidor",
+        });
+      } finally {
+        setLoading(false);
+      }
     }
+  };
+
+  //Confirmar antes de guardar
+  const confirmSubmit = () => {
+    confirmDialog({
+      message: "¿Estás seguro de que deseas guardar el cliente?",
+      header: "Confirmación de Guardado",
+      icon: "pi pi-exclamation-triangle",
+      accept: () => submitForm(),
+      reject: () =>
+        toast.current.show({
+          severity: "info",
+          summary: "Cancelado",
+          detail: "Operación cancelada",
+        }),
+    });
   };
 
   return (
     <div className="card w-10/12 m-auto bg-amber-1 p-5 shadow-xl">
-      <form onSubmit={handleSubmit} className="p-fluid">
+      <Toast ref={toast} />
+      <ConfirmDialog />
+
+      <form onSubmit={(e) => e.preventDefault()} className="p-fluid">
         <div className="field mb-3">
-          <label htmlFor="dni">DNI</label>
+          <label
+            htmlFor="dni"
+            className="text-[#003462] font-black text-sm mb-3"
+          >
+            DNI
+          </label>
           <InputText
+            placeholder="Ingrese su Número de DNI"
             id="dni"
             name="dni"
             value={formData.dni}
@@ -77,13 +154,23 @@ export default function ClienteForm() {
             className={classNames({ "p-invalid": submitted && !formData.dni })}
           />
           {submitted && !formData.dni && (
-            <Message severity="error" text="DNI es requerido" />
+            <Message
+              className="small-message"
+              severity="error"
+              text="DNI es requerido"
+            />
           )}
         </div>
 
         <div className="field mb-3">
-          <label htmlFor="ruc">RUC</label>
+          <label
+            htmlFor="ruc"
+            className="text-[#003462] font-black text-sm mb-3"
+          >
+            RUC
+          </label>
           <InputText
+            placeholder="Ingrese su Número de RUC"
             id="ruc"
             name="ruc"
             value={formData.ruc}
@@ -91,13 +178,23 @@ export default function ClienteForm() {
             className={classNames({ "p-invalid": submitted && !formData.ruc })}
           />
           {submitted && !formData.ruc && (
-            <Message severity="error" text="RUC es requerido" />
+            <Message
+              className="small-message"
+              severity="error"
+              text="RUC es requerido"
+            />
           )}
         </div>
 
         <div className="field mb-3">
-          <label htmlFor="nombre">Nombre</label>
+          <label
+            htmlFor="nombre"
+            className="text-[#003462] font-black text-sm mb-3"
+          >
+            Nombre
+          </label>
           <InputText
+            placeholder="Ingrese su Nombre"
             id="nombre"
             name="nombre"
             value={formData.nombre}
@@ -107,13 +204,23 @@ export default function ClienteForm() {
             })}
           />
           {submitted && !formData.nombre && (
-            <Message severity="error" text="Nombre es requerido" />
+            <Message
+              className="small-message"
+              severity="error"
+              text="Nombre es requerido"
+            />
           )}
         </div>
 
         <div className="field mb-3">
-          <label htmlFor="razonSocial">Razón Social</label>
+          <label
+            htmlFor="razonSocial"
+            className="text-[#003462] font-black text-sm mb-3"
+          >
+            Razón Social
+          </label>
           <InputText
+            placeholder="Ingrese la Razon social"
             id="razonSocial"
             name="razonSocial"
             value={formData.razonSocial}
@@ -123,14 +230,24 @@ export default function ClienteForm() {
             })}
           />
           {submitted && !formData.razonSocial && (
-            <Message severity="error" text="Razón Social es requerida" />
+            <Message
+              className="small-message"
+              severity="error"
+              text="Razón Social es requerida"
+            />
           )}
         </div>
 
         <div className="p-field flex justify-between mb-3">
           <div className="p-field w-3/6">
-            <label htmlFor="telefono1">Telefono 1</label>
+            <label
+              htmlFor="telefono1"
+              className="text-[#003462] font-black text-sm mb-3"
+            >
+              Telefono 1
+            </label>
             <InputText
+              placeholder="Ingrese su Primer telefono"
               id="telefono1"
               name="telefono1"
               value={formData.telefono1}
@@ -140,12 +257,22 @@ export default function ClienteForm() {
               })}
             />
             {submitted && !formData.telefono1 && (
-              <Message severity="error" text="Telefono 1 es requerido" />
+              <Message
+                className="small-message"
+                severity="error"
+                text="Telefono 1 es requerido"
+              />
             )}
           </div>
           <div className="p-field w-5/12">
-            <label htmlFor="telefono2">Telefono 2</label>
+            <label
+              htmlFor="telefono2"
+              className="text-[#003462] font-black text-sm mb-3"
+            >
+              Telefono 2
+            </label>
             <InputText
+              placeholder="Ingrese su segundo telefono"
               id="telefono2"
               name="telefono2"
               value={formData.telefono2}
@@ -156,7 +283,12 @@ export default function ClienteForm() {
 
         <div className="p-field flex justify-between mb-3">
           <div className="p-field w-3/6">
-            <label htmlFor="canal">Canal</label>
+            <label
+              htmlFor="canal"
+              className="text-[#003462] font-black text-sm mb-3"
+            >
+              Canal
+            </label>
             <Dropdown
               id="canal"
               name="canal"
@@ -169,12 +301,22 @@ export default function ClienteForm() {
               })}
             />
             {submitted && !formData.canal && (
-              <Message severity="error" text="Canal es requerido" />
+              <Message
+                className="small-message"
+                severity="error"
+                text="Canal es requerido"
+              />
             )}
           </div>
           <div className="p-field w-5/12">
-            <label htmlFor="zona">Zona</label>
+            <label
+              htmlFor="zona"
+              className="text-[#003462] font-black text-sm mb-3"
+            >
+              Zona
+            </label>
             <InputText
+              placeholder="Ingrese su Zona de residencia"
               id="zona"
               name="zona"
               value={formData.zona}
@@ -184,14 +326,24 @@ export default function ClienteForm() {
               })}
             />
             {submitted && !formData.zona && (
-              <Message severity="error" text="Zona es requerida" />
+              <Message
+                className="small-message"
+                severity="error"
+                text="Zona es requerida"
+              />
             )}
           </div>
         </div>
 
         <div className="field mb-3">
-          <label htmlFor="direccion">Dirección</label>
+          <label
+            htmlFor="direccion"
+            className="text-[#003462] font-black text-sm mb-3"
+          >
+            Dirección
+          </label>
           <InputText
+            placeholder="Ingrese su dirección"
             id="direccion"
             name="direccion"
             value={formData.direccion}
@@ -201,13 +353,23 @@ export default function ClienteForm() {
             })}
           />
           {submitted && !formData.direccion && (
-            <Message severity="error" text="Dirección es requerida" />
+            <Message
+              className="small-message"
+              severity="error"
+              text="Dirección es requerida"
+            />
           )}
         </div>
 
         <div className="field mb-3">
-          <label htmlFor="provincia">Provincia</label>
+          <label
+            htmlFor="provincia"
+            className="text-[#003462] font-black text-sm mb-3"
+          >
+            Provincia
+          </label>
           <InputText
+            placeholder="Ingrese la provincia de origen"
             id="provincia"
             name="provincia"
             value={formData.provincia}
@@ -217,13 +379,23 @@ export default function ClienteForm() {
             })}
           />
           {submitted && !formData.provincia && (
-            <Message severity="error" text="Provincia es requerida" />
+            <Message
+              className="small-message"
+              severity="error"
+              text="Provincia es requerida"
+            />
           )}
         </div>
 
         <div className="field mb-3">
-          <label htmlFor="distrito">Distrito</label>
+          <label
+            htmlFor="distrito"
+            className="text-[#003462] font-black text-sm mb-3"
+          >
+            Distrito
+          </label>
           <InputText
+            placeholder="Ingrese el distrito"
             id="distrito"
             name="distrito"
             value={formData.distrito}
@@ -233,12 +405,21 @@ export default function ClienteForm() {
             })}
           />
           {submitted && !formData.distrito && (
-            <Message severity="error" text="Distrito es requerido" />
+            <Message
+              className="small-message"
+              severity="error"
+              text="Distrito es requerido"
+            />
           )}
         </div>
 
         <div className="field mb-3">
-          <label htmlFor="fechaInicio">Fecha Inicio</label>
+          <label
+            htmlFor="fechaInicio"
+            className="text-[#003462] font-black text-sm mb-3"
+          >
+            Fecha Inicio
+          </label>
           <Calendar
             id="fechaInicio"
             name="fechaInicio"
@@ -250,14 +431,20 @@ export default function ClienteForm() {
             })}
           />
           {submitted && !formData.fechaInicio && (
-            <Message severity="error" text="Fecha Inicio es requerida" />
+            <Message
+              className="small-message"
+              severity="error"
+              text="Fecha Inicio es requerida"
+            />
           )}
         </div>
 
         <Button
-          label="Guardar"
+          label={loading ? "Guardando..." : "Guardar"}
           icon="pi pi-check"
-          type="submit"
+          type="button"
+          onClick={confirmSubmit} // Mostrar el diálogo de confirmación
+          disabled={loading}
           className="mb-5"
         />
       </form>

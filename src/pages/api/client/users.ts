@@ -6,6 +6,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const Entity = await prisma.entity.findMany();
+  const Entity = await prisma.client.findMany();
   res.status(200).json(Entity);
 }
