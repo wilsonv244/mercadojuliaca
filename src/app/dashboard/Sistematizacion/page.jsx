@@ -4,10 +4,8 @@ import { DataTableLista } from "../tools/dataTable";
 import lsMenusSistematizacion from "../Sistematizacion/lsMenusSistematizacion.json";
 import dtUsuario from "../gobiernoDatos/usuarios.json";
 import dtDashboard from "../gobiernoDatos/listDashboard.json";
-import { DataTableUsuario } from "../admin/usuario/dtUsuarios";
-import { DataTablePerfil } from "../admin/perfil/dtPerfil";
-import VendedorForm from "./vendedor/VendedorForm";
-import ClienteForm from "./profiles/ClienteForm";
+import VendedorForm from "./saler/VendedorForm";
+import ClienteForm from "./client/ClienteForm";
 import ProveedorForm from "./provider/ProviderForm";
 
 export default function PanelSistematizcion() {

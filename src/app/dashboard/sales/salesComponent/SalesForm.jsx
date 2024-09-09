@@ -1,20 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { Message } from "primereact/message";
 import { classNames } from "primereact/utils";
+import { Toast } from "primereact/toast";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 
 export default function IngresoVentasForm() {
   const [formData, setFormData] = useState({
-    fechaRegistro: "",
     idCliente: "",
     idVendedor: "",
-    montoTotal: 1000,
+    montoTotal: "",
     tipoComprobante: "",
     nroComprobante: "",
+    status: true,
   });
 
+  const toast = useRef(null); // Referencia para Toast
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -24,7 +28,6 @@ export default function IngresoVentasForm() {
   const validateForm = () => {
     setSubmitted(true);
     return (
-      formData.fechaRegistro &&
       formData.idCliente &&
       formData.idVendedor &&
       formData.tipoComprobante &&
@@ -32,43 +35,85 @@ export default function IngresoVentasForm() {
     );
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const submitForm = async () => {
     if (validateForm()) {
-      console.log("Form submitted:", formData);
-      // Aquí iría la lógica para enviar el formulario
+      setLoading(true);
+      try {
+        console.log(formData);
+        const response = await fetch("/api/sale/saveSale", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id_employee: parseInt(formData.idVendedor),
+            id_client: parseInt(formData.idCliente),
+            receipt_type: formData.tipoComprobante,
+            receipt_number: formData.nroComprobante,
+            total_amount: parseInt(formData.montoTotal),
+            status: formData.status,
+          }),
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+          toast.current.show({
+            severity: "success",
+            summary: "Éxito",
+            detail: "Venta registrada correctamente",
+          });
+          setFormData({
+            fechaRegistro: "",
+            idCliente: "",
+            idVendedor: "",
+            montoTotal: "",
+            tipoComprobante: "",
+            nroComprobante: "",
+            status: true,
+          });
+        } else {
+          toast.current.show({
+            severity: "error",
+            summary: "Error",
+            detail: result.error || "Error al registrar la venta",
+          });
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        toast.current.show({
+          severity: "error",
+          summary: "Error",
+          detail: "Error de conexión con el servidor",
+        });
+      } finally {
+        setLoading(false);
+      }
     }
+  };
+
+  // Confirmar antes de enviar
+  const confirmSubmit = () => {
+    confirmDialog({
+      message: "¿Estás seguro de que deseas guardar esta venta?",
+      header: "Confirmación de Guardado",
+      icon: "pi pi-exclamation-triangle",
+      accept: () => submitForm(),
+      reject: () =>
+        toast.current.show({
+          severity: "info",
+          summary: "Cancelado",
+          detail: "Operación cancelada",
+        }),
+    });
   };
 
   return (
     <div className="card w-2/3 m-auto">
-      <form onSubmit={handleSubmit} className="p-fluid">
-        <div className="field mb-3">
-          <label
-            htmlFor="fechaRegistro"
-            className="text-[#003462] font-black text-sm mb-3"
-          >
-            Fecha de registro
-          </label>
-          <InputText
-            placeholder="Ingrese la fecha de registro"
-            id="fechaRegistro"
-            name="fechaRegistro"
-            value={formData.fechaRegistro}
-            onChange={handleInputChange}
-            className={classNames({
-              "p-invalid": submitted && !formData.fechaRegistro,
-            })}
-          />
-          {submitted && !formData.fechaRegistro && (
-            <Message
-              className="small-message"
-              severity="error"
-              text="Fecha de registro es requerida"
-            />
-          )}
-        </div>
+      <Toast ref={toast} />
+      <ConfirmDialog />
 
+      <form onSubmit={(e) => e.preventDefault()} className="p-fluid">
+        {/* Id Cliente */}
         <div className="field mb-3">
           <label
             htmlFor="idCliente"
@@ -95,6 +140,7 @@ export default function IngresoVentasForm() {
           )}
         </div>
 
+        {/* Id Vendedor */}
         <div className="field mb-3">
           <label
             htmlFor="idVendedor"
@@ -121,6 +167,7 @@ export default function IngresoVentasForm() {
           )}
         </div>
 
+        {/* Monto Total */}
         <div className="field mb-3">
           <label
             htmlFor="montoTotal"
@@ -133,10 +180,11 @@ export default function IngresoVentasForm() {
             name="montoTotal"
             value={formData.montoTotal}
             onChange={handleInputChange}
-            disabled
+            placeholder="Ingrese el monto de la operación"
           />
         </div>
 
+        {/* Tipo de Comprobante */}
         <div className="field mb-3">
           <label
             htmlFor="tipoComprobante"
@@ -163,6 +211,7 @@ export default function IngresoVentasForm() {
           )}
         </div>
 
+        {/* Número de Comprobante */}
         <div className="field mb-3">
           <label
             htmlFor="nroComprobante"
@@ -189,7 +238,13 @@ export default function IngresoVentasForm() {
           )}
         </div>
 
-        <Button label="Guardar" icon="pi pi-check" type="submit" />
+        <Button
+          label={loading ? "Guardando..." : "Guardar"}
+          icon="pi pi-check"
+          type="button"
+          onClick={confirmSubmit} // Confirmar antes de enviar
+          disabled={loading}
+        />
       </form>
     </div>
   );

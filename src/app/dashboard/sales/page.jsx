@@ -4,6 +4,7 @@ import { DataTableLista } from "../tools/dataTable";
 import lsOpciones from "../sales/lsMenus.json";
 import dtDashboard from "../gobiernoDatos/listDashboard.json";
 import IngresoVentasForm from "./salesComponent/SalesForm";
+import SalePaymentForm from "./saleRegister/formSaleRegister";
 
 export default function AdminPanelMain() {
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -30,6 +31,8 @@ export default function AdminPanelMain() {
               switch (selectItem.cName) {
                 case "Ingresos":
                   return <IngresoVentasForm />;
+                case "Registrar Venta":
+                  return <SalePaymentForm />;
 
                 default:
                   return null;

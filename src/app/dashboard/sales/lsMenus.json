@@ -3,6 +3,10 @@
     {
       "cName": "Ingresos",
       "id": 1
+    },
+    {
+      "cName": "Registrar Venta",
+      "id": 2
     }
   ]
 }
