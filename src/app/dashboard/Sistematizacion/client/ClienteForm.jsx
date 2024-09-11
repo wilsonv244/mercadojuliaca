@@ -10,52 +10,6 @@ import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import "./ClienteForm.css";
 
 export default function ClienteForm() {
-  const es = {
-    firstDayOfWeek: 1,
-    dayNames: [
-      "domingo",
-      "lunes",
-      "martes",
-      "miércoles",
-      "jueves",
-      "viernes",
-      "sábado",
-    ],
-    dayNamesShort: ["dom", "lun", "mar", "mié", "jue", "vie", "sáb"],
-    dayNamesMin: ["D", "L", "M", "X", "J", "V", "S"],
-    monthNames: [
-      "enero",
-      "febrero",
-      "marzo",
-      "abril",
-      "mayo",
-      "junio",
-      "julio",
-      "agosto",
-      "septiembre",
-      "octubre",
-      "noviembre",
-      "diciembre",
-    ],
-    monthNamesShort: [
-      "ene",
-      "feb",
-      "mar",
-      "abr",
-      "may",
-      "jun",
-      "jul",
-      "ago",
-      "sep",
-      "oct",
-      "nov",
-      "dic",
-    ],
-    today: "Hoy",
-    clear: "Limpiar",
-    dateFormat: "dd/mm/yy", // Formato de fecha en español
-    weekHeader: "Sm",
-  };
   const [formData, setFormData] = useState({
     dni: "",
     ruc: "",
@@ -75,6 +29,23 @@ export default function ClienteForm() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const resetForm = () => {
+    setFormData({
+      dni: "",
+      ruc: "",
+      nombre: "",
+      razonSocial: "",
+      telefono1: "",
+      telefono2: "",
+      canal: null,
+      zona: "",
+      direccion: "",
+      provincia: "",
+      distrito: "",
+      fechaInicio: null,
+    });
+    setSubmitted(false);
+  };
   const canales = [
     { label: "Tradicional", value: "tradicional" },
     { label: "Mayorista", value: "mayorista" },
@@ -159,6 +130,7 @@ export default function ClienteForm() {
             summary: "Éxito",
             detail: "Cliente registrado correctamente",
           });
+          resetForm();
         } else {
           toast.current.show({
             severity: "error",
@@ -209,6 +181,7 @@ export default function ClienteForm() {
           </label>
           <InputText
             placeholder="Ingrese su Número de DNI"
+            maxLength={8}
             id="dni"
             name="dni"
             value={formData.dni}
@@ -235,6 +208,7 @@ export default function ClienteForm() {
             placeholder="Ingrese su Número de RUC"
             id="ruc"
             name="ruc"
+            maxLength={11}
             value={formData.ruc}
             onChange={handleInputChange}
             className={classNames({ "p-invalid": submitted && !formData.ruc })}

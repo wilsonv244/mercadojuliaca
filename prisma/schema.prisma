@@ -22,6 +22,7 @@ model Entity {
 
   Clients          Client[]
   Employees        Employee[]
+  Suppliers        Supplier[]
 }
 
 model Channel {
@@ -120,3 +121,101 @@ model SalePayment {
   @@index([id_sale])
   @@index([id_employee])
 }
+
+model Supplier {
+  id_supplier     Int       @id @default(autoincrement())
+  id_entity       Int?
+  ruc             String    @db.VarChar(11)
+  supplier_name   String    @db.VarChar(255)
+  legal_name      String?   @db.VarChar(255)
+  phone_number    String    @db.VarChar(15)
+  phone_number2   String?   @db.VarChar(15)
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @default(now()) @updatedAt
+
+  entity          Entity?   @relation(fields: [id_entity], references: [id_entity])
+  PurchaseOrders  PurchaseOrder[]
+
+  @@index([id_entity])
+}
+
+model CostCenter {
+  id_center       Int       @id @default(autoincrement())
+  id_father_center Int?
+  cost_center_name String   @db.VarChar(255)
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @default(now()) @updatedAt
+
+  father_center   CostCenter? @relation("CostCenterToFather", fields: [id_father_center], references: [id_center])
+  child_centers   CostCenter[] @relation("CostCenterToFather")
+  PurchaseRequests PurchaseRequest[]
+
+  @@index([id_father_center])
+}
+
+model PurchaseRequest {
+  id_request      Int       @id @default(autoincrement())
+  id_cost_center  Int
+  request_date    DateTime
+  item            String    @db.VarChar(255)
+  description     String?
+  quantity        Decimal   @db.Decimal(10, 2)
+  unit_of_measurement String @db.VarChar(50)
+  planned_cost    Decimal   @db.Decimal(12, 2)
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @default(now()) @updatedAt
+
+  cost_center     CostCenter @relation(fields: [id_cost_center], references: [id_center])
+  PurchaseOrders  PurchaseOrder[]
+
+  @@index([id_cost_center])
+}
+
+model PurchaseOrder {
+  id_order        Int       @id @default(autoincrement())
+  id_request      Int
+  id_supplier     Int
+  order_date      DateTime
+  total_amount    Decimal   @db.Decimal(12, 2)
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @default(now()) @updatedAt
+
+  request         PurchaseRequest @relation(fields: [id_request], references: [id_request])
+  supplier        Supplier        @relation(fields: [id_supplier], references: [id_supplier])
+  PurchaseShipments PurchaseShipment[]
+
+  @@index([id_request])
+  @@index([id_supplier])
+}
+
+model PurchaseShipment {
+  id_shipment     Int       @id @default(autoincrement())
+  id_order        Int
+  shipment_date   DateTime
+  receipt_type    String?   @db.VarChar(50)
+  receipt_number  String    @db.VarChar(50) @unique
+  payment_type    String    @db.VarChar(50)
+  payment_due_date DateTime
+  payment_status  Boolean   @default(false) // true is canceled
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @default(now()) @updatedAt
+
+  order           PurchaseOrder @relation(fields: [id_order], references: [id_order])
+  ShipmentPayments ShipmentPayment[]
+
+  @@index([id_order])
+}
+
+model ShipmentPayment {
+  id_payment      Int       @id @default(autoincrement())
+  id_shipment     Int
+  payment_date    DateTime
+  payment_amount  Decimal   @db.Decimal(14, 2)
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @default(now()) @updatedAt
+
+  shipment        PurchaseShipment @relation(fields: [id_shipment], references: [id_shipment])
+
+  @@index([id_shipment])
+}
+

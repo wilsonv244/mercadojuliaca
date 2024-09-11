@@ -4,9 +4,13 @@ npm install prisma @prisma/client
 ##creamos el archivo de configuracion
 npx prisma init
 
-
 ##Ejecutamos la migracion
 npx prisma migrate dev --name init
 
 ##Levantar Prisma studio
 npx prisma studio
+
+#GENERAR NUEVA MIGRACIÓN CUANDO HAYA CAMBIOS
+npx prisma migrate dev --name add_supplier_relation
+npx prisma generate
+

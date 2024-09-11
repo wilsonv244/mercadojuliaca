@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { Message } from "primereact/message";
+import { Toast } from "primereact/toast";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { classNames } from "primereact/utils";
+import "../client/ClienteForm.css";
 
 export default function ProveedorForm() {
   const [formData, setFormData] = useState({
@@ -14,6 +17,7 @@ export default function ProveedorForm() {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const toast = useRef(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -30,20 +34,81 @@ export default function ProveedorForm() {
     );
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const submitForm = async () => {
     if (validateForm()) {
-      console.log("Form submitted:", formData);
-      // Aquí iría la lógica para enviar el formulario
+      try {
+        const response = await fetch("/api/supplier/saveSupplier", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id_entity: 1, // Cambia según el id_entity necesario
+            ruc: formData.ruc,
+            supplier_name: formData.nombre,
+            legal_name: formData.razonSocial,
+            phone_number: formData.telefono1,
+            phone_number2: formData.telefono2 || null,
+          }),
+        });
+
+        if (response.ok) {
+          toast.current.show({
+            severity: "success",
+            summary: "Éxito",
+            detail: "Proveedor registrado correctamente",
+          });
+          resetForm(); // Limpiar el formulario tras la operación exitosa
+        } else {
+          toast.current.show({
+            severity: "error",
+            summary: "Error",
+            detail: "Error al registrar el proveedor",
+          });
+        }
+      } catch (error) {
+        toast.current.show({
+          severity: "error",
+          summary: "Error",
+          detail: "Error de conexión con el servidor",
+        });
+      }
     }
   };
 
+  // Confirmación antes de guardar
+  const confirmSubmit = () => {
+    confirmDialog({
+      message: "¿Estás seguro de que deseas guardar este proveedor?",
+      header: "Confirmación de Guardado",
+      icon: "pi pi-exclamation-triangle",
+      accept: () => submitForm(),
+      reject: () =>
+        toast.current.show({
+          severity: "info",
+          summary: "Cancelado",
+          detail: "Operación cancelada",
+        }),
+    });
+  };
+
+  // Resetear el formulario
+  const resetForm = () => {
+    setFormData({
+      ruc: "",
+      nombre: "",
+      razonSocial: "",
+      telefono1: "",
+      telefono2: "",
+    });
+    setSubmitted(false);
+  };
+
   return (
-    <div className="card w-2/3 m-auto">
-      <h2 className="text-center mb-4 text-[#003462] font-black">
-        Crear nuevo proveedor
-      </h2>
-      <form onSubmit={handleSubmit} className="p-fluid">
+    <div className="card w-10/12 m-auto">
+      <Toast ref={toast} />
+      <ConfirmDialog />
+      <form onSubmit={(e) => e.preventDefault()} className="p-fluid">
         <div className="field mb-3">
           <label
             htmlFor="ruc"
@@ -55,6 +120,7 @@ export default function ProveedorForm() {
             placeholder="Ingrese el RUC"
             id="ruc"
             name="ruc"
+            maxLength={11}
             value={formData.ruc}
             onChange={handleInputChange}
             className={classNames({ "p-invalid": submitted && !formData.ruc })}
@@ -132,6 +198,7 @@ export default function ProveedorForm() {
             name="telefono1"
             placeholder="Ingrese el número de teléfono"
             value={formData.telefono1}
+            maxLength={9}
             onChange={handleInputChange}
             className={classNames({
               "p-invalid": submitted && !formData.telefono1,
@@ -154,6 +221,7 @@ export default function ProveedorForm() {
             Teléfono 2
           </label>
           <InputText
+            maxLength={9}
             id="telefono2"
             placeholder="Ingrese el segundo número de teléfono"
             name="telefono2"
@@ -162,7 +230,12 @@ export default function ProveedorForm() {
           />
         </div>
 
-        <Button label="Guardar" icon="pi pi-check" type="submit" />
+        <Button
+          label="Guardar"
+          icon="pi pi-check"
+          type="button"
+          onClick={confirmSubmit} // Mostrar el diálogo de confirmación
+        />
       </form>
     </div>
   );

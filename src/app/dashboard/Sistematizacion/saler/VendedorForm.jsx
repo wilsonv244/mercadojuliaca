@@ -147,6 +147,7 @@ export default function VendedorForm() {
           <InputText
             placeholder="Ingrese su Número de DNI"
             id="dni"
+            maxLength={8}
             name="dni"
             value={formData.dni}
             onChange={handleInputChange}
@@ -222,6 +223,7 @@ export default function VendedorForm() {
           </label>
           <InputText
             id="telefono1"
+            maxLength={9}
             name="telefono1"
             placeholder="Ingrese su número de Telefono"
             value={formData.telefono1}
@@ -248,6 +250,7 @@ export default function VendedorForm() {
           </label>
           <InputText
             id="telefono2"
+            maxLength={9}
             placeholder="Ingrese su segundo número de Telefono"
             name="telefono2"
             value={formData.telefono2}
