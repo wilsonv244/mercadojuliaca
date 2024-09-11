@@ -27,7 +27,7 @@ const LinkPage = [
   {
     icon: "pi pi-bookmark-fill",
     label: "Costos",
-    route: "/dashboard/gobiernoDatos",
+    route: "/dashboard/costos",
   },
   { icon: "pi pi-power-off hover:font-bold", label: "", route: "#" },
 ];

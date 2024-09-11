@@ -2,8 +2,7 @@
 import { useState } from "react";
 import { DataTableLista } from "../tools/dataTable";
 import lsMenusSistematizacion from "../Sistematizacion/lsMenusSistematizacion.json";
-import dtUsuario from "../gobiernoDatos/usuarios.json";
-import dtDashboard from "../gobiernoDatos/listDashboard.json";
+import dtDashboard from "../Sistematizacion/lsMenusSistematizacion.json";
 import VendedorForm from "./saler/VendedorForm";
 import ClienteForm from "./client/ClienteForm";
 import ProveedorForm from "./provider/ProviderForm";

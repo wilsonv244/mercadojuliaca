@@ -3,12 +3,11 @@ import React, { useRef } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { Formik, Field, Form } from "formik";
-import { ResponseApiLogin } from "@/infraestructure/useCases/login/ResponseApi";
+
 import { Toast } from "primereact/toast";
-import Helper from "@/infraestructure/components/Helper";
+
 import { CryptoMethod } from "@/infraestructure/components/Crypto";
 import { CpLatamResponse } from "@/infraestructure/useCases/login/CpLatamResponse";
-import perfiles from "../dashboard/gobiernoDatos/usuarios.json";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -28,7 +27,7 @@ export default function LoginPage() {
     const response = await CpLatamResponse(body);
     console.log(response);
     //if (response.header.success == 1) {
-    if(true){
+    if (true) {
       const token = response.body?.cToken;
       const fechaActual = new Date();
       // localStorage.setItem(
@@ -40,11 +39,7 @@ export default function LoginPage() {
       Cookies.set("token", token == undefined ? "ERROR" : token);
       Cookies.set("cUsuario", cDatos.cUsuario);
       encriptar.saveLocalStorage("cToken", token);
-      router.push("/dashboard/gobiernoDatos");
-      const idPer = perfiles.perfiles.filter(
-        (e) => e.cUser === localStorage.getItem("cUsuario")
-      );
-      console.log(idPer);
+      router.push("dashboard/Sistematizacion");
       localStorage.setItem("cPerfil", idPer[0].cPerfil);
     } else {
       const mensaje = response.header.errors[0].message;

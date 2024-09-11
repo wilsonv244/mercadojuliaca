@@ -2,10 +2,10 @@
 import { useState } from "react";
 import { DataTableLista } from "../tools/dataTable";
 import lsOpciones from "../sales/lsMenus.json";
-import IngresoVentasForm from "./salesRegister/SalesForm";
-import SalePaymentForm from "./salePayment/SalePaymentForm";
+import IngresoVentasForm from "../sales/salesRegister/SalesForm";
+import SalePaymentForm from "../sales/salePayment/SalePaymentForm";
 
-export default function AdminPanelMain() {
+export default function AdminCostos() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectItem, setSelectItem] = useState(null);
   return (
