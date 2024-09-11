@@ -1,10 +1,10 @@
 import { ResponseSalePayment } from "@/domain/models/clientNavModel/Sale";
-import { Sale, SalePayment } from "@prisma/client";
+import { SaleEntity } from "@/domain/models/serverModel/client/responseGetSaleModel";
 
 export async function getSaleByReceiptNumber(
   receiptNumber: string
 ): Promise<ResponseSalePayment> {
-  let response: ResponseSalePayment = {
+  const initialResponse: ResponseSalePayment = {
     total_amount: 0,
     deuda_total: 0,
     statusCode: 200,
@@ -13,76 +13,47 @@ export async function getSaleByReceiptNumber(
   };
 
   try {
-    // Llamar a la API para obtener la venta por número de recibo
     const saleResponse = await fetch(
-      `/api/sale/getSaleById?receipt_number=${receiptNumber}`
+      `/api/sale/getSaleByReceip?receipt_number=${receiptNumber}`
     );
-    console.log("saleResponse");
-    console.log(saleResponse);
 
     if (!saleResponse.ok) {
-      throw new Error(`Error al obtener la venta: ${saleResponse.statusText}`);
-    }
-
-    const saleData: Sale = await saleResponse.json();
-    console.log("saleData");
-    console.log(saleData);
-
-    if (!saleData) {
-      throw new Error(
-        `No se encontró ninguna venta con el número de recibo: ${receiptNumber}`
-      );
-    }
-
-    // Llamar a la API para obtener los pagos asociados a la venta
-    const paymentResponse = await fetch(
-      `/api/sale/getSalePaymentById?id_sale=${saleData.id_sale}`
-    );
-    console.log("paymentResponse");
-    console.log(paymentResponse);
-
-    if (!paymentResponse.ok) {
-      throw new Error(
-        `Error al obtener los pagos: ${paymentResponse.statusText}`
-      );
-    }
-
-    const paymentData: SalePayment[] = await paymentResponse.json();
-    console.log(paymentData);
-
-    if (paymentData.length <= 0) {
       return {
-        total_amount: 0,
-        deuda_total: 0,
-        statusCode: 204,
-        message: "No se encontraron datos con ese Recibo",
-        id_sale: 0,
+        ...initialResponse,
+        statusCode: saleResponse.status,
+        message: await saleResponse.text(),
       };
     }
 
-    // Calcular la deuda total
-    const deudaCalculo: number = paymentData.reduce(
+    const paymentData: SaleEntity[] = await saleResponse.json();
+
+    if (paymentData.length === 0) {
+      return {
+        ...initialResponse,
+        statusCode: 204,
+        message: "No se encontraron datos con ese Recibo",
+      };
+    }
+
+    const sale = paymentData[0];
+    const totalPaid = sale.SalePayments.reduce(
       (total, item) => total + Number(item.payment_amount),
       0
     );
 
-    response = {
-      total_amount: Number(saleData.total_amount),
-      deuda_total: Number(saleData.total_amount) - deudaCalculo,
+    return {
+      total_amount: Number(sale.total_amount),
+      deuda_total: Number(sale.total_amount) - totalPaid,
       statusCode: 200,
       message: "success",
-      id_sale: Number(saleData.id_sale),
+      id_sale: sale.id_sale,
     };
-
-    return response;
   } catch (error) {
     console.error("Error al obtener la información de la venta:", error);
     return {
-      total_amount: 0,
-      deuda_total: 0,
+      ...initialResponse,
       statusCode: 500,
-      message: "Ocurrió un error: " + error,
-      id_sale: 0,
+      message: "Ocurrió un error: " + (error as Error).message,
     };
   }
 }

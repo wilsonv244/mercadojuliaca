@@ -213,6 +213,7 @@ export default function IngresoVentasForm() {
             Monto Total
           </label>
           <InputText
+            type="number"
             id="montoTotal"
             name="montoTotal"
             value={formData.montoTotal}

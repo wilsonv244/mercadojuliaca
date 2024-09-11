@@ -21,17 +21,16 @@ export default function SalePaymentForm() {
 
   const [MontoTotal, setMontoTotal] = useState(0);
   const [MontoDeuda, setMontoDeuda] = useState(0);
+  const [idSaleVenta, setIdSaleVenta] = useState(0);
 
   const [submitted, setSubmitted] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [loading, setLoading] = useState(false);
   const [optionSeller, setOptionSeller] = useState([]);
-  const toast = useRef(null); // Referencia para el Toast
+  const toast = useRef(null);
 
   useEffect(() => {
     async function fetchEmployees() {
       const options = await getEmployeeFormSaler();
-      console.log(options);
       setOptionSeller(options);
     }
     fetchEmployees();
@@ -42,6 +41,11 @@ export default function SalePaymentForm() {
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleDropdownChange = (value, name) => {
+    console.log(value.name);
+    setFormData({ ...formData, [name]: value });
+  };
+
   const handleDateChange = (e, name) => {
     setFormData({ ...formData, [name]: e.value });
   };
@@ -49,44 +53,63 @@ export default function SalePaymentForm() {
   const validateForm = () => {
     setSubmitted(true);
     return (
-      formData.id_sale &&
       formData.id_employee &&
       formData.payment_registration_date &&
       formData.description &&
       formData.payment_amount
     );
   };
+
   const llamarApiVenta = async () => {
-    console.log("id_sale");
-    console.log(id_sale.value);
-    const responseSalePayment = await getSaleByReceiptNumber(id_sale.value);
-    if (responseSalePayment.statusCode != 200) {
+    try {
+      const responseSalePayment = await getSaleByReceiptNumber(
+        formData.id_sale
+      );
+      if (responseSalePayment.statusCode !== 200) {
+        toast.current.show({
+          severity: "info",
+          summary: "Cancelado",
+          detail: "No se encontró datos con ese recibo",
+        });
+        return;
+      }
+      setMontoDeuda(responseSalePayment.deuda_total);
+      setMontoTotal(responseSalePayment.total_amount);
+      setIdSaleVenta(responseSalePayment.id_sale);
+    } catch (error) {
       toast.current.show({
-        severity: "info",
-        summary: "Cancelado",
-        detail: "No se encontro datos con ese recibo",
+        severity: "error",
+        summary: "Error",
+        detail: "Error al buscar la venta",
       });
     }
-    setMontoDeuda(responseSalePayment.deuda_total);
-    setMontoTotal(responseSalePayment.total_amount);
-    console.log("responseSalePayment2");
-    console.log(responseSalePayment);
   };
 
   const submitForm = async () => {
-    console.log(JSON.stringify(formData));
+    console.log("formData");
+    console.log(formData);
     if (validateForm()) {
+      const idEmpleado = Number(formData.id_employee.code);
+      console.log(idEmpleado);
       setLoading(true);
       try {
+        console.log("entrando");
         const response = await fetch("/api/payment/savePayment", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify({
+            id_sale: idSaleVenta,
+            id_employee: idEmpleado,
+            payment_registration_date: formData.payment_registration_date,
+            description: formData.description,
+            payment_amount: formData.payment_amount,
+          }),
         });
 
         const result = await response.json();
+        console.log(result);
         if (response.ok) {
           toast.current.show({
             severity: "success",
@@ -102,14 +125,18 @@ export default function SalePaymentForm() {
           });
         }
       } catch (error) {
+        console.log(error);
         toast.current.show({
           severity: "error",
           summary: "Error",
           detail: "Error de conexión con el servidor",
         });
       } finally {
+        console.log("no ingresa");
         setLoading(false);
       }
+    } else {
+      console.log("no ingresa");
     }
   };
 
@@ -129,7 +156,6 @@ export default function SalePaymentForm() {
     });
   };
 
-  // Resetear el formulario
   const resetForm = () => {
     setFormData({
       id_sale: "",
@@ -138,6 +164,8 @@ export default function SalePaymentForm() {
       description: "",
       payment_amount: "",
     });
+    setMontoTotal(0);
+    setMontoDeuda(0);
     setSubmitted(false);
   };
 
@@ -165,7 +193,7 @@ export default function SalePaymentForm() {
                 "p-invalid": submitted && !formData.id_sale,
               })}
             />
-            <div className=" w-1/12">
+            <div className="w-1/12">
               <Button
                 onClick={() => llamarApiVenta()}
                 className="m-3"
@@ -188,13 +216,13 @@ export default function SalePaymentForm() {
         <div className="flex justify-between">
           <div className="field mb-3">
             <label
-              htmlFor="Monto Total"
+              htmlFor="MontoTotal"
               className="text-[#003462] font-black text-sm mb-3"
             >
               Monto Total
             </label>
             <InputText
-              placeholder="Ingrese el ID de la venta"
+              placeholder="Monto Total"
               id="MontoTotal"
               disabled
               name="MontoTotal"
@@ -203,13 +231,14 @@ export default function SalePaymentForm() {
           </div>
           <div className="field mb-3">
             <label
-              htmlFor="Monto Total"
+              htmlFor="MontoDeuda"
               className="text-[#003462] font-black text-sm mb-3"
             >
               Monto Deuda
             </label>
             <InputText
-              placeholder="Ingrese el ID de la venta"
+              type="number"
+              placeholder="Monto Deuda"
               id="MontoDeuda"
               name="MontoDeuda"
               value={MontoDeuda}
@@ -227,8 +256,8 @@ export default function SalePaymentForm() {
           </label>
           <div className="card flex justify-content-center">
             <Dropdown
-              value={selectedEmployee}
-              onChange={(e) => setSelectedEmployee(e.value)}
+              value={formData.id_employee}
+              onChange={(e) => handleDropdownChange(e.value, "id_employee")}
               options={optionSeller}
               optionLabel="name"
               editable
