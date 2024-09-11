@@ -1,10 +1,13 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { Message } from "primereact/message";
 import { classNames } from "primereact/utils";
 import { Toast } from "primereact/toast";
+import { Dropdown } from "primereact/dropdown";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import { getAllClientForm } from "@/infraestructure/useCasesNav/Client/getClientUseCase";
+import { getEmployeeFormSaler } from "@/infraestructure/useCasesNav/Client/getEmployeeUseCase";
 
 export default function IngresoVentasForm() {
   const [formData, setFormData] = useState({
@@ -19,9 +22,40 @@ export default function IngresoVentasForm() {
   const toast = useRef(null); // Referencia para Toast
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [optionClient, setOptionClient] = useState([]);
+  const [optionSeller, setOptionSeller] = useState([]);
+  const [montoIgv, setMontoIgv] = useState(0);
 
+  useEffect(() => {
+    async function fetchData() {
+      const optionsClient = await getAllClientForm();
+      const optionsSaler = await getEmployeeFormSaler();
+      setOptionClient(optionsClient);
+      setOptionSeller(optionsSaler);
+    }
+    fetchData();
+  }, []);
+
+  const MontoConIgv = (montoSinIgv) => {
+    console.log(montoSinIgv);
+    if (montoSinIgv > 0) {
+      const igv = 0.18;
+      const montoConIgv = montoSinIgv
+        ? parseFloat(montoSinIgv) * (1 + igv)
+        : "";
+      return montoConIgv.toFixed(2);
+    }
+    return 0;
+  };
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    if (name == "montoTotal") {
+      setMontoIgv(MontoConIgv(value));
+    }
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleDropdownChange = (value, name) => {
     setFormData({ ...formData, [name]: value });
   };
 
@@ -36,21 +70,21 @@ export default function IngresoVentasForm() {
   };
 
   const submitForm = async () => {
+    console.log(formData.idCliente["code"]);
     if (validateForm()) {
       setLoading(true);
       try {
-        console.log(formData);
         const response = await fetch("/api/sale/saveSale", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            id_employee: parseInt(formData.idVendedor),
-            id_client: parseInt(formData.idCliente),
+            id_employee: parseInt(formData.idVendedor["code"]),
+            id_client: parseInt(formData.idCliente["code"]),
             receipt_type: formData.tipoComprobante,
             receipt_number: formData.nroComprobante,
-            total_amount: parseInt(formData.montoTotal),
+            total_amount: parseFloat(formData.montoTotal),
             status: formData.status,
           }),
         });
@@ -62,15 +96,7 @@ export default function IngresoVentasForm() {
             summary: "Éxito",
             detail: "Venta registrada correctamente",
           });
-          setFormData({
-            fechaRegistro: "",
-            idCliente: "",
-            idVendedor: "",
-            montoTotal: "",
-            tipoComprobante: "",
-            nroComprobante: "",
-            status: true,
-          });
+          resetForm();
         } else {
           toast.current.show({
             severity: "error",
@@ -91,7 +117,18 @@ export default function IngresoVentasForm() {
     }
   };
 
-  // Confirmar antes de enviar
+  const resetForm = () => {
+    setFormData({
+      idCliente: "",
+      idVendedor: "",
+      montoTotal: "",
+      tipoComprobante: "",
+      nroComprobante: "",
+      status: true,
+    });
+    setSubmitted(false);
+  };
+
   const confirmSubmit = () => {
     confirmDialog({
       message: "¿Estás seguro de que deseas guardar esta venta?",
@@ -108,7 +145,7 @@ export default function IngresoVentasForm() {
   };
 
   return (
-    <div className="card w-2/3 m-auto">
+    <div className="card w-4/5 m-auto">
       <Toast ref={toast} />
       <ConfirmDialog />
 
@@ -121,12 +158,12 @@ export default function IngresoVentasForm() {
           >
             Id Cliente
           </label>
-          <InputText
-            id="idCliente"
-            placeholder="Ingrese el Id del cliente"
-            name="idCliente"
+          <Dropdown
             value={formData.idCliente}
-            onChange={handleInputChange}
+            onChange={(e) => handleDropdownChange(e.value, "idCliente")}
+            options={optionClient}
+            optionLabel="name"
+            placeholder="Selecciona un cliente"
             className={classNames({
               "p-invalid": submitted && !formData.idCliente,
             })}
@@ -148,12 +185,12 @@ export default function IngresoVentasForm() {
           >
             Id Vendedor
           </label>
-          <InputText
-            id="idVendedor"
-            placeholder="Ingrese el Id del vendedor"
-            name="idVendedor"
+          <Dropdown
             value={formData.idVendedor}
-            onChange={handleInputChange}
+            onChange={(e) => handleDropdownChange(e.value, "idVendedor")}
+            options={optionSeller}
+            optionLabel="name"
+            placeholder="Selecciona un vendedor"
             className={classNames({
               "p-invalid": submitted && !formData.idVendedor,
             })}
@@ -181,6 +218,9 @@ export default function IngresoVentasForm() {
             value={formData.montoTotal}
             onChange={handleInputChange}
             placeholder="Ingrese el monto de la operación"
+            className={classNames({
+              "p-invalid": submitted && !formData.montoTotal,
+            })}
           />
         </div>
 
@@ -237,12 +277,42 @@ export default function IngresoVentasForm() {
             />
           )}
         </div>
+        <div className="flex justify-between">
+          <div className="field mb-3">
+            <label
+              htmlFor="nroComprobante"
+              className="text-[#003462] font-black text-sm mb-3"
+            >
+              Monto con IGV
+            </label>
+            <InputText
+              placeholder="Monto con IGV"
+              name="nroComprobante"
+              value={montoIgv}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="field mb-3">
+            <label
+              htmlFor="nroComprobante"
+              className="text-[#003462] font-black text-sm mb-3"
+            >
+              Monto sin IGV
+            </label>
+            <InputText
+              placeholder="Monto sin IGV"
+              name="nroComprobante"
+              value={formData.montoTotal}
+              onChange={handleInputChange}
+            />
+          </div>
+        </div>
 
         <Button
           label={loading ? "Guardando..." : "Guardar"}
           icon="pi pi-check"
           type="button"
-          onClick={confirmSubmit} // Confirmar antes de enviar
+          onClick={confirmSubmit}
           disabled={loading}
         />
       </form>

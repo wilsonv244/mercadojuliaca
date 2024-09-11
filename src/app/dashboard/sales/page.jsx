@@ -3,7 +3,7 @@ import { useState } from "react";
 import { DataTableLista } from "../tools/dataTable";
 import lsOpciones from "../sales/lsMenus.json";
 import dtDashboard from "../gobiernoDatos/listDashboard.json";
-import IngresoVentasForm from "./salesComponent/SalesForm";
+import IngresoVentasForm from "./salesRegister/SalesForm";
 import SalePaymentForm from "./salePayment/SalePaymentForm";
 
 export default function AdminPanelMain() {
