@@ -10,6 +10,52 @@ import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import "./ClienteForm.css";
 
 export default function ClienteForm() {
+  const es = {
+    firstDayOfWeek: 1,
+    dayNames: [
+      "domingo",
+      "lunes",
+      "martes",
+      "miércoles",
+      "jueves",
+      "viernes",
+      "sábado",
+    ],
+    dayNamesShort: ["dom", "lun", "mar", "mié", "jue", "vie", "sáb"],
+    dayNamesMin: ["D", "L", "M", "X", "J", "V", "S"],
+    monthNames: [
+      "enero",
+      "febrero",
+      "marzo",
+      "abril",
+      "mayo",
+      "junio",
+      "julio",
+      "agosto",
+      "septiembre",
+      "octubre",
+      "noviembre",
+      "diciembre",
+    ],
+    monthNamesShort: [
+      "ene",
+      "feb",
+      "mar",
+      "abr",
+      "may",
+      "jun",
+      "jul",
+      "ago",
+      "sep",
+      "oct",
+      "nov",
+      "dic",
+    ],
+    today: "Hoy",
+    clear: "Limpiar",
+    dateFormat: "dd/mm/yy", // Formato de fecha en español
+    weekHeader: "Sm",
+  };
   const [formData, setFormData] = useState({
     dni: "",
     ruc: "",
@@ -33,6 +79,22 @@ export default function ClienteForm() {
     { label: "Tradicional", value: "tradicional" },
     { label: "Mayorista", value: "mayorista" },
     { label: "Provincia", value: "provincia" },
+  ];
+
+  const provinciasPuno = [
+    { label: "Puno", value: "puno" },
+    { label: "Azángaro", value: "azangaro" },
+    { label: "Carabaya", value: "carabaya" },
+    { label: "Chucuito", value: "chucuito" },
+    { label: "El Collao", value: "el_collao" }, // Nota: Se usa guion bajo para espacios en el value
+    { label: "Huancané", value: "huancane" },
+    { label: "Lampa", value: "lampa" },
+    { label: "Melgar", value: "melgar" },
+    { label: "Moho", value: "moho" },
+    { label: "San Antonio de Putina", value: "san_antonio_de_putina" },
+    { label: "San Román", value: "san_roman" },
+    { label: "Sandia", value: "sandia" },
+    { label: "Yunguyo", value: "yunguyu" },
   ];
 
   const handleInputChange = (e) => {
@@ -368,16 +430,26 @@ export default function ClienteForm() {
           >
             Provincia
           </label>
-          <InputText
-            placeholder="Ingrese la provincia de origen"
+
+          <Dropdown
             id="provincia"
             name="provincia"
             value={formData.provincia}
-            onChange={handleInputChange}
+            options={provinciasPuno}
+            onChange={(e) => handleDropdownChange(e, "provincia")}
+            placeholder="Seleccione un provincia"
             className={classNames({
               "p-invalid": submitted && !formData.provincia,
             })}
           />
+          {submitted && !formData.provincia && (
+            <Message
+              className="small-message"
+              severity="error"
+              text="Canal es requerido"
+            />
+          )}
+
           {submitted && !formData.provincia && (
             <Message
               className="small-message"
@@ -421,6 +493,7 @@ export default function ClienteForm() {
             Fecha Inicio
           </label>
           <Calendar
+            firstDayOfWeek
             id="fechaInicio"
             name="fechaInicio"
             value={formData.fechaInicio}

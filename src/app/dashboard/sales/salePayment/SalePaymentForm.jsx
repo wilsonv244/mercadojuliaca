@@ -8,6 +8,7 @@ import { Toast } from "primereact/toast";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { Dropdown } from "primereact/dropdown";
 import { getEmployeeFormSaler } from "@/infraestructure/useCasesNav/Client/getEmployeeUseCase";
+import { getSaleByReceiptNumber } from "@/infraestructure/useCasesNav/Sale/salePaymentUseCase";
 
 export default function SalePaymentForm() {
   const [formData, setFormData] = useState({
@@ -17,6 +18,9 @@ export default function SalePaymentForm() {
     description: "",
     payment_amount: "",
   });
+
+  const [MontoTotal, setMontoTotal] = useState(0);
+  const [MontoDeuda, setMontoDeuda] = useState(0);
 
   const [submitted, setSubmitted] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
@@ -52,8 +56,25 @@ export default function SalePaymentForm() {
       formData.payment_amount
     );
   };
+  const llamarApiVenta = async () => {
+    console.log("id_sale");
+    console.log(id_sale.value);
+    const responseSalePayment = await getSaleByReceiptNumber(id_sale.value);
+    if (responseSalePayment.statusCode != 200) {
+      toast.current.show({
+        severity: "info",
+        summary: "Cancelado",
+        detail: "No se encontro datos con ese recibo",
+      });
+    }
+    setMontoDeuda(responseSalePayment.deuda_total);
+    setMontoTotal(responseSalePayment.total_amount);
+    console.log("responseSalePayment2");
+    console.log(responseSalePayment);
+  };
 
   const submitForm = async () => {
+    console.log(JSON.stringify(formData));
     if (validateForm()) {
       setLoading(true);
       try {
@@ -133,16 +154,29 @@ export default function SalePaymentForm() {
           >
             ID Venta
           </label>
-          <InputText
-            placeholder="Ingrese el ID de la venta"
-            id="id_sale"
-            name="id_sale"
-            value={formData.id_sale}
-            onChange={handleInputChange}
-            className={classNames({
-              "p-invalid": submitted && !formData.id_sale,
-            })}
-          />
+          <div className="flex justify-between">
+            <InputText
+              placeholder="Ingrese el ID de la venta"
+              id="id_sale"
+              name="id_sale"
+              value={formData.id_sale}
+              onChange={handleInputChange}
+              className={classNames({
+                "p-invalid": submitted && !formData.id_sale,
+              })}
+            />
+            <div className=" w-1/12">
+              <Button
+                onClick={() => llamarApiVenta()}
+                className="m-3"
+                icon="pi pi-search"
+                rounded
+                text
+                severity="success"
+                aria-label="Search"
+              />
+            </div>
+          </div>
           {submitted && !formData.id_sale && (
             <Message
               className="small-message"
@@ -164,10 +198,7 @@ export default function SalePaymentForm() {
               id="MontoTotal"
               disabled
               name="MontoTotal"
-              value="0"
-              className={classNames({
-                "p-invalid": submitted,
-              })}
+              value={MontoTotal}
             />
           </div>
           <div className="field mb-3">
@@ -181,11 +212,8 @@ export default function SalePaymentForm() {
               placeholder="Ingrese el ID de la venta"
               id="MontoDeuda"
               name="MontoDeuda"
-              value="0"
+              value={MontoDeuda}
               disabled
-              className={classNames({
-                "p-invalid": submitted,
-              })}
             />
           </div>
         </div>
