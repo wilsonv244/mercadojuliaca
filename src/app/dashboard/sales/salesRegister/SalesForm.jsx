@@ -8,7 +8,7 @@ import { Dropdown } from "primereact/dropdown";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { getAllClientForm } from "@/infraestructure/useCasesNav/Client/getClientUseCase";
 import { getEmployeeFormSaler } from "@/infraestructure/useCasesNav/Client/getEmployeeUseCase";
-import { MontoConIgv } from "@/domain/utils/Amount";
+import { calcularIgv, MontoConIgv } from "@/domain/utils/Amount";
 
 export default function IngresoVentasForm() {
   const [formData, setFormData] = useState({
@@ -37,11 +37,10 @@ export default function IngresoVentasForm() {
     fetchData();
   }, []);
 
-  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name == "montoTotal") {
-      setMontoIgv(MontoConIgv(value));
+      setMontoIgv((value - calcularIgv(value)).toFixed(2));
     }
     setFormData({ ...formData, [name]: value });
   };
@@ -196,24 +195,41 @@ export default function IngresoVentasForm() {
         </div>
 
         {/* Monto Total */}
-        <div className="field mb-3">
-          <label
-            htmlFor="montoTotal"
-            className="text-[#003462] font-black text-sm mb-3"
-          >
-            Monto Total
-          </label>
-          <InputText
-            type="number"
-            id="montoTotal"
-            name="montoTotal"
-            value={formData.montoTotal}
-            onChange={handleInputChange}
-            placeholder="Ingrese el monto de la operación"
-            className={classNames({
-              "p-invalid": submitted && !formData.montoTotal,
-            })}
-          />
+        <div className="flex justify-between gap-3">
+          <div className="field mb-3 w-full">
+            <label
+              htmlFor="montoTotal"
+              className="text-[#003462] font-black text-sm mb-3"
+            >
+              Monto Total
+            </label>
+            <InputText
+              type="number"
+              id="montoTotal"
+              name="montoTotal"
+              value={formData.montoTotal}
+              onChange={handleInputChange}
+              placeholder="Ingrese el monto de la operación"
+              className={classNames({
+                "p-invalid": submitted && !formData.montoTotal,
+              })}
+            />
+          </div>
+          <div className="field mb-3 w-full">
+            <label
+              htmlFor="nroComprobante"
+              className="text-[#003462] font-black text-sm mb-3"
+            >
+              Monto sin IGV
+            </label>
+            <InputText
+              disabled
+              placeholder="Monto sin IGV"
+              name="nroComprobante"
+              value={montoIgv}
+              onChange={handleInputChange}
+            />
+          </div>
         </div>
 
         {/* Tipo de Comprobante */}
@@ -268,36 +284,6 @@ export default function IngresoVentasForm() {
               text="Nro Comprobante es requerido"
             />
           )}
-        </div>
-        <div className="flex justify-between">
-          <div className="field mb-3">
-            <label
-              htmlFor="nroComprobante"
-              className="text-[#003462] font-black text-sm mb-3"
-            >
-              Monto con IGV
-            </label>
-            <InputText
-              placeholder="Monto con IGV"
-              name="nroComprobante"
-              value={montoIgv}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div className="field mb-3">
-            <label
-              htmlFor="nroComprobante"
-              className="text-[#003462] font-black text-sm mb-3"
-            >
-              Monto sin IGV
-            </label>
-            <InputText
-              placeholder="Monto sin IGV"
-              name="nroComprobante"
-              value={formData.montoTotal}
-              onChange={handleInputChange}
-            />
-          </div>
         </div>
 
         <Button
