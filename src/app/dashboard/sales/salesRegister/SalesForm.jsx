@@ -8,6 +8,7 @@ import { Dropdown } from "primereact/dropdown";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { getAllClientForm } from "@/infraestructure/useCasesNav/Client/getClientUseCase";
 import { getEmployeeFormSaler } from "@/infraestructure/useCasesNav/Client/getEmployeeUseCase";
+import { MontoConIgv } from "@/domain/utils/Amount";
 
 export default function IngresoVentasForm() {
   const [formData, setFormData] = useState({
@@ -36,17 +37,7 @@ export default function IngresoVentasForm() {
     fetchData();
   }, []);
 
-  const MontoConIgv = (montoSinIgv) => {
-    console.log(montoSinIgv);
-    if (montoSinIgv > 0) {
-      const igv = 0.18;
-      const montoConIgv = montoSinIgv
-        ? parseFloat(montoSinIgv) * (1 + igv)
-        : "";
-      return montoConIgv.toFixed(2);
-    }
-    return 0;
-  };
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name == "montoTotal") {
