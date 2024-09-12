@@ -1,0 +1,12 @@
+{
+  "Menus": [
+    {
+      "cName": "Solicitud Compra",
+      "id": 1
+    },
+    {
+      "cName": "Solicitud Orden Compra",
+      "id": 2
+    }
+  ]
+}

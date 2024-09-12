@@ -1,9 +1,11 @@
 "use client";
 import { useState } from "react";
 import { DataTableLista } from "../tools/dataTable";
-import lsOpciones from "../sales/lsMenus.json";
+import lsOpciones from "../costos/opcionesMenu.json";
 import IngresoVentasForm from "../sales/salesRegister/SalesForm";
 import SalePaymentForm from "../sales/salePayment/SalePaymentForm";
+import PurchaseRequestForm from "./purchaseRequest/solicitudCompra";
+import PurchaseOrderForm from "./purchaseOrder/formPurchaseOrder";
 
 export default function AdminCostos() {
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -28,10 +30,10 @@ export default function AdminCostos() {
             (() => {
               console.log(selectItem.cName);
               switch (selectItem.cName) {
-                case "Ingresos":
-                  return <IngresoVentasForm />;
-                case "Registrar Venta":
-                  return <SalePaymentForm />;
+                case "Solicitud Compra":
+                  return <PurchaseRequestForm />;
+                case "Solicitud Orden Compra":
+                  return <PurchaseOrderForm />;
 
                 default:
                   return null;

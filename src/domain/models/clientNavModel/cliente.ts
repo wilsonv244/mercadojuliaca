@@ -17,3 +17,8 @@ export interface OptionSeller {
   name: string;
   code: string;
 }
+
+export interface OptionMenu {
+  label: string;
+  value: string;
+}
