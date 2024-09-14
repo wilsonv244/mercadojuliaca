@@ -7,6 +7,14 @@
     {
       "cName": "Solicitud Orden Compra",
       "id": 2
+    },
+    {
+      "cName": "Solicitud de Embarque",
+      "id": 3
+    },
+    {
+      "cName": "Liquidez de Cuentas a pagar",
+      "id": 4
     }
   ]
 }

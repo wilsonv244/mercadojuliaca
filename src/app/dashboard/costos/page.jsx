@@ -6,6 +6,8 @@ import IngresoVentasForm from "../sales/salesRegister/SalesForm";
 import SalePaymentForm from "../sales/salePayment/SalePaymentForm";
 import PurchaseRequestForm from "./purchaseRequest/solicitudCompra";
 import PurchaseOrderForm from "./purchaseOrder/formPurchaseOrder";
+import PurchaseShipmentForm from "./purchaseShipment/formPurchaseShipment";
+import ShipmentPaymentForm from "./shipmentPayment/formShipmentPayment";
 
 export default function AdminCostos() {
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -34,6 +36,10 @@ export default function AdminCostos() {
                   return <PurchaseRequestForm />;
                 case "Solicitud Orden Compra":
                   return <PurchaseOrderForm />;
+                case "Solicitud de Embarque":
+                  return <PurchaseShipmentForm />;
+                case "Liquidez de Cuentas a pagar":
+                  return <ShipmentPaymentForm />;
 
                 default:
                   return null;
