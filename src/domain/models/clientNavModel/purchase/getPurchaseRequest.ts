@@ -7,3 +7,11 @@ export interface responsePurchaseRequ {
   status_code: number | null;
   message: string | null;
 }
+
+export interface responsePurchaseOrder {
+  ruc: string;
+  supplier_name: string;
+  cost: number;
+  status_code: number | null;
+  message: string | null;
+}

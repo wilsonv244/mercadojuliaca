@@ -16,7 +16,6 @@ export async function getSaleByReceiptNumber(
     const saleResponse = await fetch(
       `/api/sale/getSaleByReceip?receipt_number=${receiptNumber}`
     );
-
     if (!saleResponse.ok) {
       return {
         ...initialResponse,
@@ -26,7 +25,6 @@ export async function getSaleByReceiptNumber(
     }
 
     const paymentData: SaleEntity[] = await saleResponse.json();
-
     if (paymentData.length === 0) {
       return {
         ...initialResponse,
@@ -36,14 +34,20 @@ export async function getSaleByReceiptNumber(
     }
 
     const sale = paymentData[0];
+    console.log("sale");
+    console.log(sale);
     const totalPaid = sale.SalePayments.reduce(
-      (total, item) => total + Number(item.payment_amount),
+      (total, item) =>
+        total +
+        (item.is_credit_note
+          ? -Math.abs(Number(item.payment_amount)) || 0
+          : Number(item.payment_amount) || 0),
       0
     );
 
     return {
       total_amount: Number(sale.total_amount),
-      deuda_total: Number(sale.total_amount) - totalPaid,
+      deuda_total: totalPaid,
       statusCode: 200,
       message: "success",
       id_sale: sale.id_sale,

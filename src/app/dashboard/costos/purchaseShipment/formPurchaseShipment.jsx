@@ -7,6 +7,7 @@ import { classNames } from "primereact/utils";
 import { Toast } from "primereact/toast";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { Dropdown } from "primereact/dropdown";
+import { getPurchaseOrderById } from "@/infraestructure/useCasesNav/purchase/getPurchaseOrderbyId";
 //import { getOrders } from "@/infraestructure/useCasesNav/purchase/getOrders"; // Assuming there's a function to get orders
 
 export default function PurchaseShipmentForm() {
@@ -23,15 +24,8 @@ export default function PurchaseShipmentForm() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [orderOptions, setOrderOptions] = useState([]);
+  const [requests, setRequests] = useState({});
   const toast = useRef(null);
-
-  useEffect(() => {
-    // async function fetchOrders() {
-    //   const orders = await getOrders(); // Obtener la lista de órdenes
-    //   setOrderOptions(orders);
-    // }
-    // fetchOrders();
-  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -46,7 +40,6 @@ export default function PurchaseShipmentForm() {
     setSubmitted(true);
     return (
       Number(formData.id_order) &&
-      formData.shipment_date &&
       formData.receipt_type &&
       formData.receipt_number &&
       formData.payment_type &&
@@ -55,6 +48,7 @@ export default function PurchaseShipmentForm() {
   };
 
   const submitForm = async () => {
+    console.log(formData);
     if (validateForm()) {
       setLoading(true);
       try {
@@ -71,7 +65,7 @@ export default function PurchaseShipmentForm() {
           toast.current.show({
             severity: "success",
             summary: "Éxito",
-            detail: "Envío registrado correctamente",
+            detail: "Solicitud de Enbarque registrado correctamente",
           });
           resetForm(); // Limpiar el formulario tras la operación exitosa
         } else {
@@ -118,7 +112,14 @@ export default function PurchaseShipmentForm() {
       payment_due_date: null,
       payment_status: false,
     });
+    setRequests({});
     setSubmitted(false);
+  };
+
+  const llamarApiVenta = async () => {
+    const apiPurchaseId = await getPurchaseOrderById(formData.id_order);
+    setRequests(apiPurchaseId);
+    console.log(requests);
   };
 
   return (
@@ -166,19 +167,23 @@ export default function PurchaseShipmentForm() {
           )}
         </div>
 
-        <div className="flex justify-between gap-2 bg-red-50 p-3 rounded-lg">
+        <div
+          className={`flex justify-between gap-2  p-3 rounded-lg ${
+            requests.status_code !== 200 ? "bg-red-50" : "bg-green-50"
+          }`}
+        >
           <div className="field w-full">
             <label
               htmlFor="item"
               className="text-[#003462] font-black text-sm mb-3"
             >
-              Artículo
+              Razón Social del proveedor
             </label>
             <InputText
               id="item"
               disabled
               name="item"
-              value="Refrigeradora"
+              value={requests.supplier_name || "" + ` - ` + requests.ruc || ""}
               placeholder="Descripción del artículo"
             />
           </div>
@@ -187,14 +192,14 @@ export default function PurchaseShipmentForm() {
               htmlFor="quantity"
               className="text-[#003462] font-black text-sm mb-3"
             >
-              Cantidad
+              Monto del Producto
             </label>
             <InputText
               id="quantity"
               name="quantity"
               disabled
-              value={180}
-              placeholder="Cantidad del artículo"
+              value={requests.cost || ""}
+              placeholder="Monto del producto"
             />
           </div>
         </div>

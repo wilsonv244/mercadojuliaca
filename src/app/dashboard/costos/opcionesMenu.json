@@ -15,6 +15,10 @@
     {
       "cName": "Liquidez de Cuentas a pagar",
       "id": 4
+    },
+    {
+      "cName": "Nota de Créditos de costos",
+      "id": 5
     }
   ]
 }

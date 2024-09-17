@@ -10,7 +10,6 @@ export default async function handler(
   if (req.method === "POST") {
     const {
       id_order,
-      shipment_date,
       receipt_type,
       receipt_number,
       payment_type,
@@ -20,7 +19,6 @@ export default async function handler(
 
     if (
       !id_order ||
-      !shipment_date ||
       !receipt_type ||
       !receipt_number ||
       !payment_type ||
@@ -34,8 +32,8 @@ export default async function handler(
     try {
       const newShipment = await prisma.purchaseShipment.create({
         data: {
-          id_order,
-          shipment_date: new Date(shipment_date),
+          id_order: Number(id_order),
+          shipment_date: new Date(),
           receipt_type,
           receipt_number,
           payment_type,

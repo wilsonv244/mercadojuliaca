@@ -29,6 +29,7 @@ export default async function handler(
           receipt_date: true,
           SalePayments: {
             select: {
+              is_credit_note: true,
               payment_amount: true,
               description: true,
               payment_registration_date: true,

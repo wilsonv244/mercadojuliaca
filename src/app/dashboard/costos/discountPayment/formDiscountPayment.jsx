@@ -8,11 +8,12 @@ import { Toast } from "primereact/toast";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { getShipPayDataByIdUseCase } from "@/infraestructure/useCasesNav/shipment/getShipPayDataFormUseCase";
 
-export default function ShipmentPaymentForm() {
+export default function DiscountPaymentCost() {
   const [formData, setFormData] = useState({
     id_shipment: "",
     payment_date: null,
     payment_amount: "",
+    description: "",
   });
 
   const [submitted, setSubmitted] = useState(false);
@@ -39,14 +40,6 @@ export default function ShipmentPaymentForm() {
   const submitForm = async () => {
     if (validateForm()) {
       setLoading(true);
-      if (Number(formData.payment_amount) >= requests.amount_pending) {
-        toast.current.show({
-          severity: "info",
-          summary: "Cancelado",
-          detail: "El monto supera el saldo de la deuda",
-        });
-        return;
-      }
       try {
         console.log(formData);
         const response = await fetch("/api/shipment/saveShipmentPayment", {
@@ -55,7 +48,9 @@ export default function ShipmentPaymentForm() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            id_shipment: parseInt(formData.id_shipment),
+            description: formData.description,
+            is_credit_note: true,
+            id_shipment: parseInt(requests.id_shipment),
             payment_date: formData.payment_date.toISOString().split("T")[0], // Solo la fecha
             payment_amount: parseFloat(formData.payment_amount),
           }),
@@ -108,13 +103,17 @@ export default function ShipmentPaymentForm() {
       id_shipment: "",
       payment_date: null,
       payment_amount: "",
+      description: "",
     });
     setSubmitted(false);
     setRequests({});
   };
 
   const llamarApiVenta = async () => {
-    const apiPurchaseId = await getShipPayDataByIdUseCase(formData.id_shipment);
+    const apiPurchaseId = await getShipPayDataByIdUseCase(
+      null,
+      formData.id_shipment
+    );
     setRequests(apiPurchaseId);
     console.log(apiPurchaseId);
   };
@@ -131,12 +130,12 @@ export default function ShipmentPaymentForm() {
             htmlFor="id_shipment"
             className="text-[#003462] font-black text-sm mb-3"
           >
-            ID del Envío
+            Ingrese Numero de Comprobante
           </label>
           <div className="flex justify-between">
             <InputText
               value={formData.id_shipment}
-              placeholder="Buscar solicitud de Embarque"
+              placeholder="Buscar por Número de comprobante"
               name="id_shipment"
               onChange={handleInputChange}
               className={classNames({
@@ -310,6 +309,22 @@ export default function ShipmentPaymentForm() {
               text="Monto de Pago es requerido"
             />
           )}
+        </div>
+
+        <div className="field w-full mb-3">
+          <label
+            htmlFor="description"
+            className="text-[#003462] font-black text-sm mb-3"
+          >
+            Sustento de Descuento
+          </label>
+          <InputText
+            id="description"
+            name="description"
+            onChange={handleInputChange}
+            value={formData.description}
+            placeholder="Escriba el sustento del descuento"
+          />
         </div>
 
         <Button

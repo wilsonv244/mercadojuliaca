@@ -7,10 +7,14 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === "POST") {
-    const { id_shipment, payment_date, payment_amount }: ShipmentPaymentData =
-      req.body;
+    const {
+      description,
+      id_shipment,
+      is_credit_note,
+      payment_date,
+      payment_amount,
+    }: ShipmentPaymentData = req.body;
 
-    
     if (!id_shipment || !payment_date || !payment_amount) {
       return res.status(400).json({ error: "Faltan campos obligatorios" });
     }
@@ -18,9 +22,13 @@ export default async function handler(
     try {
       const newPayment = await prisma.shipmentPayment.create({
         data: {
+          description,
+          is_credit_note,
           id_shipment,
           payment_date: new Date(payment_date),
-          payment_amount,
+          payment_amount: is_credit_note
+            ? Math.abs(payment_amount)
+            : payment_amount,
         },
       });
 

@@ -22,6 +22,7 @@ export default async function handler(
         },
         include: {
           request: true,
+          supplier: true,
         },
       });
 
@@ -44,6 +45,11 @@ export default async function handler(
           quantity: orderData.request.quantity,
           unit_of_measurement: orderData.request.unit_of_measurement,
           planned_cost: Number(orderData.request.planned_cost),
+        },
+        purchaseSupplier: {
+          ruc: orderData.supplier.ruc,
+          supplier_name: orderData.supplier.supplier_name,
+          legal_name: orderData.supplier.legal_name,
         },
       };
 

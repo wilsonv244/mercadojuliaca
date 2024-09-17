@@ -4,6 +4,7 @@ import { DataTableLista } from "../tools/dataTable";
 import lsOpciones from "../sales/lsMenus.json";
 import IngresoVentasForm from "./salesRegister/SalesForm";
 import SalePaymentForm from "./salePayment/SalePaymentForm";
+import DescountSaleForm from "./formDescountSale";
 
 export default function AdminPanelMain() {
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -32,6 +33,8 @@ export default function AdminPanelMain() {
                   return <IngresoVentasForm />;
                 case "Registrar Venta":
                   return <SalePaymentForm />;
+                case "Nota de credito de ingresos":
+                  return <DescountSaleForm />;
 
                 default:
                   return null;

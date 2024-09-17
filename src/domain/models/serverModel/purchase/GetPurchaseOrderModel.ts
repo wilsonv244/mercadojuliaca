@@ -8,6 +8,11 @@ export interface PurchaseRequest {
   unit_of_measurement: string;
   planned_cost: number;
 }
+export interface purchaseWithSuplier {
+  ruc: string;
+  supplier_name: string;
+  legal_name: string | null;
+}
 
 export interface PurchaseOrderWithRequest {
   id_order: number;
@@ -16,4 +21,5 @@ export interface PurchaseOrderWithRequest {
   order_date: string;
   total_amount: number;
   purchaseRequest: PurchaseRequest;
+  purchaseSupplier: purchaseWithSuplier;
 }
