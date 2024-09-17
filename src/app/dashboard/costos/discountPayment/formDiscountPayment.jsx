@@ -39,6 +39,14 @@ export default function DiscountPaymentCost() {
 
   const submitForm = async () => {
     if (validateForm()) {
+      if (formData.payment_amount > requests.amount_pending) {
+        toast.current.show({
+          severity: "warn",
+          summary: "Éxito",
+          detail: "El monto no debe ser mayor al saldo",
+        });
+        return;
+      }
       setLoading(true);
       try {
         const response = await fetch("/api/shipment/saveShipmentPayment", {

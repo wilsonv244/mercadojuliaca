@@ -59,11 +59,7 @@ export async function getShipPayDataByIdUseCase(
 
     // Calculate the pending amount
     const amount_pending_data: number = data.reduce(
-      (total, venta) =>
-        total +
-        (venta.is_credit_note
-          ? -Math.abs(Number(venta.payment_amount)) || 0
-          : Number(venta.payment_amount) || 0),
+      (total, venta) => total + Number(venta.payment_amount),
       0
     );
 

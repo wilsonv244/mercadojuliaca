@@ -87,14 +87,11 @@ export default function DescountSaleForm() {
   const submitForm = async () => {
     if (validateForm()) {
       const idEmpleado = Number(formData.id_employee.code);
-      if (
-        formData.payment_amount >
-        Number(ventaData.total_amount - ventaData.deuda_total)
-      ) {
+      if (formData.payment_amount > Number(ventaData.deuda_total)) {
         toast.current.show({
           severity: "warn",
           summary: "Éxito",
-          detail: "El monto no debe superar al monto total",
+          detail: "El monto no debe superar al monto deuda",
         });
         return;
       }

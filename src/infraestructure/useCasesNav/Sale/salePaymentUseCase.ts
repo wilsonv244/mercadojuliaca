@@ -31,11 +31,7 @@ export async function getSaleByReceiptNumber(
     console.log("sale");
     console.log(sale);
     const totalPaid = sale.SalePayments.reduce(
-      (total, item) =>
-        total +
-        (item.is_credit_note
-          ? -Math.abs(Number(item.payment_amount)) || 0
-          : Number(item.payment_amount) || 0),
+      (total, item) => total + Number(item.payment_amount),
       0
     );
     console.log("totalPaid");
