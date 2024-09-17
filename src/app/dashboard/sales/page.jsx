@@ -27,7 +27,6 @@ export default function AdminPanelMain() {
           </h2>
           {selectItem != null ? (
             (() => {
-              console.log(selectItem.cName);
               switch (selectItem.cName) {
                 case "Ingresos":
                   return <IngresoVentasForm />;

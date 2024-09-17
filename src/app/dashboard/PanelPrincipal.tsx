@@ -16,10 +16,6 @@ const getOut: LogoutFunction = (label) => {
     Cookies.remove("cUsuario");
   }
 };
-const user: string | null = localStorage.getItem("user_login");
-const userProfile = JSON.parse(user ?? "");
-console.log("userProfile");
-console.log(userProfile.user_name);
 
 const LinkPage = [
   {
@@ -43,6 +39,21 @@ const LinkPage = [
 export default function PanelPrincipal() {
   const pathRoute = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [UserProfile, setUserProfile] = useState({
+    id_user: "",
+    user_name: "",
+    user_password: "",
+    profile: "",
+    status: true,
+    created_at: "",
+    updated_at: "",
+  });
+  const user: string | null = localStorage.getItem("user_login");
+  useEffect(() => {
+    const userProfile = JSON.parse(user ?? "");
+
+    setUserProfile(userProfile);
+  }, []);
 
   return (
     <header className="bg-[#fbb517] shadow-md mb-5">
@@ -61,19 +72,19 @@ export default function PanelPrincipal() {
               <Tag
                 className="mr-1"
                 icon="pi pi-user"
-                value={userProfile.user_name || ""}
+                value={UserProfile.user_name || ""}
               ></Tag>
               <Tag
                 className="mr-1"
                 icon="pi pi-info-circle"
                 severity="info"
-                value={userProfile.profile || ""}
+                value={UserProfile.profile || ""}
               ></Tag>
             </div>
             {LinkPage.map(({ icon, label, route }) => {
               const isActive: boolean | undefined =
                 pathRoute?.startsWith(route);
-              console.log(route);
+
               const className = `${icon} ml-2`;
               return (
                 <>

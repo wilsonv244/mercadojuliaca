@@ -14,7 +14,7 @@ export default function AdminCostos() {
   const [selectItem, setSelectItem] = useState(null);
   const user = localStorage.getItem("user_login");
   const userProfile = JSON.parse(user);
-  console.log(userProfile);
+
   return (
     <>
       <div className="mx-auto w-11/12 lg:flex lg:gap-10 lg:justify-between">
@@ -37,7 +37,6 @@ export default function AdminCostos() {
           </h2>
           {selectItem != null ? (
             (() => {
-              console.log(selectItem.cName);
               switch (selectItem.cName) {
                 case "Solicitud Compra":
                   return <PurchaseRequestForm />;

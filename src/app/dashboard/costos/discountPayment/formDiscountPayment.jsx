@@ -41,7 +41,6 @@ export default function DiscountPaymentCost() {
     if (validateForm()) {
       setLoading(true);
       try {
-        console.log(formData);
         const response = await fetch("/api/shipment/saveShipmentPayment", {
           method: "POST",
           headers: {
@@ -115,7 +114,6 @@ export default function DiscountPaymentCost() {
       formData.id_shipment
     );
     setRequests(apiPurchaseId);
-    console.log(apiPurchaseId);
   };
 
   return (

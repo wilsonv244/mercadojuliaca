@@ -37,12 +37,11 @@ export default function PurchaseOrderForm() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    console.log(value);
-    console.log(name);
+
     if (name == "total_amount") {
       setMontoSinIgv((value - calcularIgv(value)).toFixed(2));
     }
-    console.log(value);
+
     setFormData({ ...formData, [name]: value });
   };
 

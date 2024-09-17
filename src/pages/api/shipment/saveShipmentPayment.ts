@@ -14,8 +14,9 @@ export default async function handler(
       payment_date,
       payment_amount,
     }: ShipmentPaymentData = req.body;
-
-    if (!id_shipment || !payment_date || !payment_amount) {
+    console.log("req.bod");
+    console.log(req.body);
+    if (!id_shipment || !payment_date) {
       return res.status(400).json({ error: "Faltan campos obligatorios" });
     }
 

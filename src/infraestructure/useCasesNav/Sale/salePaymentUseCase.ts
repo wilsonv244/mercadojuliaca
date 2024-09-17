@@ -38,10 +38,15 @@ export async function getSaleByReceiptNumber(
           : Number(item.payment_amount) || 0),
       0
     );
-
+    console.log("totalPaid");
+    console.log(totalPaid);
     return {
       total_amount: Number(sale.total_amount),
-      deuda_total: totalPaid,
+      deuda_total: Number(
+        totalPaid == 0
+          ? sale.total_amount
+          : Number(sale.total_amount) - totalPaid
+      ),
       statusCode: 200,
       message: "success",
       id_sale: sale.id_sale,

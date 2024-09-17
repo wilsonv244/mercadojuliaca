@@ -39,23 +39,23 @@ export default function ShipmentPaymentForm() {
   const submitForm = async () => {
     if (validateForm()) {
       setLoading(true);
-      if (Number(formData.payment_amount) >= requests.amount_pending) {
+      if (Number(formData.payment_amount) > requests.amount_pending) {
         toast.current.show({
           severity: "info",
           summary: "Cancelado",
           detail: "El monto supera el saldo de la deuda",
         });
+        setLoading(false);
         return;
       }
       try {
-        console.log(formData);
         const response = await fetch("/api/shipment/saveShipmentPayment", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            id_shipment: parseInt(formData.id_shipment),
+            id_shipment: parseInt(requests.id_shipment),
             payment_date: formData.payment_date.toISOString().split("T")[0], // Solo la fecha
             payment_amount: parseFloat(formData.payment_amount),
           }),
@@ -114,9 +114,13 @@ export default function ShipmentPaymentForm() {
   };
 
   const llamarApiVenta = async () => {
-    const apiPurchaseId = await getShipPayDataByIdUseCase(formData.id_shipment);
-    setRequests(apiPurchaseId);
+    const apiPurchaseId = await getShipPayDataByIdUseCase(
+      null,
+      formData.id_shipment
+    );
+    console.log("apiPurchaseId");
     console.log(apiPurchaseId);
+    setRequests(apiPurchaseId);
   };
 
   return (

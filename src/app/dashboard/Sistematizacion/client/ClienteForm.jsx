@@ -286,6 +286,7 @@ export default function ClienteForm() {
               placeholder="Ingrese su Primer telefono"
               id="telefono1"
               name="telefono1"
+              maxLength={9}
               value={formData.telefono1}
               onChange={handleInputChange}
               className={classNames({
@@ -308,6 +309,7 @@ export default function ClienteForm() {
               Telefono 2
             </label>
             <InputText
+              maxLength={9}
               placeholder="Ingrese su segundo telefono"
               id="telefono2"
               name="telefono2"

@@ -18,22 +18,21 @@ export async function getShipPayDataByIdUseCase(
   };
 
   try {
-    let url = "";
-    console.log("url");
-    console.log(id_order);
-    console.log(receipt_number);
-    // Determinar qué parámetro usar en la búsqueda
-    if (id_order) {
-      url = `/api/shipment/getShipmentPayment?id_shipment=${id_order}`;
-    } else if (receipt_number) {
-      url = `/api/shipment/getShipmentPayment?receipt_number=${receipt_number}`;
-    } else {
+    // Validate input parameters
+    if (!id_order && !receipt_number) {
       return {
         ...paymentData,
         status_code: 400,
         message: "Debe proporcionar id_order o receipt_number para la búsqueda",
       };
     }
+
+    // Construct the query string based on the input parameters
+    const params = new URLSearchParams();
+    if (id_order) params.append("id_shipment", id_order.toString());
+    if (receipt_number) params.append("receipt_number", receipt_number);
+
+    const url = `/api/shipment/getShipmentPayment?${params.toString()}`;
 
     const response = await fetch(url);
 
@@ -58,6 +57,7 @@ export async function getShipPayDataByIdUseCase(
     const order = data[0].shipment.order;
     const total_amount: number = Number(order.total_amount);
 
+    // Calculate the pending amount
     const amount_pending_data: number = data.reduce(
       (total, venta) =>
         total +
@@ -66,9 +66,6 @@ export async function getShipPayDataByIdUseCase(
           : Number(venta.payment_amount) || 0),
       0
     );
-
-    console.log("amount_pending_data2");
-    console.log(amount_pending_data);
 
     const isPaid = amount_pending_data >= total_amount;
 
@@ -86,7 +83,9 @@ export async function getShipPayDataByIdUseCase(
   } catch (error) {
     return {
       ...paymentData,
-      message: `Error al llamar a la API: ${error || error}`,
+      message: `Error al llamar a la API: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
     };
   }
 }

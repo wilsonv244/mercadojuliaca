@@ -41,7 +41,6 @@ export default function DescountSaleForm() {
   };
 
   const handleDropdownChange = (value, name) => {
-    console.log(value.name);
     setFormData({ ...formData, [name]: value });
   };
 
@@ -64,6 +63,8 @@ export default function DescountSaleForm() {
       const responseSalePayment = await getSaleByReceiptNumber(
         formData.id_sale
       );
+      console.log("responseSalePayment");
+      console.log(responseSalePayment);
       if (responseSalePayment.statusCode !== 200) {
         toast.current.show({
           severity: "info",
@@ -84,14 +85,21 @@ export default function DescountSaleForm() {
   };
 
   const submitForm = async () => {
-    console.log("formData");
-    console.log(formData);
     if (validateForm()) {
       const idEmpleado = Number(formData.id_employee.code);
-      console.log(idEmpleado);
+      if (
+        formData.payment_amount >
+        Number(ventaData.total_amount - ventaData.deuda_total)
+      ) {
+        toast.current.show({
+          severity: "warn",
+          summary: "Éxito",
+          detail: "El monto no debe superar al monto total",
+        });
+        return;
+      }
       setLoading(true);
       try {
-        console.log("entrando");
         const response = await fetch("/api/payment/savePayment", {
           method: "POST",
           headers: {
@@ -99,16 +107,17 @@ export default function DescountSaleForm() {
           },
           body: JSON.stringify({
             is_credit_note: true,
-            id_sale: idSaleVenta,
+            id_sale: ventaData.id_sale,
             id_employee: idEmpleado,
             payment_registration_date: formData.payment_registration_date,
             description: formData.description,
             payment_amount: formData.payment_amount,
           }),
         });
-
+        console.log("response");
         const result = await response.json();
         console.log(result);
+
         if (response.ok) {
           toast.current.show({
             severity: "success",
@@ -124,6 +133,7 @@ export default function DescountSaleForm() {
           });
         }
       } catch (error) {
+        console.log("error");
         console.log(error);
         toast.current.show({
           severity: "error",
@@ -131,11 +141,9 @@ export default function DescountSaleForm() {
           detail: "Error de conexión con el servidor",
         });
       } finally {
-        console.log("no ingresa");
         setLoading(false);
       }
     } else {
-      console.log("no ingresa");
     }
   };
 
@@ -163,8 +171,7 @@ export default function DescountSaleForm() {
       description: "",
       payment_amount: "",
     });
-    setMontoTotal(0);
-    setMontoDeuda(0);
+    setVentaData({});
     setSubmitted(false);
   };
 
@@ -244,7 +251,7 @@ export default function DescountSaleForm() {
               placeholder="Monto Deuda"
               id="MontoDeuda"
               name="MontoDeuda"
-              value={ventaData.deuda_total || ""}
+              value={ventaData.deuda_total || 0}
               disabled
             />
           </div>

@@ -8,12 +8,11 @@ import { Toast } from "primereact/toast";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { Dropdown } from "primereact/dropdown";
 import { getPurchaseOrderById } from "@/infraestructure/useCasesNav/purchase/getPurchaseOrderbyId";
-//import { getOrders } from "@/infraestructure/useCasesNav/purchase/getOrders"; // Assuming there's a function to get orders
 
 export default function PurchaseShipmentForm() {
   const [formData, setFormData] = useState({
     id_order: "",
-    shipment_date: null,
+    shipment_date: null, // Se utiliza el campo shipment_date
     receipt_type: "",
     receipt_number: "",
     payment_type: "",
@@ -23,7 +22,6 @@ export default function PurchaseShipmentForm() {
 
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [orderOptions, setOrderOptions] = useState([]);
   const [requests, setRequests] = useState({});
   const toast = useRef(null);
 
@@ -48,7 +46,6 @@ export default function PurchaseShipmentForm() {
   };
 
   const submitForm = async () => {
-    console.log(formData);
     if (validateForm()) {
       setLoading(true);
       try {
@@ -61,12 +58,35 @@ export default function PurchaseShipmentForm() {
         });
 
         const result = await response.json();
+        console.log("result");
+        console.log(result);
+        console.log(result.shipment.id_shipment);
+
+        const responseSavePayment = await fetch(
+          "/api/shipment/saveShipmentPayment",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              id_shipment: parseInt(result.shipment.id_shipment),
+              payment_date: new Date().toISOString().split("T")[0], // Fecha actual
+              payment_amount: 1, // El monto es 0
+            }),
+          }
+        );
+
+        console.log("responseSavePayment");
+        console.log(await responseSavePayment.json());
+
         if (response.ok) {
           toast.current.show({
             severity: "success",
             summary: "Éxito",
-            detail: "Solicitud de Enbarque registrado correctamente",
+            detail: "Solicitud de Envío registrada correctamente",
           });
+
           resetForm(); // Limpiar el formulario tras la operación exitosa
         } else {
           toast.current.show({
@@ -119,9 +139,7 @@ export default function PurchaseShipmentForm() {
   const llamarApiVenta = async () => {
     const apiPurchaseId = await getPurchaseOrderById(formData.id_order);
     setRequests(apiPurchaseId);
-    console.log(requests);
   };
-
   return (
     <div className="card w-4/5 m-auto">
       <Toast ref={toast} />

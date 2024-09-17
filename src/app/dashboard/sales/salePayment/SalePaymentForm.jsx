@@ -20,9 +20,6 @@ export default function SalePaymentForm() {
   });
 
   const [ventaData, setVentaData] = useState({});
-  const [MontoDeuda, setMontoDeuda] = useState(0);
-  const [idSaleVenta, setIdSaleVenta] = useState(0);
-
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [optionSeller, setOptionSeller] = useState([]);
@@ -42,7 +39,6 @@ export default function SalePaymentForm() {
   };
 
   const handleDropdownChange = (value, name) => {
-    console.log(value.name);
     setFormData({ ...formData, [name]: value });
   };
 
@@ -75,6 +71,8 @@ export default function SalePaymentForm() {
         return;
       }
       setVentaData(responseSalePayment);
+      console.log("responseSalePayment");
+      console.log(responseSalePayment);
     } catch (error) {
       toast.current.show({
         severity: "error",
@@ -85,14 +83,19 @@ export default function SalePaymentForm() {
   };
 
   const submitForm = async () => {
-    console.log("formData");
-    console.log(formData);
     if (validateForm()) {
       const idEmpleado = Number(formData.id_employee.code);
-      console.log(idEmpleado);
+
       setLoading(true);
       try {
-        console.log("entrando");
+        if (formData.payment_amount > ventaData.deuda_total) {
+          toast.current.show({
+            severity: "warn",
+            summary: "Éxito",
+            detail: "El pago supera el monto de la deuda",
+          });
+          return;
+        }
         const response = await fetch("/api/payment/savePayment", {
           method: "POST",
           headers: {
@@ -108,7 +111,7 @@ export default function SalePaymentForm() {
         });
 
         const result = await response.json();
-        console.log(result);
+
         if (response.ok) {
           toast.current.show({
             severity: "success",
@@ -124,18 +127,15 @@ export default function SalePaymentForm() {
           });
         }
       } catch (error) {
-        console.log(error);
         toast.current.show({
           severity: "error",
           summary: "Error",
           detail: "Error de conexión con el servidor",
         });
       } finally {
-        console.log("no ingresa");
         setLoading(false);
       }
     } else {
-      console.log("no ingresa");
     }
   };
 
@@ -243,7 +243,7 @@ export default function SalePaymentForm() {
               placeholder="Monto Deuda"
               id="MontoDeuda"
               name="MontoDeuda"
-              value={ventaData.deuda_total || ""}
+              value={ventaData.deuda_total || 0}
               disabled
             />
           </div>
