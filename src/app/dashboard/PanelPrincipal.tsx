@@ -16,9 +16,17 @@ const getOut: LogoutFunction = (label) => {
     Cookies.remove("cUsuario");
   }
 };
+const user: string | null = localStorage.getItem("user_login");
+const userProfile = JSON.parse(user ?? "");
+console.log("userProfile");
+console.log(userProfile.user_name);
 
 const LinkPage = [
-  { icon: "pi pi-spin pi-cog", label: "Sistematización", route: "/dashboard/Sistematizacion" },
+  {
+    icon: "pi pi-spin pi-cog",
+    label: "Sistematización",
+    route: "/dashboard/Sistematizacion",
+  },
   {
     icon: "pi pi-bookmark-fill",
     label: "Ingresos",
@@ -35,12 +43,7 @@ const LinkPage = [
 export default function PanelPrincipal() {
   const pathRoute = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [user, setUsuario] = useState("");
-  const [perfil, setPerfil] = useState("");
-  useEffect(() => {
-    setUsuario(localStorage.getItem("cUsuario") ?? "usuario");
-    setPerfil(localStorage.getItem("cPerfil") ?? "Axel Daniel");
-  }, []);
+
   return (
     <header className="bg-[#fbb517] shadow-md mb-5">
       <nav
@@ -50,25 +53,26 @@ export default function PanelPrincipal() {
         <div className="flex w-full justify-between">
           <div className="flex lg:flex-1">
             <a href="#" className="-m-1">
-              <img
-                className="w-12"
-                src="/img/logo-lays.png"
-                alt=""
-              />
+              <img className="w-12" src="/img/logo-lays.png" alt="" />
             </a>
           </div>
           <Popover.Group className="hidden lg:flex lg:gap-x-12 lg:items-center text-black">
             <div className="card flex flex-wrap justify-content-center gap-2">
-              <Tag className="mr-1" icon="pi pi-user" value={user}></Tag>
+              <Tag
+                className="mr-1"
+                icon="pi pi-user"
+                value={userProfile.user_name || ""}
+              ></Tag>
               <Tag
                 className="mr-1"
                 icon="pi pi-info-circle"
                 severity="info"
-                value={perfil}
+                value={userProfile.profile || ""}
               ></Tag>
             </div>
             {LinkPage.map(({ icon, label, route }) => {
-              const isActive = pathRoute.startsWith(route);
+              const isActive: boolean | undefined =
+                pathRoute?.startsWith(route);
               console.log(route);
               const className = `${icon} ml-2`;
               return (

@@ -2,8 +2,6 @@
 import { useState } from "react";
 import { DataTableLista } from "../tools/dataTable";
 import lsOpciones from "../costos/opcionesMenu.json";
-import IngresoVentasForm from "../sales/salesRegister/SalesForm";
-import SalePaymentForm from "../sales/salePayment/SalePaymentForm";
 import PurchaseRequestForm from "./purchaseRequest/solicitudCompra";
 import PurchaseOrderForm from "./purchaseOrder/formPurchaseOrder";
 import PurchaseShipmentForm from "./purchaseShipment/formPurchaseShipment";
@@ -14,6 +12,9 @@ import ReportRequest from "./reportRequest";
 export default function AdminCostos() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectItem, setSelectItem] = useState(null);
+  const user = localStorage.getItem("user_login");
+  const userProfile = JSON.parse(user);
+  console.log(userProfile);
   return (
     <>
       <div className="mx-auto w-11/12 lg:flex lg:gap-10 lg:justify-between">
@@ -23,7 +24,11 @@ export default function AdminCostos() {
             setSelectItem={setSelectItem}
             setSelectedProduct={setSelectedProduct}
             nombreDashboard="Opciones"
-            data={lsOpciones.Menus}
+            data={
+              userProfile.profile == "GERENTE GENERAL"
+                ? lsOpciones.Menus.slice(0, 6)
+                : lsOpciones.Menus.slice(0, 5)
+            }
           />
         </div>
         <div className=" lg:w-4/5 w-11/12">

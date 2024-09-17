@@ -23,28 +23,31 @@ export default function LoginPage() {
     }
   };
   const registrarFunction = async (cDatos) => {
-    const body = JSON.stringify(cDatos);
-    const response = await CpLatamResponse(body);
-    console.log(response);
-    //if (response.header.success == 1) {
-    if (true) {
-      const token = response.body?.cToken;
-      const fechaActual = new Date();
-      // localStorage.setItem(
-      //   "dateNow",
-      //   fechaActual.setMinutes(fechaActual.getMinutes() + 55)
-      // );
-      localStorage.setItem("cUsuario", response.body.userName);
-      //encriptar.saveLocalStorage("cUser", cDatos.cUser);
-      Cookies.set("token", token == undefined ? "ERROR" : token);
-      Cookies.set("cUsuario", cDatos.cUsuario);
-      encriptar.saveLocalStorage("cToken", token);
-      router.push("dashboard/Sistematizacion");
-      localStorage.setItem("cPerfil", idPer[0].cPerfil);
-    } else {
-      const mensaje = response.header.errors[0].message;
-      const codigo = response.header.errors[0].code;
-      show(` ${codigo} -  ${mensaje}`, "warn");
+    try {
+      console.log(cDatos);
+
+      // First fetch call to login API
+      const response = await fetch("/api/login/loginUser", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_name: cDatos.user_name,
+          user_password: cDatos.user_password,
+        }),
+      });
+
+      if (response.status === 200) {
+        const data = await response.json();
+        localStorage.setItem("user_login", JSON.stringify(data.user)); // Store parsed data in localStorage
+
+        router.push("dashboard/Sistematizacion");
+      } else {
+        show("Credenciales incorrectas", "warn"); // Show warning if credentials are incorrect
+      }
+    } catch (error) {
+      console.error("Error logging in:", error);
     }
   };
 
@@ -77,8 +80,8 @@ export default function LoginPage() {
         <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
           <Formik
             initialValues={{
-              cUser: "",
-              cPassword: "",
+              user_name: "",
+              user_password: "",
             }}
             onSubmit={(values, { setSubmitting }) => {
               registrarFunction(values);
@@ -98,8 +101,8 @@ export default function LoginPage() {
                   </label>
                   <div className="mt-2">
                     <Field
-                      id="cUser"
-                      name="cUser"
+                      id="user_name"
+                      name="user_name"
                       autoComplete="email"
                       placeholder="usuario"
                       required
@@ -118,8 +121,8 @@ export default function LoginPage() {
                   </div>
                   <div className="mt-2">
                     <Field
-                      id="cPassword"
-                      name="cPassword"
+                      id="user_password"
+                      name="user_password"
                       type="password"
                       placeholder="*****"
                       autoComplete="current-password"
