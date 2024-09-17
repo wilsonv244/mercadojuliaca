@@ -9,6 +9,7 @@ import PurchaseOrderForm from "./purchaseOrder/formPurchaseOrder";
 import PurchaseShipmentForm from "./purchaseShipment/formPurchaseShipment";
 import ShipmentPaymentForm from "./shipmentPayment/formShipmentPayment";
 import DiscountPaymentCost from "./discountPayment/formDiscountPayment";
+import ReportRequest from "./reportRequest";
 
 export default function AdminCostos() {
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -43,6 +44,8 @@ export default function AdminCostos() {
                   return <ShipmentPaymentForm />;
                 case "Nota de Créditos de costos":
                   return <DiscountPaymentCost />;
+                case "Reporte de Solicitudes de Compra":
+                  return <ReportRequest />;
 
                 default:
                   return null;

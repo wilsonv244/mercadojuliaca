@@ -16,22 +16,16 @@ export async function getSaleByReceiptNumber(
     const saleResponse = await fetch(
       `/api/sale/getSaleByReceip?receipt_number=${receiptNumber}`
     );
-    if (!saleResponse.ok) {
-      return {
-        ...initialResponse,
-        statusCode: saleResponse.status,
-        message: await saleResponse.text(),
-      };
-    }
+    console.log(saleResponse);
 
-    const paymentData: SaleEntity[] = await saleResponse.json();
-    if (paymentData.length === 0) {
+    if (saleResponse.status === 204) {
       return {
         ...initialResponse,
         statusCode: 204,
         message: "No se encontraron datos con ese Recibo",
       };
     }
+    const paymentData: SaleEntity[] = await saleResponse.json();
 
     const sale = paymentData[0];
     console.log("sale");

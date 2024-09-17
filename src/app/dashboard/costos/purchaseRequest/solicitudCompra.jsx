@@ -18,6 +18,7 @@ export default function PurchaseRequestForm() {
     quantity: "",
     unit_of_measurement: "",
     planned_cost: "",
+    is_approved: false,
   });
 
   const [submitted, setSubmitted] = useState(false);
@@ -252,6 +253,7 @@ export default function PurchaseRequestForm() {
             id="quantity"
             name="quantity"
             value={formData.quantity}
+            type="Number"
             onChange={handleInputChange}
             placeholder="Ingrese la cantidad"
             className={classNames({
@@ -304,6 +306,7 @@ export default function PurchaseRequestForm() {
           <InputText
             id="planned_cost"
             name="planned_cost"
+            type="Number"
             value={formData.planned_cost}
             onChange={handleInputChange}
             placeholder="Ingrese el costo planificado"

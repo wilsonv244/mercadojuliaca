@@ -10,6 +10,7 @@ export default async function handler(
     try {
       console.log(req.body);
       const {
+        is_approved,
         id_cost_center,
         request_date,
         item,
@@ -36,6 +37,7 @@ export default async function handler(
       const newPurchaseRequest: PurchaseRequest =
         await prisma.purchaseRequest.create({
           data: {
+            is_approved: Number(is_approved) > 100 ? false : true,
             id_cost_center: Number(id_cost_center),
             request_date: new Date(request_date), // Convertir a tipo `Date` si es necesario
             item,

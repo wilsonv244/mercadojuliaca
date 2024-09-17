@@ -20,9 +20,7 @@ export default function DescountSaleForm() {
     is_credit_note: false,
   });
 
-  const [MontoTotal, setMontoTotal] = useState(0);
-  const [MontoDeuda, setMontoDeuda] = useState(0);
-  const [idSaleVenta, setIdSaleVenta] = useState(0);
+  const [ventaData, setVentaData] = useState({});
 
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -72,11 +70,10 @@ export default function DescountSaleForm() {
           summary: "Cancelado",
           detail: "No se encontró datos con ese recibo",
         });
+        setVentaData({});
         return;
       }
-      setMontoDeuda(responseSalePayment.deuda_total);
-      setMontoTotal(responseSalePayment.total_amount);
-      setIdSaleVenta(responseSalePayment.id_sale);
+      setVentaData(responseSalePayment);
     } catch (error) {
       toast.current.show({
         severity: "error",
@@ -215,7 +212,11 @@ export default function DescountSaleForm() {
             />
           )}
         </div>
-        <div className="flex justify-between">
+        <div
+          className={`flex justify-between gap-2  p-3 rounded-lg ${
+            ventaData.statusCode !== 200 ? "bg-red-50" : "bg-green-50"
+          }`}
+        >
           <div className="field mb-3">
             <label
               htmlFor="MontoTotal"
@@ -228,7 +229,7 @@ export default function DescountSaleForm() {
               id="MontoTotal"
               disabled
               name="MontoTotal"
-              value={MontoTotal}
+              value={ventaData.total_amount || 0}
             />
           </div>
           <div className="field mb-3">
@@ -243,7 +244,7 @@ export default function DescountSaleForm() {
               placeholder="Monto Deuda"
               id="MontoDeuda"
               name="MontoDeuda"
-              value={MontoDeuda}
+              value={ventaData.deuda_total || ""}
               disabled
             />
           </div>

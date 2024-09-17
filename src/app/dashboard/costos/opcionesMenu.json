@@ -19,6 +19,10 @@
     {
       "cName": "Nota de Créditos de costos",
       "id": 5
+    },
+    {
+      "cName": "Reporte de Solicitudes de Compra",
+      "id": 6
     }
   ]
 }
