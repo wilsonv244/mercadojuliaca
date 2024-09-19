@@ -17,13 +17,7 @@ export default async function handler(
       payment_status,
     }: PurchaseShipment = req.body;
 
-    if (
-      !id_order ||
-      !receipt_type ||
-      !receipt_number ||
-      !payment_type ||
-      !payment_due_date
-    ) {
+    if (!id_order || !receipt_type || !receipt_number || !payment_due_date) {
       return res
         .status(400)
         .json({ error: "Todos los campos son obligatorios." });
@@ -36,7 +30,7 @@ export default async function handler(
           shipment_date: new Date(),
           receipt_type,
           receipt_number,
-          payment_type,
+          payment_type: "EFECTIVO",
           payment_due_date: new Date(payment_due_date),
           payment_status,
         },

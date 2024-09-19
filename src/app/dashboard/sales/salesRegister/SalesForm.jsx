@@ -9,6 +9,7 @@ import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { getAllClientForm } from "@/infraestructure/useCasesNav/Client/getClientUseCase";
 import { getEmployeeFormSaler } from "@/infraestructure/useCasesNav/Client/getEmployeeUseCase";
 import { calcularIgv, MontoConIgv } from "@/domain/utils/Amount";
+import { TipoComprobante } from "../../tools/TypeTables";
 
 export default function IngresoVentasForm() {
   const [formData, setFormData] = useState({
@@ -80,11 +81,12 @@ export default function IngresoVentasForm() {
         });
 
         const result = await response.json();
+        console.log(result);
         if (response.ok) {
           toast.current.show({
             severity: "success",
             summary: "Éxito",
-            detail: "Venta registrada correctamente",
+            detail: `Venta registrada correctamente con el Nro Comprobante: ${result.receipt_number}`,
           });
           resetForm();
         } else {
@@ -146,7 +148,7 @@ export default function IngresoVentasForm() {
             htmlFor="idCliente"
             className="text-[#003462] font-black text-sm mb-3"
           >
-            Id Cliente
+            Razon social del cliente
           </label>
           <Dropdown
             value={formData.idCliente}
@@ -173,7 +175,7 @@ export default function IngresoVentasForm() {
             htmlFor="idVendedor"
             className="text-[#003462] font-black text-sm mb-3"
           >
-            Id Vendedor
+            Nombre del Vendedor
           </label>
           <Dropdown
             value={formData.idVendedor}
@@ -201,7 +203,7 @@ export default function IngresoVentasForm() {
               htmlFor="montoTotal"
               className="text-[#003462] font-black text-sm mb-3"
             >
-              Monto Total
+              Monto Total incluye IGV
             </label>
             <InputText
               type="number"
@@ -240,10 +242,11 @@ export default function IngresoVentasForm() {
           >
             Tipo Comprobante
           </label>
-          <InputText
+          <Dropdown
             id="tipoComprobante"
             placeholder="Ingrese el tipo de comprobante"
             name="tipoComprobante"
+            options={TipoComprobante}
             value={formData.tipoComprobante}
             onChange={handleInputChange}
             className={classNames({

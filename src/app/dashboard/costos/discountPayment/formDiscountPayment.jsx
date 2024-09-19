@@ -68,7 +68,7 @@ export default function DiscountPaymentCost() {
           toast.current.show({
             severity: "success",
             summary: "Éxito",
-            detail: "Pago de envío registrado correctamente",
+            detail: "Nota de crédito registrado correctamente",
           });
           resetForm(); // Limpiar formulario después de la operación exitosa
         } else {
@@ -296,7 +296,7 @@ export default function DiscountPaymentCost() {
             htmlFor="payment_amount"
             className="text-[#003462] font-black text-sm mb-3"
           >
-            Monto de Pago
+            Monto de Pago Incluye IGV
           </label>
           <InputText
             placeholder="Ingrese el monto de pago"

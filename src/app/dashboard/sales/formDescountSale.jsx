@@ -111,7 +111,6 @@ export default function DescountSaleForm() {
             payment_amount: formData.payment_amount,
           }),
         });
-        console.log("response");
         const result = await response.json();
         console.log(result);
 
@@ -119,7 +118,7 @@ export default function DescountSaleForm() {
           toast.current.show({
             severity: "success",
             summary: "Éxito",
-            detail: "Nota de venta registrado correctamente",
+            detail: `Nota de venta registrado correctamente con el codigo: ${result.id_payment}`,
           });
           resetForm(); // Limpiar el formulario tras la operación exitosa
         } else {
@@ -183,7 +182,7 @@ export default function DescountSaleForm() {
             htmlFor="id_sale"
             className="text-[#003462] font-black text-sm mb-3"
           >
-            ID Venta
+            Nro Comprobante
           </label>
           <div className="flex justify-between">
             <InputText
@@ -226,7 +225,7 @@ export default function DescountSaleForm() {
               htmlFor="MontoTotal"
               className="text-[#003462] font-black text-sm mb-3"
             >
-              Monto Total
+              Nombre del Empleado
             </label>
             <InputText
               placeholder="Monto Total"
@@ -332,11 +331,12 @@ export default function DescountSaleForm() {
             htmlFor="payment_amount"
             className="text-[#003462] font-black text-sm mb-3"
           >
-            Monto de Pago
+            Monto de Pago incluye IGV
           </label>
           <InputText
             placeholder="Ingrese el monto de pago"
             id="payment_amount"
+            type="number"
             name="payment_amount"
             value={formData.payment_amount}
             onChange={handleInputChange}

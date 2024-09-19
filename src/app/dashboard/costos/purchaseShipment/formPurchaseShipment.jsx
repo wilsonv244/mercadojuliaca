@@ -8,6 +8,7 @@ import { Toast } from "primereact/toast";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { Dropdown } from "primereact/dropdown";
 import { getPurchaseOrderById } from "@/infraestructure/useCasesNav/purchase/getPurchaseOrderbyId";
+import { TipoComprobante } from "../../tools/TypeTables";
 
 export default function PurchaseShipmentForm() {
   const [formData, setFormData] = useState({
@@ -40,7 +41,6 @@ export default function PurchaseShipmentForm() {
       Number(formData.id_order) &&
       formData.receipt_type &&
       formData.receipt_number &&
-      formData.payment_type &&
       formData.payment_due_date
     );
   };
@@ -72,7 +72,7 @@ export default function PurchaseShipmentForm() {
             body: JSON.stringify({
               id_shipment: parseInt(result.shipment.id_shipment),
               payment_date: new Date().toISOString().split("T")[0], // Fecha actual
-              payment_amount: 1, // El monto es 0
+              payment_amount: 0, // El monto es 0
             }),
           }
         );
@@ -84,7 +84,7 @@ export default function PurchaseShipmentForm() {
           toast.current.show({
             severity: "success",
             summary: "Éxito",
-            detail: "Solicitud de Envío registrada correctamente",
+            detail: `Solicitud de Envío registrada correctamente con el Nro RECIBO: ${formData.receipt_number}`,
           });
 
           resetForm(); // Limpiar el formulario tras la operación exitosa
@@ -201,8 +201,8 @@ export default function PurchaseShipmentForm() {
               id="item"
               disabled
               name="item"
-              value={requests.supplier_name || "" + ` - ` + requests.ruc || ""}
-              placeholder="Descripción del artículo"
+              value={requests.legal_name || ""}
+              placeholder="Razon Social del Proveedor"
             />
           </div>
           <div className="field w-full">
@@ -231,9 +231,10 @@ export default function PurchaseShipmentForm() {
           >
             Tipo de Recibo
           </label>
-          <InputText
+          <Dropdown
             id="receipt_type"
             name="receipt_type"
+            options={TipoComprobante}
             value={formData.receipt_type}
             onChange={handleInputChange}
             placeholder="Ingrese el tipo de recibo (Factura, Ticket, etc.)"
@@ -273,33 +274,6 @@ export default function PurchaseShipmentForm() {
               className="small-message"
               severity="error"
               text="Número de Recibo es requerido"
-            />
-          )}
-        </div>
-
-        {/* Payment Type */}
-        <div className="field mb-3">
-          <label
-            htmlFor="payment_type"
-            className="text-[#003462] font-black text-sm mb-3"
-          >
-            Tipo de Pago
-          </label>
-          <InputText
-            id="payment_type"
-            name="payment_type"
-            value={formData.payment_type}
-            onChange={handleInputChange}
-            placeholder="Ingrese el tipo de pago (Transferencia bancaria, etc.)"
-            className={classNames({
-              "p-invalid": submitted && !formData.payment_type,
-            })}
-          />
-          {submitted && !formData.payment_type && (
-            <Message
-              className="small-message"
-              severity="error"
-              text="Tipo de Pago es requerido"
             />
           )}
         </div>

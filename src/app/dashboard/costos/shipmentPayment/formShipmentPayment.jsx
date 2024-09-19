@@ -135,7 +135,7 @@ export default function ShipmentPaymentForm() {
             htmlFor="id_shipment"
             className="text-[#003462] font-black text-sm mb-3"
           >
-            ID del Envío
+            Nro de Recibo
           </label>
           <div className="flex justify-between">
             <InputText
@@ -295,7 +295,7 @@ export default function ShipmentPaymentForm() {
             htmlFor="payment_amount"
             className="text-[#003462] font-black text-sm mb-3"
           >
-            Monto de Pago
+            Monto de Pago Incluye IGV
           </label>
           <InputText
             placeholder="Ingrese el monto de pago"

@@ -9,6 +9,7 @@ export async function getPurchaseOrderById(
     ruc: "",
     supplier_name: "",
     cost: 0,
+    legal_name: "",
     status_code: 500,
     message: "Error desconocido",
   };
@@ -31,6 +32,7 @@ export async function getPurchaseOrderById(
     return {
       ruc: data.purchaseSupplier.ruc,
       supplier_name: data.purchaseSupplier.supplier_name,
+      legal_name: data.purchaseSupplier.legal_name,
       cost: data.total_amount,
       status_code: 200,
       message: "OK",

@@ -77,11 +77,12 @@ export default function PurchaseOrderForm() {
         });
 
         const result = await response.json();
+        console.log(result);
         if (response.ok) {
           toast.current.show({
             severity: "success",
             summary: "Éxito",
-            detail: "Orden de compra registrada correctamente",
+            detail: `Orden de compra registrada correctamente con el codigo: ${result.id_order}`,
           });
           resetForm(); // Limpiar formulario tras la operación exitosa
         } else {
@@ -105,7 +106,18 @@ export default function PurchaseOrderForm() {
 
   const llamarApiVenta = async () => {
     const apiPurchaseId = await getPurchaseById(formData.id_request);
-    setRequests(apiPurchaseId);
+    if (apiPurchaseId.status_code === 200) {
+      console.log(apiPurchaseId);
+      if (!apiPurchaseId.is_approved) {
+        toast.current.show({
+          severity: "info",
+          summary: "Cancelado",
+          detail: "La solicitud de compra no fue aprobada",
+        });
+        return;
+      }
+      setRequests(apiPurchaseId);
+    }
   };
 
   const confirmSubmit = () => {

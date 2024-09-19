@@ -413,7 +413,7 @@ export default function ClienteForm() {
             value={formData.provincia}
             options={provinciasPuno}
             onChange={(e) => handleDropdownChange(e, "provincia")}
-            placeholder="Seleccione un provincia"
+            placeholder="Seleccione una provincia"
             className={classNames({
               "p-invalid": submitted && !formData.provincia,
             })}

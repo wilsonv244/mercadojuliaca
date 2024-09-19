@@ -111,12 +111,12 @@ export default function SalePaymentForm() {
         });
 
         const result = await response.json();
-
+        console.log(result);
         if (response.ok) {
           toast.current.show({
             severity: "success",
             summary: "Éxito",
-            detail: "Pago registrado correctamente",
+            detail: `Pago registrado correctamente con el Codigo: ${result.id_payment}`,
           });
           resetForm(); // Limpiar el formulario tras la operación exitosa
         } else {
@@ -178,7 +178,7 @@ export default function SalePaymentForm() {
             htmlFor="id_sale"
             className="text-[#003462] font-black text-sm mb-3"
           >
-            ID Venta
+            Nro Comprobante
           </label>
           <div className="flex justify-between">
             <InputText
@@ -254,7 +254,7 @@ export default function SalePaymentForm() {
             htmlFor="id_employee"
             className="text-[#003462] font-black text-sm mb-3"
           >
-            ID Empleado
+            Nombre del Empleado
           </label>
           <div className="card flex justify-content-center">
             <Dropdown
@@ -327,7 +327,7 @@ export default function SalePaymentForm() {
             htmlFor="payment_amount"
             className="text-[#003462] font-black text-sm mb-3"
           >
-            Monto de Pago
+            Monto de Pago incluye IGV
           </label>
           <InputText
             placeholder="Ingrese el monto de pago"

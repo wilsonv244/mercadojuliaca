@@ -35,9 +35,9 @@ export default function PurchaseRequestForm() {
   }, []);
 
   const unitsOfMeasurement = [
-    { label: "Units", value: "units" },
-    { label: "Kilograms", value: "kg" },
-    { label: "Liters", value: "l" },
+    { label: "UNIDADES", value: "UNIDADES" },
+    { label: "KILOGRAMOS", value: "KILOGRAMOS" },
+    { label: "LITROS", value: "LITROS" },
   ];
 
   const handleInputChange = (e) => {
@@ -75,13 +75,14 @@ export default function PurchaseRequestForm() {
         });
 
         const result = await response.json();
+        console.log(result);
         if (response.ok) {
           toast.current.show({
             severity: "success",
             summary: "Éxito",
-            detail: "Solicitud de compra registrada correctamente",
+            detail: `Solicitud de compra registrada correctamente con el CODIGO: ${result.id_request}`,
           });
-          resetForm(); // Clear the form after successful submission
+          resetForm();
         } else {
           toast.current.show({
             severity: "error",

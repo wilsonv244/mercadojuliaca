@@ -12,6 +12,7 @@ export async function getPurchaseById(
     planned_cost: 0,
     status_code: 500,
     message: "Error desconocido",
+    is_approved: false,
   };
 
   try {
@@ -35,6 +36,7 @@ export async function getPurchaseById(
       quantity: Number(data.quantity),
       unit_of_measurement: data.unit_of_measurement,
       planned_cost: Number(data.planned_cost),
+      is_approved: data.is_approved,
       status_code: 200,
       message: "OK",
     };
