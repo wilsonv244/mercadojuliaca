@@ -24,10 +24,10 @@ export class FechtMethod implements IFechtMethod {
         headers: headers,
         body: bodyRequest,
       });
-      console.log(response.status);
+
       const responseBody =
         response.status === 204 ? null : await response.json();
-      console.log(responseBody);
+
       return {
         statusCode: response.status,
         body: responseBody,

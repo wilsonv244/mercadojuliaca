@@ -123,7 +123,7 @@ export default function ClienteForm() {
         });
 
         const result = await response.json();
-        console.log(result);
+
         if (response.ok) {
           toast.current.show({
             severity: "success",

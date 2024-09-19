@@ -8,7 +8,6 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     try {
-      console.log(req.body);
       const {
         is_approved,
         id_cost_center,

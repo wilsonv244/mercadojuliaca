@@ -58,9 +58,6 @@ export default function PurchaseShipmentForm() {
         });
 
         const result = await response.json();
-        console.log("result");
-        console.log(result);
-        console.log(result.shipment.id_shipment);
 
         const responseSavePayment = await fetch(
           "/api/shipment/saveShipmentPayment",
@@ -76,9 +73,6 @@ export default function PurchaseShipmentForm() {
             }),
           }
         );
-
-        console.log("responseSavePayment");
-        console.log(await responseSavePayment.json());
 
         if (response.ok) {
           toast.current.show({

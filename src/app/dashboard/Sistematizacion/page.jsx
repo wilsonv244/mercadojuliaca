@@ -30,7 +30,6 @@ export default function PanelSistematizcion() {
           </h2>
           {selectItem != null ? (
             (() => {
-              console.log(selectItem.cName);
               switch (selectItem.cName) {
                 case "Clientes":
                   return <ClienteForm />;

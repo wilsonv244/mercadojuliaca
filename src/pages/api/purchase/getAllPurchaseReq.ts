@@ -13,7 +13,8 @@ export default async function handler(
     const approvedRequests: PurchaseRequest[] =
       await prisma.purchaseRequest.findMany({
         where: {
-          is_approved: true,
+          is_approved: false,
+          
         },
       });
 

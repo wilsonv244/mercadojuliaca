@@ -19,13 +19,12 @@ export async function ProfileRetrieve(): Promise<UserManagementProfile> {
   try {
     const responseApi = await callApi.getMethod(urlPath, null);
     const { statusCode, body, description } = responseApi;
-    console.log(responseApi);
 
     if (statusCode >= 300) {
       errorResponse = body as ErrorResponse;
     } else {
       listaPerfiles = responseApi.body?.data?.UserManagement?.UserProfiles;
-      console.log(listaPerfiles);
+
       let dataPerfiles: DataTableUserProfiels[] = listaPerfiles.flatMap(
         (perfil) => {
           return perfil.Users.map((user) => {
@@ -41,8 +40,6 @@ export async function ProfileRetrieve(): Promise<UserManagementProfile> {
           });
         }
       );
-
-      console.log(dataPerfiles);
     }
     return {
       Code: statusCode,
@@ -51,7 +48,6 @@ export async function ProfileRetrieve(): Promise<UserManagementProfile> {
       UserProfiles: listaPerfiles,
     };
   } catch (error) {
-    console.log(error);
     return {
       Code: 500,
       Description: String(error),

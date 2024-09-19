@@ -7,7 +7,7 @@ import PurchaseOrderForm from "./purchaseOrder/formPurchaseOrder";
 import PurchaseShipmentForm from "./purchaseShipment/formPurchaseShipment";
 import ShipmentPaymentForm from "./shipmentPayment/formShipmentPayment";
 import DiscountPaymentCost from "./discountPayment/formDiscountPayment";
-import ReportRequest from "./reportRequest";
+import ReportRequest from "./reportRegister/reportRequest";
 
 export default function AdminCostos() {
   const [selectedProduct, setSelectedProduct] = useState(null);

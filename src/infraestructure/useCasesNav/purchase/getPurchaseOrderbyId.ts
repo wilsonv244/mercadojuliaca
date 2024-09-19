@@ -18,7 +18,7 @@ export async function getPurchaseOrderById(
     const response = await fetch(
       `/api/purchase/getPurchaseOrderbyId?id_order=${id_order}`
     );
-    console.log(response);
+
     if (!response.ok) {
       return {
         ...responsePurchase,

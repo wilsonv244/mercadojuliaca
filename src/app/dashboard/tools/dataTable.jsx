@@ -55,7 +55,6 @@ export const getEstadoPerfi = (status) => {
 };
 
 export function footerTemplate(dataPerfil) {
-  console.log(dataPerfil);
   return (
     <React.Fragment>
       <td colSpan={5}>

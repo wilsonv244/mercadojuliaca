@@ -24,8 +24,6 @@ export default function LoginPage() {
   };
   const registrarFunction = async (cDatos) => {
     try {
-      console.log(cDatos);
-
       // First fetch call to login API
       const response = await fetch("/api/login/loginUser", {
         method: "POST",
@@ -67,7 +65,7 @@ export default function LoginPage() {
           <div className="flex justify-center">
             <img
               className="w-48 lg:block hidden"
-              src="/img/logoAvalos2.png"
+              src="/img/logoAvalos3.png"
               alt="logo banco ripley"
             />
             <img

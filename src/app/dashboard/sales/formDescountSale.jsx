@@ -63,8 +63,7 @@ export default function DescountSaleForm() {
       const responseSalePayment = await getSaleByReceiptNumber(
         formData.id_sale
       );
-      console.log("responseSalePayment");
-      console.log(responseSalePayment);
+
       if (responseSalePayment.statusCode !== 200) {
         toast.current.show({
           severity: "info",
@@ -112,7 +111,6 @@ export default function DescountSaleForm() {
           }),
         });
         const result = await response.json();
-        console.log(result);
 
         if (response.ok) {
           toast.current.show({
@@ -129,8 +127,6 @@ export default function DescountSaleForm() {
           });
         }
       } catch (error) {
-        console.log("error");
-        console.log(error);
         toast.current.show({
           severity: "error",
           summary: "Error",

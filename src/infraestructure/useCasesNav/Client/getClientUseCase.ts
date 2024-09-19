@@ -18,7 +18,7 @@ export async function getAllClientForm(): Promise<OptionSeller[]> {
           code: item.id_client.toString(),
         });
       });
-      console.log(options);
+
       return options;
     } else {
       throw new Error("No se encontraron empleados");

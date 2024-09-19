@@ -4,6 +4,7 @@ import { Column } from "primereact/column";
 import { InputText } from "primereact/inputtext";
 import { FilterMatchMode } from "primereact/api";
 import { classNames } from "primereact/utils";
+import ModalConfirmRequest from "./modalConfirm";
 
 export default function ReportRequest() {
   const [filters, setFilters] = useState({
@@ -12,7 +13,7 @@ export default function ReportRequest() {
   const [requests, setRequests] = useState([]);
   const [globalFilterValue, setGlobalFilterValue] = useState("");
   const [selectedRequest, setSelectedRequest] = useState(null);
-  const [paymentDetails, setPaymentDetails] = useState(null);
+  const [visible, setVisible] = useState(false);
 
   // Fetching purchase requests data
   useEffect(() => {
@@ -26,7 +27,7 @@ export default function ReportRequest() {
       }
     };
     fetchPurchaseRequests();
-  }, []);
+  }, [visible]);
 
   // Update global filter
   const onGlobalFilterChange = (e) => {
@@ -40,13 +41,13 @@ export default function ReportRequest() {
 
   // Handle row selection
   const handleSelection = (e) => {
-    setPaymentDetails(e.value);
-    setSelectedRequest(e);
+    setSelectedRequest(e.value);
+    setVisible(true);
   };
 
   // Highlight selected row
   const rowClass = (data) =>
-    selectedRequest && data.id_request === selectedRequest.value.id_request
+    selectedRequest && data.id_request === selectedRequest.id_request
       ? "p-highlight p-selectable-row"
       : "";
 
@@ -55,8 +56,8 @@ export default function ReportRequest() {
     return (
       <i
         className={classNames("pi", {
-          "pi-thumbs-up true-icon": !rowData.is_activate,
-          "pi-times-circle false-icon": rowData.is_activate,
+          "pi-thumbs-up true-icon": rowData.is_approved,
+          "pi-times-circle false-icon": !rowData.is_approved,
         })}
       ></i>
     );
@@ -108,6 +109,13 @@ export default function ReportRequest() {
         <Column field="planned_cost" header="Costo Planeado" />
         <Column field="is_approved" header="Estado" body={renderStatusIcon} />
       </DataTable>
+      {visible && (
+        <ModalConfirmRequest
+          selectedRequest={selectedRequest}
+          visible={visible}
+          setVisible={setVisible}
+        />
+      )}
     </div>
   );
 }

@@ -16,7 +16,6 @@ export async function getSaleByReceiptNumber(
     const saleResponse = await fetch(
       `/api/sale/getSaleByReceip?receipt_number=${receiptNumber}`
     );
-    console.log(saleResponse);
 
     if (saleResponse.status === 204) {
       return {
@@ -28,14 +27,12 @@ export async function getSaleByReceiptNumber(
     const paymentData: SaleEntity[] = await saleResponse.json();
 
     const sale = paymentData[0];
-    console.log("sale");
-    console.log(sale);
+
     const totalPaid = sale.SalePayments.reduce(
       (total, item) => total + Number(item.payment_amount),
       0
     );
-    console.log("totalPaid");
-    console.log(totalPaid);
+
     return {
       total_amount: Number(sale.total_amount),
       deuda_total: Number(

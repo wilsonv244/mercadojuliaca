@@ -61,7 +61,6 @@ export default function IngresoVentasForm() {
   };
 
   const submitForm = async () => {
-    console.log(formData.idCliente["code"]);
     if (validateForm()) {
       setLoading(true);
       try {
@@ -81,7 +80,7 @@ export default function IngresoVentasForm() {
         });
 
         const result = await response.json();
-        console.log(result);
+
         if (response.ok) {
           toast.current.show({
             severity: "success",

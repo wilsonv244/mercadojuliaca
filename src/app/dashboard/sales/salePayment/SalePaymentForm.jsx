@@ -71,8 +71,6 @@ export default function SalePaymentForm() {
         return;
       }
       setVentaData(responseSalePayment);
-      console.log("responseSalePayment");
-      console.log(responseSalePayment);
     } catch (error) {
       toast.current.show({
         severity: "error",
@@ -111,7 +109,7 @@ export default function SalePaymentForm() {
         });
 
         const result = await response.json();
-        console.log(result);
+
         if (response.ok) {
           toast.current.show({
             severity: "success",

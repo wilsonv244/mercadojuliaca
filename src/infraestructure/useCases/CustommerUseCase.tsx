@@ -15,11 +15,10 @@ export async function customerRegister(
   let errorResponse: ErrorResponse = { errors: [] };
 
   const urlPath = `${process.env.NEXT_PUBLIC_URL_BACK}/data-platform/v1/customer-relationship-management/data-complete/register`;
-  console.log(request);
+
   try {
     const responseApi = await callApi.postMethod(urlPath, null, request);
     const { statusCode, body, description } = responseApi;
-    console.log(responseApi);
 
     if (statusCode === 400) {
       errorResponse = body as ErrorResponse;
@@ -31,7 +30,6 @@ export async function customerRegister(
       Errors: errorResponse,
     };
   } catch (error) {
-    console.log(error);
     return {
       Code: 500,
       Description: String(error),
@@ -48,13 +46,11 @@ export async function CustomerRetrive(): Promise<UserManagementResponse> {
   try {
     const responseApi = await callApi.getMethod(urlPath, null);
     const { statusCode, body, description } = responseApi;
-    console.log(responseApi);
 
     if (statusCode >= 300) {
       errorResponse = body as ErrorResponse;
     } else {
       ListaUsers = responseApi.body?.data?.UserManagement?.UserList;
-      console.log(ListaUsers);
     }
 
     return {
@@ -64,7 +60,6 @@ export async function CustomerRetrive(): Promise<UserManagementResponse> {
       UserManagement: { UserList: ListaUsers },
     };
   } catch (error) {
-    console.log(error);
     return {
       Code: 500,
       Description: String(error),

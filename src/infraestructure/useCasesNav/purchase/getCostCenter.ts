@@ -13,8 +13,7 @@ export async function getCostCenter(): Promise<OptionMenu[]> {
     }
 
     const data = await response.json();
-    console.log("data");
-    console.log(data);
+
     if (data.length > 0) {
       data.forEach((item: CostCenter) => {
         options.push({
@@ -22,7 +21,7 @@ export async function getCostCenter(): Promise<OptionMenu[]> {
           value: item.id_center.toString(),
         });
       });
-      console.log(options);
+
       return options;
     } else {
       throw new Error("No se encontraron empleados");

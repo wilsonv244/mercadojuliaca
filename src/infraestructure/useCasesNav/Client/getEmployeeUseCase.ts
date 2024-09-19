@@ -17,7 +17,7 @@ export async function getEmployeeFormSaler(): Promise<OptionSeller[]> {
           code: item.id_employee.toString(),
         });
       });
-      console.log(options);
+
       return options;
     } else {
       throw new Error("No se encontraron empleados");

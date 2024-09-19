@@ -6,8 +6,6 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === "POST") {
-    console.log("req");
-    console.log(req);
     const {
       id_employee,
       id_client,

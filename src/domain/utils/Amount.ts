@@ -1,6 +1,4 @@
 export const MontoConIgv = (montoSinIgv: number) => {
-  console.log(montoSinIgv);
-
   if (montoSinIgv > 0) {
     const igv = 0.18;
     const montoConIgv = montoSinIgv * (1 + igv);

@@ -15,8 +15,7 @@ export async function CpLatamResponse(
     nExpireIn: 0,
     userName: "",
   };
-  console.log("variable de entorno");
-  console.log(process.env.NEXT_URL_CPLATAM);
+
   const urlApiResponse = `${process.env.NEXT_URL_CPLATAM}/api/authentication/login`;
   const responseApi = await CallApi.postMethod(urlApiResponse, null, data);
   const respuestaApi = responseApi.body?.success;

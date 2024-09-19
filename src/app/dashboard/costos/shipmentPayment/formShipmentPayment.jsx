@@ -118,8 +118,7 @@ export default function ShipmentPaymentForm() {
       null,
       formData.id_shipment
     );
-    console.log("apiPurchaseId");
-    console.log(apiPurchaseId);
+
     setRequests(apiPurchaseId);
   };
 
