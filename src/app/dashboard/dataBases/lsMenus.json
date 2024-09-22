@@ -1,0 +1,16 @@
+{
+  "Menus": [
+    {
+      "cName": "Cuentas por Pagar",
+      "id": 1
+    },
+    {
+      "cName": "Base de Ingresos",
+      "id": 2
+    },
+    {
+      "cName": "Cuentas por cobrar",
+      "id": 3
+    }
+  ]
+}

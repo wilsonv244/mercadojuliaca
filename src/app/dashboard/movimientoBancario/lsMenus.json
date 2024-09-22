@@ -1,0 +1,12 @@
+{
+  "Menus": [
+    {
+      "cName": "Registrar Movimiento Bancario",
+      "id": 1
+    },
+    {
+      "cName": "Exportar Movimiento Bancario",
+      "id": 2
+    }
+  ]
+}

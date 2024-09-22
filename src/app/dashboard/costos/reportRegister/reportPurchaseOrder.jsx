@@ -6,25 +6,22 @@ import { FilterMatchMode } from "primereact/api";
 import { classNames } from "primereact/utils";
 import ModalConfirmRequest from "./modalConfirm";
 
-export default function ReportRequest({ userProfile }) {
-  console.log("userProfile");
-  console.log(userProfile);
+export default function ReportePurchaseOrder() {
   const [filters, setFilters] = useState({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
   const [requests, setRequests] = useState([]);
   const [globalFilterValue, setGlobalFilterValue] = useState("");
-  const [selectedRequest, setSelectedRequest] = useState(null);
   const [visible, setVisible] = useState(false);
 
   // Fetching purchase requests data
   useEffect(() => {
     const fetchPurchaseRequests = async () => {
       try {
-        const response = await fetch("/api/purchase/getAllPurchaseReq");
+        const response = await fetch("/api/report/getAllPurchaseOrder");
         const data = await response.json();
         console.log(data);
-        setRequests(data);
+        setRequests(data.purchaseOrders);
       } catch (error) {
         console.error("Error fetching purchase requests:", error);
       }
@@ -40,37 +37,6 @@ export default function ReportRequest({ userProfile }) {
       global: { ...prev.global, value },
     }));
     setGlobalFilterValue(value);
-  };
-
-  // Handle row selection
-  const handleSelection = (e) => {
-    console.log(e.value);
-    console.log(e.value.is_approved);
-    if (!e.value.is_approved && userProfile.profile == "GERENTE GENERAL") {
-      setSelectedRequest(e.value);
-      setVisible(true);
-    }
-  };
-
-  // Highlight selected row
-  const rowClass = (data) =>
-    selectedRequest && data.id_request === selectedRequest.id_request
-      ? "p-highlight p-selectable-row"
-      : "";
-
-  // Render status icon
-  const renderStatusIcon = (rowData) => {
-    const baseClasses = "p-3 rounded-lg text-white text-center";
-    const statusClasses = classNames(baseClasses, {
-      "bg-green-600": rowData.is_approved,
-      "bg-red-400": !rowData.is_approved,
-    });
-
-    return (
-      <div className={statusClasses}>
-        {rowData.is_approved ? "Aprobado" : "No Aprobado"}
-      </div>
-    );
   };
 
   // Render header with search input
@@ -97,9 +63,6 @@ export default function ReportRequest({ userProfile }) {
         paginator
         filters={filters}
         selectionMode="single"
-        onSelectionChange={handleSelection}
-        selection={selectedRequest}
-        rowClassName={rowClass}
         header={renderHeader}
         rows={10}
         rowsPerPageOptions={[5, 10, 25, 50]}
@@ -109,24 +72,17 @@ export default function ReportRequest({ userProfile }) {
           headerStyle={{ width: "4rem" }}
           body={(data, options) => options.rowIndex + 1}
         />
+        <Column field="id_order" header="N° Orden de Compra" />
+        <Column field="order_date" header="Fecha Orden de Compra" />
         <Column field="id_request" header="N° Solicitud" />
-        <Column field="created_at" header="Fecha Solicitud" />
-        <Column field="id_cost_center" header="Id Centro Costos" />
-        <Column field="cost_center.cost_center_name" header="Cost Center" />
-        <Column field="item" header="Articulo" />
-        <Column field="description" header="Descripción" />
-        <Column field="quantity" header="Cantidad" />
-        <Column field="unit_of_measurement" header="Unidad de Medida" />
-        <Column field="planned_cost" header="Costo Planeado" />
-        <Column field="is_approved" header="Estado" body={renderStatusIcon} />
+        <Column field="request.item" header="Articulo" />
+        <Column field="request.description" header="Descripcion" />
+        <Column field="request.quantity" header="Cantidad" />
+        <Column field="request.unit_of_measurement" header="Unidad de Medida" />
+        <Column field="request.planned_cost" header="Costo Planeado" />
+        <Column field="supplier.legal_name" header="Proveedor" />
+        <Column field="total_amount" header="Monto Total" />
       </DataTable>
-      {visible && (
-        <ModalConfirmRequest
-          selectedRequest={selectedRequest}
-          visible={visible}
-          setVisible={setVisible}
-        />
-      )}
     </div>
   );
 }

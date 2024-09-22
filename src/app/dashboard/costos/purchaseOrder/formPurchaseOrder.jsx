@@ -11,6 +11,7 @@ import { getEmployeeFormSaler } from "@/infraestructure/useCasesNav/Client/getEm
 import { getPurchaseById } from "@/infraestructure/useCasesNav/purchase/getPurchaseReqById";
 import { set } from "date-fns";
 import { calcularIgv } from "@/domain/utils/Amount";
+import { getSupplierUseCase } from "@/infraestructure/useCasesNav/Client/getSupplierUseCase";
 
 export default function PurchaseOrderForm() {
   const [formData, setFormData] = useState({
@@ -29,7 +30,7 @@ export default function PurchaseOrderForm() {
 
   useEffect(() => {
     async function fetchData() {
-      const supplierOptions = await getEmployeeFormSaler();
+      const supplierOptions = await getSupplierUseCase();
       setSuppliers(supplierOptions);
     }
     fetchData();

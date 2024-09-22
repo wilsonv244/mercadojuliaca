@@ -221,7 +221,7 @@ export default function DescountSaleForm() {
               htmlFor="MontoTotal"
               className="text-[#003462] font-black text-sm mb-3"
             >
-              Nombre del Empleado
+              Monto Total de la compra
             </label>
             <InputText
               placeholder="Monto Total"
@@ -254,7 +254,7 @@ export default function DescountSaleForm() {
             htmlFor="id_employee"
             className="text-[#003462] font-black text-sm mb-3"
           >
-            ID Empleado
+            Nombre del Empleado
           </label>
           <div className="card flex justify-content-center">
             <Dropdown

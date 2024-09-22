@@ -1,16 +1,11 @@
 "use client";
 import { useState } from "react";
 import { DataTableLista } from "../tools/dataTable";
-import lsOpciones from "../costos/opcionesMenu.json";
-import PurchaseRequestForm from "./purchaseRequest/solicitudCompra";
-import PurchaseOrderForm from "./purchaseOrder/formPurchaseOrder";
-import PurchaseShipmentForm from "./purchaseShipment/formPurchaseShipment";
-import ShipmentPaymentForm from "./shipmentPayment/formShipmentPayment";
-import DiscountPaymentCost from "./discountPayment/formDiscountPayment";
-import ReportRequest from "./reportRegister/reportRequest";
-import ReportePurchaseOrder from "./reportRegister/reportPurchaseOrder";
+import lsOpciones from "../movimientoBancario/lsMenus.json";
 
-export default function AdminCostos() {
+import FormRegistrarMovBancarioas from "./formRegister";
+
+export default function MovimientoBancario() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectItem, setSelectItem] = useState(null);
   const user = localStorage.getItem("user_login");
@@ -37,20 +32,9 @@ export default function AdminCostos() {
             (() => {
               switch (selectItem.cName) {
                 case "Solicitud Compra":
-                  return <PurchaseRequestForm />;
+                  return <FormRegistrarMovBancarioas />;
                 case "Solicitud Orden Compra":
-                  return <PurchaseOrderForm />;
-                case "Solicitud de Embarque":
-                  return <PurchaseShipmentForm />;
-                case "Liquidez de Cuentas a pagar":
-                  return <ShipmentPaymentForm />;
-                case "Nota de Créditos de costos":
-                  return <DiscountPaymentCost />;
-                case "Reporte de Solicitudes de Compra":
-                  return <ReportRequest userProfile={userProfile} />;
-                case "Reporte de Ordendes de Compra":
-                  return <ReportePurchaseOrder />;
-
+                  return <FormRegistrarMovBancarioas />;
                 default:
                   return null;
               }

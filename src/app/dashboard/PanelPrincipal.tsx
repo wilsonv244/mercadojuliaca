@@ -33,6 +33,16 @@ const LinkPage = [
     label: "Costos",
     route: "/dashboard/costos",
   },
+  {
+    icon: "pi pi-database",
+    label: "BD",
+    route: "/dashboard/dataBases",
+  },
+  {
+    icon: "pi pi-credit-card",
+    label: "Movimiento Bancario",
+    route: "/dashboard/movimientoBancario",
+  },
   { icon: "pi pi-power-off hover:font-bold", label: "", route: "#" },
 ];
 

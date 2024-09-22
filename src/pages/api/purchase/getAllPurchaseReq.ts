@@ -1,39 +1,31 @@
-// pages/api/purchase/getApprovedPurchaseRequests.ts
-
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/infraestructure/postgressDB/prisma";
-import { ApiResponse } from "@/domain/models/serverModel/purchase/responseGetPurchaseReq";
-import { PurchaseRequest } from "@prisma/client";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ApiResponse>
+  res: NextApiResponse
 ) {
+  if (req.method !== "GET") {
+    res.setHeader("Allow", ["GET"]);
+    return res.status(405).json({ error: "Method Not Allowed" });
+  }
+
   try {
-    const approvedRequests: PurchaseRequest[] =
-      await prisma.purchaseRequest.findMany({
-        where: {
-          is_approved: false,
-          
+    const purchaseRequests = await prisma.purchaseRequest.findMany({
+      include: {
+        cost_center: {
+          select: {
+            cost_center_name: true,
+          },
         },
-      });
-
-    if (approvedRequests.length === 0) {
-      return res.status(204).json({
-        status_code: 204,
-        message: "No se encontraron solicitudes aprobadas.",
-      });
-    }
-
-    return res.status(200).json({
-      status_code: 200,
-      data: approvedRequests,
+      },
     });
+    console.log("purchaseRequests");
+    console.log(purchaseRequests);
+
+    res.status(200).json(purchaseRequests);
   } catch (error) {
-    console.error("Error al consultar las solicitudes aprobadas:", error);
-    return res.status(500).json({
-      status_code: 500,
-      message: "Error interno del servidor.",
-    });
+    console.error("Error fetching purchase requests:", error);
+    res.status(500).json({ error: "Error fetching data" });
   }
 }

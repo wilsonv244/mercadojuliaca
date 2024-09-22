@@ -23,6 +23,10 @@
     {
       "cName": "Reporte de Solicitudes de Compra",
       "id": 6
+    },
+    {
+      "cName": "Reporte de Ordendes de Compra",
+      "id": 7
     }
   ]
 }
