@@ -9,8 +9,6 @@ import BankTransactionForm from "./formRegister";
 export default function MovimientoBancario() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectItem, setSelectItem] = useState(null);
-  const user = localStorage.getItem("user_login");
-  const userProfile = JSON.parse(user);
 
   return (
     <>

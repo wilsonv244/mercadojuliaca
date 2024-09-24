@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { DataTableLista } from "../tools/dataTable";
 import lsMenusSistematizacion from "../Sistematizacion/lsMenusSistematizacion.json";
-import dtDashboard from "../Sistematizacion/lsMenusSistematizacion.json";
 import VendedorForm from "./saler/VendedorForm";
 import ClienteForm from "./client/ClienteForm";
 import ProveedorForm from "./provider/ProviderForm";
@@ -10,8 +9,6 @@ import ProveedorForm from "./provider/ProviderForm";
 export default function PanelSistematizcion() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectItem, setSelectItem] = useState(null);
-  const [dataDashboard, setDataDashboard] = useState(dtDashboard.ListDashboard);
-  const data = [];
   return (
     <>
       <div className="mx-auto w-11/12 lg:flex lg:gap-10 lg:justify-between">

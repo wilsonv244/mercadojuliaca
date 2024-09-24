@@ -13,8 +13,14 @@ import ReportePurchaseOrder from "./reportRegister/reportPurchaseOrder";
 export default function AdminCostos() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectItem, setSelectItem] = useState(null);
-  const user = localStorage.getItem("user_login");
-  const userProfile = JSON.parse(user);
+  const [userProfile, setUserProfile] = useState(null);
+
+  useEffect(() => {
+    const user = localStorage.getItem("user_login");
+    if (user) {
+      setUserProfile(JSON.parse(user));
+    }
+  }, []);
 
   return (
     <>
