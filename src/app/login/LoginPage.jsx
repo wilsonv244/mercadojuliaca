@@ -37,7 +37,8 @@ export default function LoginPage() {
 
       if (response.status === 200) {
         const data = await response.json();
-        //localStorage.setItem("user_login", JSON.stringify(data.user));
+        localStorage.setItem("user_login", JSON.stringify(data.user));
+        console.log(JSON.stringify(data));
 
         router.push("dashboard/Sistematizacion");
       } else {

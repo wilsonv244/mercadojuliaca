@@ -52,11 +52,11 @@ export default function PanelPrincipal() {
     id_profile: 0,
     user_name: "",
   });
-  //const user: string | null = localStorage.getItem("user_login");
   useEffect(() => {
-    //const userProfile = JSON.parse(user ?? "");
-
-    setUserProfile({ id_profile: 1, user_name: "Gerente" });
+    const user: string | null = localStorage.getItem("user_login");
+    const userProfileUser = JSON.parse(user ?? "");
+    console.log(userProfileUser);
+    setUserProfile(userProfileUser);
   }, []);
 
   return (
@@ -134,11 +134,7 @@ export default function PanelPrincipal() {
         <Dialog.Panel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
             <a href="#" className="-m-1.5 p-1.5">
-              <img
-                className="h-8 w-auto"
-                src="/img/logo-navalos.png"
-                alt=""
-              />
+              <img className="h-8 w-auto" src="/img/logo-navalos.png" alt="" />
             </a>
             <button
               type="button"
