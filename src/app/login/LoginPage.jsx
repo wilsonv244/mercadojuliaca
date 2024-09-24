@@ -3,6 +3,7 @@ import React, { useRef } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { Formik, Field, Form } from "formik";
+import Image from "next/image";
 
 import { Toast } from "primereact/toast";
 
@@ -53,24 +54,30 @@ export default function LoginPage() {
     <div className="lg:flex h-screen lg:bg-[#f8f8f8] bg-[#4f2d7f]">
       <div className=" bg-[#543078]  w-2/6 h-full lg:block hidden">
         <div className="grid min-h-screen items-stretch text-center">
-          <img
+          <Image
             className="w-full object-cover h-screen"
             src="/img/LaysPapitas.png"
             alt="Logo"
+            width={500}
+            height={500}
           />
         </div>
       </div>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm text-center">
           <div className="flex justify-center">
-            <img
+            <Image
               className="w-48 lg:block hidden"
               src="/img/logoAvalos3.png"
               alt="logo banco ripley"
+              width={500}
+              height={500}
             />
-            <img
+            <Image
               className="w-56 lg:hidden "
               src="/img/logoAvalos2.png"
+              width={500}
+              height={500}
               alt="logo banco ripley"
             />
           </div>
