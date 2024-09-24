@@ -7,7 +7,8 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import { getCuentasPorPagar } from "@/infraestructure/useCasesNav/report/reportCuentasPorPagar";
 
-export default function ReportDataBases() {
+export default function ReportDataBases({ action }) {
+  console.log(action);
   const [formData, setFormData] = useState({
     startDate: null,
     endDate: null,
@@ -21,10 +22,35 @@ export default function ReportDataBases() {
 
   const exportToExcel = async () => {
     setLoading(true);
-    const purchaseRequests = await getCuentasPorPagar();
+    let purchaseRequests = [];
+    switch (action) {
+      case "BASEDATOS":
+        const responseCuentasPagar = await getCuentasPorPagar();
+        purchaseRequests = responseCuentasPagar.lsPurchaseDetail;
+        break;
+      case "CUENTASPAGAR":
+        const saleResponse = await fetch(
+          `/api/report/getAllReportPurchaseOrder`
+        );
+        purchaseRequests = await saleResponse.json();
+        break;
+      case "BASEINGRESOS":
+        const saleResponse2 = await fetch(
+          `/api/report/getAllReportBaseIngresos`
+        );
+        purchaseRequests = await saleResponse2.json();
+        break;
+      case "CUENTASCOBRAR":
+        const saleResponse3 = await fetch(
+          `/api/report/getAllReportCuentasCobrar`
+        );
+        purchaseRequests = await saleResponse3.json();
+        break;
+    }
+
     console.log(purchaseRequests);
 
-    if (purchaseRequests.lsPurchaseDetail.length === 0) {
+    if (purchaseRequests.length === 0) {
       toast.current.show({
         severity: "warn",
         summary: "Atención",
@@ -36,7 +62,7 @@ export default function ReportDataBases() {
     }
 
     // Convertir los datos a formato JSON para Excel
-    const worksheetData = purchaseRequests.lsPurchaseDetail.map((request) => ({
+    const worksheetData = purchaseRequests.map((request) => ({
       id_solicitud_compra: request.sol_num,
       "Centro de Costo": request.sol_sub_cen_costo,
       "Fecha de Solicitud": request.fecha_registro,
@@ -63,7 +89,22 @@ export default function ReportDataBases() {
     }));
 
     // Crear hoja de cálculo
-    const worksheet = XLSX.utils.json_to_sheet(worksheetData);
+    let worksheet = "";
+    switch (action) {
+      case "BASEDATOS":
+        worksheet = XLSX.utils.json_to_sheet(worksheetData);
+        break;
+      case "CUENTASPAGAR":
+        worksheet = XLSX.utils.json_to_sheet(purchaseRequests);
+        break;
+      case "BASEINGRESOS":
+        worksheet = XLSX.utils.json_to_sheet(purchaseRequests);
+        break;
+      case "CUENTASCOBRAR":
+        worksheet = XLSX.utils.json_to_sheet(purchaseRequests);
+        break;
+    }
+
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Solicitudes");
 

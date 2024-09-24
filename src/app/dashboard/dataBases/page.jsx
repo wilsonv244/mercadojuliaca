@@ -26,12 +26,14 @@ export default function AdminDataBases() {
           {selectItem != null ? (
             (() => {
               switch (selectItem.cName) {
+                case "Base de Datos":
+                  return <ReportDataBases action="BASEDATOS" />;
                 case "Cuentas por Pagar":
-                  return <ReportDataBases />;
+                  return <ReportDataBases action="CUENTASPAGAR" />;
                 case "Base de Ingresos":
-                  return <ReportDataBases />;
+                  return <ReportDataBases action="BASEINGRESOS" />;
                 case "Cuentas por cobrar":
-                  return <ReportDataBases />;
+                  return <ReportDataBases action="CUENTASCOBRAR" />;
 
                 default:
                   return null;
