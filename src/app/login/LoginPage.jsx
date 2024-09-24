@@ -6,13 +6,12 @@ import { Formik, Field, Form } from "formik";
 
 import { Toast } from "primereact/toast";
 
-import { CryptoMethod } from "@/infraestructure/components/Crypto";
 import { CpLatamResponse } from "@/infraestructure/useCases/login/CpLatamResponse";
 
 export default function LoginPage() {
   const router = useRouter();
   const toast = useRef(null);
-  const encriptar = new CryptoMethod();
+
   const show = (mensaje, state) => {
     if (toast.current) {
       toast.current.show({
@@ -38,7 +37,7 @@ export default function LoginPage() {
 
       if (response.status === 200) {
         const data = await response.json();
-        localStorage.setItem("user_login", JSON.stringify(data.user)); // Store parsed data in localStorage
+        localStorage.setItem("user_login", JSON.stringify(data.user));
 
         router.push("dashboard/Sistematizacion");
       } else {

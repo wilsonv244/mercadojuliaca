@@ -3,8 +3,6 @@ import {
   IloginBody,
 } from "@/domain/Interfaces/login/InterfacesLogin";
 import { FechtMethod } from "../../http/FetchMethod";
-import { ApiResponseModel } from "@/domain/models/general/ApiModel";
-import { CryptoMethod } from "@/infraestructure/components/Crypto";
 
 export async function ResponseApiLogin(
   data: string

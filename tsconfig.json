@@ -31,6 +31,7 @@
     ".next/types/**/*.ts",
     "src/app/dashboard/updateCatalogs/*.jsx",
     "src/app/dashboard/updateCatalogs/*.tsx",
+    "src/app/dashboard/**/*.tsx",
     "src/presentation/genComponents/AlertsDinamic.jsx",
     "middleware.ts",
     "src/app/dashboard/editCatalogs/page.jsx",
