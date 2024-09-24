@@ -69,7 +69,7 @@ export default function LoginPage() {
             />
             <img
               className="w-56 lg:hidden "
-              src="/img/logo-bancoripley-negative.36ae25c342b7b63a1eb2.svg"
+              src="/img/logoAvalos2.png"
               alt="logo banco ripley"
             />
           </div>

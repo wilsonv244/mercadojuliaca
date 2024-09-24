@@ -5,6 +5,7 @@ import lsOpciones from "../movimientoBancario/lsMenus.json";
 
 import FormRegistrarMovBancarioas from "./formRegister";
 import BankTransactionForm from "./formRegister";
+import ReportDataBases from "../dataBases/DataBasesReport";
 
 export default function MovimientoBancario() {
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -32,7 +33,7 @@ export default function MovimientoBancario() {
                 case "Registrar Movimiento Bancario":
                   return <BankTransactionForm />;
                 case "Exportar Movimiento Bancario":
-                  return <BankTransactionForm />;
+                  return <ReportDataBases action={"MOVBANCARIO"} />;
                 default:
                   return null;
               }

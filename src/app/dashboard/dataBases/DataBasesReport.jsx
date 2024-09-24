@@ -9,8 +9,8 @@ import { getCuentasPorPagar } from "@/infraestructure/useCasesNav/report/reportC
 
 export default function ReportDataBases({ action }) {
   const [formData, setFormData] = useState({
-    startDate: null,
-    endDate: null,
+    d_fecha_inicio: null,
+    d_fecha_fin: null,
   });
   const [loading, setLoading] = useState(false);
   const toast = useRef(null);
@@ -19,34 +19,43 @@ export default function ReportDataBases({ action }) {
     setFormData({ ...formData, [name]: e.value });
   };
 
+  console.log(action);
   const exportToExcel = async () => {
-    setLoading(true);
     let purchaseRequests = [];
     switch (action) {
       case "BASEDATOS":
-        const responseCuentasPagar = await getCuentasPorPagar();
+        const responseCuentasPagar = await getCuentasPorPagar(
+          formData.d_fecha_inicio,
+          formData.d_fecha_fin
+        );
         purchaseRequests = responseCuentasPagar.lsPurchaseDetail;
         break;
       case "CUENTASPAGAR":
         const saleResponse = await fetch(
-          `/api/report/getAllReportPurchaseOrder`
+          `/api/report/getAllReportPurchaseOrder?d_fecha_inicio=${formData.d_fecha_inicio}&d_fecha_fin=${formData.d_fecha_fin}`
         );
         purchaseRequests = await saleResponse.json();
         break;
       case "BASEINGRESOS":
         const saleResponse2 = await fetch(
-          `/api/report/getAllReportBaseIngresos`
+          `/api/report/getAllReportBaseIngresos?d_fecha_inicio=${formData.d_fecha_inicio}&d_fecha_fin=${formData.d_fecha_fin}`
         );
         purchaseRequests = await saleResponse2.json();
         break;
       case "CUENTASCOBRAR":
         const saleResponse3 = await fetch(
-          `/api/report/getAllReportCuentasCobrar`
+          `/api/report/getAllReportCuentasCobrar?d_fecha_inicio=${formData.d_fecha_inicio}&d_fecha_fin=${formData.d_fecha_fin}`
         );
         purchaseRequests = await saleResponse3.json();
         break;
+      case "MOVBANCARIO":
+        const saleResponse4 = await fetch(
+          `/api/report/getAllReportBankTransaction?d_fecha_inicio=${formData.d_fecha_inicio}&d_fecha_fin=${formData.d_fecha_fin}`
+        );
+        purchaseRequests = await saleResponse4.json();
+        break;
     }
-
+    console.log(purchaseRequests.length);
     if (purchaseRequests.length === 0) {
       toast.current.show({
         severity: "warn",
@@ -59,6 +68,7 @@ export default function ReportDataBases({ action }) {
     }
 
     // Convertir los datos a formato JSON para Excel
+
     const worksheetData = purchaseRequests.map((request) => ({
       id_solicitud_compra: request.sol_num,
       "Centro de Costo": request.sol_sub_cen_costo,
@@ -98,6 +108,9 @@ export default function ReportDataBases({ action }) {
         worksheet = XLSX.utils.json_to_sheet(purchaseRequests);
         break;
       case "CUENTASCOBRAR":
+        worksheet = XLSX.utils.json_to_sheet(purchaseRequests);
+        break;
+      case "MOVBANCARIO":
         worksheet = XLSX.utils.json_to_sheet(purchaseRequests);
         break;
     }
@@ -143,21 +156,20 @@ export default function ReportDataBases({ action }) {
     <div className="card w-4/5 m-auto mt-6">
       <Toast ref={toast} />
       <ConfirmDialog />
-      {/*
-      <form onSubmit={(e) => e.preventDefault()} className="p-fluid">
 
+      <form onSubmit={(e) => e.preventDefault()} className="p-fluid">
         <div className="field mb-3">
           <label
-            htmlFor="startDate"
+            htmlFor="d_fecha_inicio"
             className="text-[#003462] font-black text-sm mb-3"
           >
             Fecha de Inicio
           </label>
           <Calendar
-            id="startDate"
-            name="startDate"
-            value={formData.startDate}
-            onChange={(e) => handleDateChange(e, "startDate")}
+            id="d_fecha_inicio"
+            name="d_fecha_inicio"
+            value={formData.d_fecha_inicio}
+            onChange={(e) => handleDateChange(e, "d_fecha_inicio")}
             placeholder="Seleccione la fecha de inicio"
             showIcon
           />
@@ -165,23 +177,22 @@ export default function ReportDataBases({ action }) {
 
         <div className="field mb-3">
           <label
-            htmlFor="endDate"
+            htmlFor="d_fecha_fin"
             className="text-[#003462] font-black text-sm mb-3"
           >
             Fecha de Fin
           </label>
           <Calendar
-            id="endDate"
-            name="endDate"
-            value={formData.endDate}
-            onChange={(e) => handleDateChange(e, "endDate")}
+            id="d_fecha_fin"
+            name="d_fecha_fin"
+            value={formData.d_fecha_fin}
+            onChange={(e) => handleDateChange(e, "d_fecha_fin")}
             placeholder="Seleccione la fecha de fin"
             showIcon
           />
         </div>
+      </form>
 
-        </form> 
-        */}
       <Button
         label={loading ? "Exportando..." : "Exportar a Excel"}
         icon="pi pi-file-excel"

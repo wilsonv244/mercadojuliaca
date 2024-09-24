@@ -136,7 +136,7 @@ export default function PanelPrincipal() {
             <a href="#" className="-m-1.5 p-1.5">
               <img
                 className="h-8 w-auto"
-                src="/img/logo-bancoripley.258fb24695985b4e9c0d.svg"
+                src="/img/logo-navalos.png"
                 alt=""
               />
             </a>

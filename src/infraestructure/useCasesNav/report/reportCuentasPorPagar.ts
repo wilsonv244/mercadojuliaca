@@ -6,7 +6,10 @@ import { ResponseSalePayment } from "@/domain/models/clientNavModel/Sale";
 import { SaleEntity } from "@/domain/models/serverModel/client/responseGetSaleModel";
 import { NextApiResponse } from "next";
 
-export async function getCuentasPorPagar(): Promise<PurchaseDetailResponse> {
+export async function getCuentasPorPagar(
+  d_fecha_inicio: Date,
+  d_fecha_fin: Date
+): Promise<PurchaseDetailResponse> {
   const initialResponse: PurchaseDetail = {
     sol_num: 0,
     sol_cen_costo: "",
@@ -37,8 +40,12 @@ export async function getCuentasPorPagar(): Promise<PurchaseDetailResponse> {
   };
 
   try {
-    const saleResponse = await fetch(`/api/report/getAllReportPurchaseOrder`);
-
+    console.log(d_fecha_fin);
+    console.log(d_fecha_inicio);
+    const saleResponse = await fetch(
+      `/api/report/getAllReportPurchaseOrder?d_fecha_inicio=${d_fecha_inicio}&d_fecha_fin=${d_fecha_fin}`
+    );
+    console.log(saleResponse);
     if (saleResponse.status === 204) {
       return {
         lsPurchaseDetail: [initialResponse],
