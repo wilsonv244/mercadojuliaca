@@ -1,4 +1,3 @@
-"use client";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Dialog, Disclosure, Popover, Transition } from "@headlessui/react";
 import { useEffect, useState } from "react";
@@ -50,20 +49,14 @@ export default function PanelPrincipal() {
   const pathRoute = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [UserProfile, setUserProfile] = useState({
-    id_user: "",
-    user_name: "",
-    user_password: "",
-    profile: "",
     id_profile: 0,
-    status: true,
-    created_at: "",
-    updated_at: "",
+    user_name: "",
   });
-  const user: string | null = localStorage.getItem("user_login");
+  //const user: string | null = localStorage.getItem("user_login");
   useEffect(() => {
-    const userProfile = JSON.parse(user ?? "");
+    //const userProfile = JSON.parse(user ?? "");
 
-    setUserProfile(userProfile);
+    setUserProfile({ id_profile: 1, user_name: "Gerente" });
   }, []);
 
   return (
@@ -89,7 +82,11 @@ export default function PanelPrincipal() {
                 className="mr-1"
                 icon="pi pi-info-circle"
                 severity="info"
-                value={UserProfile.id_profile == 1 ?"GERENTE GENERARL" : "SUB GERENTE"}
+                value={
+                  UserProfile.id_profile == 1
+                    ? "GERENTE GENERARL"
+                    : "SUB GERENTE"
+                }
               ></Tag>
             </div>
             {LinkPage.map(({ icon, label, route }) => {

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DataTableLista } from "../tools/dataTable";
 import lsOpciones from "../costos/opcionesMenu.json";
 import PurchaseRequestForm from "./purchaseRequest/solicitudCompra";
@@ -16,9 +16,9 @@ export default function AdminCostos() {
   const [userProfile, setUserProfile] = useState(null);
 
   useEffect(() => {
-    const user = localStorage.getItem("user_login");
-    if (user) {
-      setUserProfile(JSON.parse(user));
+    //const user = localStorage.getItem("user_login");
+    if (true) {
+      setUserProfile({ id_profile: 1 });
     }
   }, []);
 

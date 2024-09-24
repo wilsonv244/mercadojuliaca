@@ -6,10 +6,6 @@ export default class Helper {
   private ckey: string =
     "ax7a1b3be1f64d5cf9e9d3b9177274f084e4c95a2a6e7a1b3be1f64d5c2c4d6f6cbde72061ce7a53";
 
-  getToken(): string | null | undefined {
-    const cTokenLS = localStorage.getItem("token");
-    return cTokenLS;
-  }
   formatDate(cFecha: string): string {
     const fecha: Date = new Date(cFecha);
     fecha.setHours(fecha.getHours() + 5);
