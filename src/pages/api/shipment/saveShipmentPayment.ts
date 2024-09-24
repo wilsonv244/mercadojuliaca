@@ -13,6 +13,7 @@ export default async function handler(
       is_credit_note,
       payment_date,
       payment_amount,
+      payment_receipt_number,
     }: ShipmentPaymentData = req.body;
 
     if (!id_shipment || !payment_date) {
@@ -29,6 +30,9 @@ export default async function handler(
           payment_amount: is_credit_note
             ? Math.abs(payment_amount)
             : payment_amount,
+          payment_receipt_number: is_credit_note
+            ? payment_receipt_number
+            : null,
         },
       });
 

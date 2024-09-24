@@ -11,6 +11,7 @@ export default async function handler(
       id_employee,
       description,
       payment_amount,
+      payment_receipt_number,
       is_credit_note,
     } = req.body;
     if (!id_sale || !id_employee || !payment_amount) {
@@ -20,6 +21,9 @@ export default async function handler(
     try {
       const newSalePayment = await prisma.salePayment.create({
         data: {
+          payment_receipt_number: is_credit_note
+            ? payment_receipt_number
+            : null,
           is_credit_note,
           id_sale: parseInt(id_sale),
           id_employee: parseInt(id_employee),

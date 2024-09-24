@@ -5,7 +5,7 @@ import { Toast } from "primereact/toast";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
-
+import { getCuentasPorPagar } from "@/infraestructure/useCasesNav/report/reportCuentasPorPagar";
 
 export default function ReportDataBases() {
   const [formData, setFormData] = useState({
@@ -19,23 +19,12 @@ export default function ReportDataBases() {
     setFormData({ ...formData, [name]: e.value });
   };
 
-  const fetchPurchaseRequests = async () => {
-    const { startDate, endDate } = formData;
-    try {
-    } catch (error) {
-      toast.current.show({
-        severity: "error",
-        summary: "Error",
-        detail: "Error al obtener los datos",
-      });
-      return [];
-    }
-  };
-
   const exportToExcel = async () => {
     setLoading(true);
-    const purchaseRequests = await fetchPurchaseRequests();
-    if (purchaseRequests.length === 0) {
+    const purchaseRequests = await getCuentasPorPagar();
+    console.log(purchaseRequests);
+
+    if (purchaseRequests.lsPurchaseDetail.length === 0) {
       toast.current.show({
         severity: "warn",
         summary: "Atención",
@@ -47,17 +36,30 @@ export default function ReportDataBases() {
     }
 
     // Convertir los datos a formato JSON para Excel
-    const worksheetData = purchaseRequests.map((request) => ({
-      "ID Solicitud": request.id_request,
-      "Centro de Costo": request.id_cost_center,
-      "Fecha de Solicitud": new Date(request.request_date).toLocaleDateString(),
-      Artículo: request.item,
-      Descripción: request.description || "",
-      Cantidad: request.quantity,
-      "Unidad de Medida": request.unit_of_measurement,
-      "Costo Planificado": request.planned_cost,
-      Aprobado: request.is_approved ? "Sí" : "No",
-      "Fecha Creación": new Date(request.created_at).toLocaleDateString(),
+    const worksheetData = purchaseRequests.lsPurchaseDetail.map((request) => ({
+      id_solicitud_compra: request.sol_num,
+      "Centro de Costo": request.sol_sub_cen_costo,
+      "Fecha de Solicitud": request.fecha_registro,
+      Articulo: request.sol_articulo,
+      Descripción: request.sol_descripcion,
+      Cantidad: request.sol_cantidad,
+      "Unidad de Medida": request.sol_unidad_medida,
+      "Costo Planificado": request.sol_costo_planificado,
+      Estado: request.sol_estado,
+      "Quien Aprobo": request.sol_aprobado_por,
+      ID_Nro_Orden_Compra: request.ord_nro,
+      Proveedor: request.ord_prov_razon,
+      RUC: request.ord_prov_ruc,
+      "RAZON SOCIAL": request.ord_prov_razon,
+      "FECHA ORDER COMPRA": request.ord_fecha,
+      "MONTO TOTAL": request.ord_monto_total,
+      "MONTO SIN IGV": request.ord_monto_sin_igv,
+      IGV: request.ord_monto_total - request.ord_monto_sin_igv,
+      "ID EMBARQUE": request.emb_nro,
+      "TIPO RECIBO": request.emb_tipo_recibo,
+      "FECHA VENCIMIENTO": request.emb_fecha_venc,
+      "ESTADO PAGO": request.emb_estado,
+      "FECHA NOTA CREDITO": request.ord_fecha,
     }));
 
     // Crear hoja de cálculo
@@ -100,12 +102,12 @@ export default function ReportDataBases() {
   };
 
   return (
-    <div className="card w-4/5 m-auto">
+    <div className="card w-4/5 m-auto mt-6">
       <Toast ref={toast} />
       <ConfirmDialog />
-
+      {/*
       <form onSubmit={(e) => e.preventDefault()} className="p-fluid">
-        {/* Fecha de Inicio */}
+
         <div className="field mb-3">
           <label
             htmlFor="startDate"
@@ -123,7 +125,6 @@ export default function ReportDataBases() {
           />
         </div>
 
-        {/* Fecha de Fin */}
         <div className="field mb-3">
           <label
             htmlFor="endDate"
@@ -141,13 +142,15 @@ export default function ReportDataBases() {
           />
         </div>
 
-        <Button
-          label={loading ? "Exportando..." : "Exportar a Excel"}
-          icon="pi pi-file-excel"
-          onClick={confirmExport}
-          disabled={loading}
-        />
-      </form>
+        </form> 
+        */}
+      <Button
+        label={loading ? "Exportando..." : "Exportar a Excel"}
+        icon="pi pi-file-excel"
+        onClick={confirmExport}
+        disabled={loading}
+        className="w-full m-auto mt-6"
+      />
     </div>
   );
 }

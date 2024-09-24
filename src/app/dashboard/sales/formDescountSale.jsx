@@ -17,6 +17,7 @@ export default function DescountSaleForm() {
     payment_registration_date: null,
     description: "",
     payment_amount: "",
+    payment_receipt_number: "",
     is_credit_note: false,
   });
 
@@ -118,7 +119,7 @@ export default function DescountSaleForm() {
             summary: "Éxito",
             detail: `Nota de venta registrado correctamente con el codigo: ${result.id_payment}`,
           });
-          resetForm(); // Limpiar el formulario tras la operación exitosa
+          resetForm();
         } else {
           toast.current.show({
             severity: "error",
@@ -314,6 +315,31 @@ export default function DescountSaleForm() {
             })}
           />
           {submitted && !formData.description && (
+            <Message
+              className="small-message"
+              severity="error"
+              text="Descripción es requerida"
+            />
+          )}
+        </div>
+        <div className="field mb-3">
+          <label
+            htmlFor="payment_receipt_number"
+            className="text-[#003462] font-black text-sm mb-3"
+          >
+            N° Nota de Credito
+          </label>
+          <InputText
+            placeholder="Ingrese la descripción"
+            id="payment_receipt_number"
+            name="payment_receipt_number"
+            value={formData.payment_receipt_number}
+            onChange={handleInputChange}
+            className={classNames({
+              "p-invalid": submitted && !formData.payment_receipt_number,
+            })}
+          />
+          {submitted && !formData.payment_receipt_number && (
             <Message
               className="small-message"
               severity="error"

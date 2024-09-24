@@ -14,6 +14,7 @@ export default function DiscountPaymentCost() {
     payment_date: null,
     payment_amount: "",
     description: "",
+    payment_receipt_number: "",
   });
 
   const [submitted, setSubmitted] = useState(false);
@@ -33,7 +34,10 @@ export default function DiscountPaymentCost() {
   const validateForm = () => {
     setSubmitted(true);
     return (
-      formData.id_shipment && formData.payment_date && formData.payment_amount
+      formData.id_shipment &&
+      formData.payment_date &&
+      formData.payment_amount &&
+      formData.payment_receipt_number
     );
   };
 
@@ -49,6 +53,7 @@ export default function DiscountPaymentCost() {
       }
       setLoading(true);
       try {
+        console.log(formData);
         const response = await fetch("/api/shipment/saveShipmentPayment", {
           method: "POST",
           headers: {
@@ -60,6 +65,7 @@ export default function DiscountPaymentCost() {
             id_shipment: parseInt(requests.id_shipment),
             payment_date: formData.payment_date.toISOString().split("T")[0], // Solo la fecha
             payment_amount: parseFloat(formData.payment_amount),
+            payment_receipt_number: formData.payment_receipt_number,
           }),
         });
 
@@ -317,6 +323,31 @@ export default function DiscountPaymentCost() {
           )}
         </div>
 
+        <div className="field mb-3">
+          <label
+            htmlFor="payment_receipt_number"
+            className="text-[#003462] font-black text-sm mb-3"
+          >
+            N° Nota de Credito
+          </label>
+          <InputText
+            placeholder="Ingrese la descripción"
+            id="payment_receipt_number"
+            name="payment_receipt_number"
+            value={formData.payment_receipt_number}
+            onChange={handleInputChange}
+            className={classNames({
+              "p-invalid": submitted && !formData.payment_receipt_number,
+            })}
+          />
+          {submitted && !formData.payment_receipt_number && (
+            <Message
+              className="small-message"
+              severity="error"
+              text="Descripción es requerida"
+            />
+          )}
+        </div>
         <div className="field w-full mb-3">
           <label
             htmlFor="description"

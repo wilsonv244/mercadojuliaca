@@ -10,13 +10,57 @@ generator client {
 
 model User {
   id_user        Int      @id @default(autoincrement())
-  user_name      String   @db.VarChar(15)
-  user_password  String   @db.VarChar(25) // It's good to allow more space for a hashed password
-  profile        String   @db.VarChar(35)
-  status         Boolean  @default(false)
+  user_name      String   @db.VarChar(255)
+  user_password  String   @db.VarChar(255)
+  status         Boolean  @default(true)
   created_at     DateTime @default(now())
   updated_at     DateTime @default(now()) @updatedAt
+
+  // Clave foránea para el perfil
+  id_profile     Int
+  profile        Profile  @relation(fields: [id_profile], references: [id_profile])
+
+  // Relaciones inversas con las transacciones bancarias
+  transactions_delivered BankTransaction[] @relation("UserDelivery")
+  transactions_received  BankTransaction[] @relation("UserReceive")
+
+  @@map("users") // Mapear a la tabla 'users' en la base de datos
 }
+
+
+
+model BankTransaction {
+  id_transaction     Int      @id @default(autoincrement())
+  transaction_date   DateTime @db.Date
+  id_user_delivery   Int
+  id_user_receive    Int
+  receipt_type       String?  @db.VarChar(50)  // Este campo puede ser opcional si no siempre hay recibo
+  receipt_number     String   @db.VarChar(50)  @unique
+  total_amount       Decimal    @db.Decimal(10, 2)
+  is_active          Boolean  @default(true)
+  created_at         DateTime @default(now())
+  updated_at         DateTime @default(now()) @updatedAt
+
+  // Relaciones con los usuarios
+  user_delivery      User     @relation("UserDelivery", fields: [id_user_delivery], references: [id_user])
+  user_receive       User     @relation("UserReceive", fields: [id_user_receive], references: [id_user])
+
+  @@map("bank_transaction") // Mapear a la tabla 'bank_transaction' en la base de datos
+}
+
+
+
+model Profile {
+  id_profile     Int      @id @default(autoincrement())
+  profile        String   @db.VarChar(255) // Campo de perfil del usuario
+  status         Boolean  @default(true)
+  created_at     DateTime @default(now())
+  updated_at     DateTime @default(now()) @updatedAt
+  users          User[]   
+
+  @@map("profiles") 
+}
+
 
 
 model Entity {

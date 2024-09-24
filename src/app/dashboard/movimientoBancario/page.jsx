@@ -4,6 +4,7 @@ import { DataTableLista } from "../tools/dataTable";
 import lsOpciones from "../movimientoBancario/lsMenus.json";
 
 import FormRegistrarMovBancarioas from "./formRegister";
+import BankTransactionForm from "./formRegister";
 
 export default function MovimientoBancario() {
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -31,10 +32,10 @@ export default function MovimientoBancario() {
           {selectItem != null ? (
             (() => {
               switch (selectItem.cName) {
-                case "Solicitud Compra":
-                  return <FormRegistrarMovBancarioas />;
-                case "Solicitud Orden Compra":
-                  return <FormRegistrarMovBancarioas />;
+                case "Registrar Movimiento Bancario":
+                  return <BankTransactionForm />;
+                case "Exportar Movimiento Bancario":
+                  return <BankTransactionForm />;
                 default:
                   return null;
               }
