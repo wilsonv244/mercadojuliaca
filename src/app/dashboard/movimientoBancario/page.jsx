@@ -11,7 +11,6 @@ export default function MovimientoBancario() {
   const [selectItem, setSelectItem] = useState(null);
   const user = localStorage.getItem("user_login");
   const userProfile = JSON.parse(user);
-  console.log(userProfile);
 
   return (
     <>

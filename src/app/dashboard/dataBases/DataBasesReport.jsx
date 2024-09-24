@@ -8,7 +8,6 @@ import { saveAs } from "file-saver";
 import { getCuentasPorPagar } from "@/infraestructure/useCasesNav/report/reportCuentasPorPagar";
 
 export default function ReportDataBases({ action }) {
-  console.log(action);
   const [formData, setFormData] = useState({
     startDate: null,
     endDate: null,
@@ -47,8 +46,6 @@ export default function ReportDataBases({ action }) {
         purchaseRequests = await saleResponse3.json();
         break;
     }
-
-    console.log(purchaseRequests);
 
     if (purchaseRequests.length === 0) {
       toast.current.show({

@@ -20,7 +20,6 @@ export default function ReportePurchaseOrder() {
       try {
         const response = await fetch("/api/report/getAllPurchaseOrder");
         const data = await response.json();
-        console.log(data);
         setRequests(data.purchaseOrders);
       } catch (error) {
         console.error("Error fetching purchase requests:", error);

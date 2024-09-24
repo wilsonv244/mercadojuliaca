@@ -7,8 +7,6 @@ import { classNames } from "primereact/utils";
 import ModalConfirmRequest from "./modalConfirm";
 
 export default function ReportRequest({ userProfile }) {
-  console.log("userProfile");
-  console.log(userProfile);
   const [filters, setFilters] = useState({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
@@ -23,7 +21,7 @@ export default function ReportRequest({ userProfile }) {
       try {
         const response = await fetch("/api/purchase/getAllPurchaseReq");
         const data = await response.json();
-        console.log(data);
+
         setRequests(data);
       } catch (error) {
         console.error("Error fetching purchase requests:", error);
@@ -44,9 +42,7 @@ export default function ReportRequest({ userProfile }) {
 
   // Handle row selection
   const handleSelection = (e) => {
-    console.log(e.value);
-    console.log(e.value.is_approved);
-    if (!e.value.is_approved && userProfile.profile == "GERENTE GENERAL") {
+    if (!e.value.is_approved && userProfile.id_profile == 1) {
       setSelectedRequest(e.value);
       setVisible(true);
     }

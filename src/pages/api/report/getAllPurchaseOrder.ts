@@ -42,8 +42,7 @@ export default async function handler(
         },
       },
     });
-    console.log("purchaseOrders");
-    console.log(purchaseOrders);
+
     // Devolver los resultados en formato JSON
     res.status(200).json({ purchaseOrders });
   } catch (error) {

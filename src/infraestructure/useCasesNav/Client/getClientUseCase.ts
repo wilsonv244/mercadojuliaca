@@ -36,13 +36,13 @@ export async function getAllProfiles(): Promise<OptionMenu[]> {
   const options: OptionMenu[] = [];
   try {
     const response = await fetch("/api/login/getProfile");
-    console.log(response);
+
     if (!response.ok) {
       throw new Error(`Error al obtener empleados: ${response.statusText}`);
     }
 
     const data = await response.json();
-    console.log(data);
+
     if (data.length > 0) {
       data.forEach((item: any) => {
         options.push({

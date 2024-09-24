@@ -59,7 +59,6 @@ export default function BankTransactionForm() {
   };
 
   const submitForm = async () => {
-    console.log(formData);
     setSubmitted(true);
     if (
       !formData.receipt_number ||
@@ -93,7 +92,7 @@ export default function BankTransactionForm() {
         }),
       });
       const result = await response.json();
-      console.log(result);
+
       if (response.ok) {
         toast.current?.show({
           severity: "success",

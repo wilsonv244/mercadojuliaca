@@ -54,6 +54,7 @@ export default function PanelPrincipal() {
     user_name: "",
     user_password: "",
     profile: "",
+    id_profile: 0,
     status: true,
     created_at: "",
     updated_at: "",
@@ -88,7 +89,7 @@ export default function PanelPrincipal() {
                 className="mr-1"
                 icon="pi pi-info-circle"
                 severity="info"
-                value={UserProfile.profile || ""}
+                value={UserProfile.id_profile == 1 ?"GERENTE GENERARL" : "SUB GERENTE"}
               ></Tag>
             </div>
             {LinkPage.map(({ icon, label, route }) => {
