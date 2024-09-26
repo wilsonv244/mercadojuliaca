@@ -21,6 +21,7 @@ export default function BankTransactionForm() {
   useEffect(() => {
     async function fetchProfiles() {
       const options = await getAllProfiles();
+      console.log(options);
       setOptionProfiles(options);
     }
     fetchProfiles();
@@ -179,7 +180,6 @@ export default function BankTransactionForm() {
             N° Recibo
           </label>
           <InputText
-            type="number"
             id="receipt_number"
             name="receipt_number"
             value={formData.receipt_number}

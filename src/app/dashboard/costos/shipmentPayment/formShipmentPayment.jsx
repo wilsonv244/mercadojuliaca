@@ -7,6 +7,8 @@ import { classNames } from "primereact/utils";
 import { Toast } from "primereact/toast";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { getShipPayDataByIdUseCase } from "@/infraestructure/useCasesNav/shipment/getShipPayDataFormUseCase";
+import { Entidades, TipoComprobanteLiquidez } from "../../tools/TypeTables";
+import { Dropdown } from "primereact/dropdown";
 
 export default function ShipmentPaymentForm() {
   const [formData, setFormData] = useState({
@@ -259,6 +261,85 @@ export default function ShipmentPaymentForm() {
               />
             </div>
           </div>
+        </div>
+
+        <div className="field mb-3">
+          <label
+            htmlFor="receipt_type"
+            className="text-[#003462] font-black text-sm mb-3"
+          >
+            Tipo de Comprobante
+          </label>
+          <Dropdown
+            id="receipt_type"
+            name="receipt_type"
+            options={TipoComprobanteLiquidez}
+            value={formData.receipt_type}
+            onChange={handleInputChange}
+            placeholder="Ingrese el tipo de recibo (Factura, Ticket, etc.)"
+            className={classNames({
+              "p-invalid": submitted && !formData.receipt_type,
+            })}
+          />
+          {submitted && !formData.receipt_type && (
+            <Message
+              className="small-message"
+              severity="error"
+              text="Tipo de Recibo es requerido"
+            />
+          )}
+        </div>
+        <div className="field mb-3">
+          <label
+            htmlFor="bank_type"
+            className="text-[#003462] font-black text-sm mb-3"
+          >
+            Nombre Banco
+          </label>
+          <Dropdown
+            id="bank_type"
+            name="bank_type"
+            options={Entidades}
+            value={formData.bank_type}
+            onChange={handleInputChange}
+            placeholder="Seleccione una Entidad"
+            className={classNames({
+              "p-invalid": submitted && !formData.bank_type,
+            })}
+          />
+          {submitted && !formData.bank_type && (
+            <Message
+              className="small-message"
+              severity="error"
+              text="Tipo de Recibo es requerido"
+            />
+          )}
+        </div>
+
+        <div className="field mb-3">
+          <label
+            htmlFor="operation_number"
+            className="text-[#003462] font-black text-sm mb-3"
+          >
+            Nro de Operación
+          </label>
+          <InputText
+            placeholder="Ingrese el número de operación"
+            id="operation_number"
+            name="operation_number"
+            value={formData.operation_number}
+            onChange={handleInputChange}
+            className={classNames({
+              "p-invalid": submitted && !formData.operation_number,
+            })}
+          />
+          {submitted && !formData.operation_number && (
+            <Message
+              className="small-message"
+              severity="error"
+              text="Monto de Pago es requerido"
+            />
+          )}
         </div>
 
         {/* Fecha de Pago */}

@@ -14,7 +14,8 @@ export default async function handler(
       receipt_number,
       total_amount,
     } = req.body;
-
+    console.log("req.body");
+    console.log(req.body);
     try {
       if (
         !transaction_date ||
