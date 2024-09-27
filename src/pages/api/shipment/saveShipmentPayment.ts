@@ -14,6 +14,9 @@ export default async function handler(
       payment_date,
       payment_amount,
       payment_receipt_number,
+      operation_number,
+      id_bank,
+      id_receipt_type,
     }: ShipmentPaymentData = req.body;
 
     if (!id_shipment || !payment_date) {
@@ -23,16 +26,15 @@ export default async function handler(
     try {
       const newPayment = await prisma.shipmentPayment.create({
         data: {
+          id_bank: id_bank,
+          operation_number: operation_number,
+          id_receipt_type: id_receipt_type,
           description,
           is_credit_note,
           id_shipment,
           payment_date: new Date(payment_date),
-          payment_amount: is_credit_note
-            ? Math.abs(payment_amount)
-            : payment_amount,
-          payment_receipt_number: is_credit_note
-            ? payment_receipt_number
-            : null,
+          payment_amount: payment_amount,
+          payment_receipt_number: is_credit_note ? payment_receipt_number : "",
         },
       });
 

@@ -70,9 +70,14 @@ export default function PurchaseShipmentForm() {
               id_shipment: parseInt(result.shipment.id_shipment),
               payment_date: new Date().toISOString().split("T")[0], // Fecha actual
               payment_amount: 0, // El monto es 0
+              id_bank: 1,
+              operation_number: formData.receipt_number,
+              id_receipt_type: 1,
             }),
           }
         );
+        const resultResponse = await responseSavePayment.json();
+        console.log(resultResponse);
 
         if (response.ok) {
           toast.current.show({

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
@@ -22,12 +22,19 @@ export default function VendedorForm() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const toast = useRef(null); // Referencia para Toast
+  const [channel, setChannel] = useState([]);
 
-  const canales = [
-    { label: "Tradicional", value: 1 },
-    { label: "Mayorista", value: 2 },
-    { label: "Provincia", value: 3 },
-  ];
+  useEffect(() => {
+    const getChannel = async () => {
+      const response = await fetch("/api/tablesType/getChannel", {
+        method: "GET", // Corrección aquí
+      });
+      const result = await response.json();
+      console.log(result);
+      setChannel(result);
+    };
+    getChannel();
+  }, []);
 
   const estatus = [
     { label: "ACTIVO", value: "activo" },
@@ -284,7 +291,7 @@ export default function VendedorForm() {
             id="canal"
             name="canal"
             value={formData.canal}
-            options={canales}
+            options={channel}
             onChange={(e) => handleDropdownChange(e, "canal")}
             placeholder="Seleccione un canal"
             className={classNames({

@@ -271,20 +271,45 @@ model PurchaseShipment {
   @@index([id_order])
 }
 
+model ReceiptType {
+  id_type     Int       @id @default(autoincrement())
+  name        String    @db.VarChar(25)
+  ShipmentPayments ShipmentPayment[]
+  
+  @@map("receipt_types")
+}
+
+model Bank {
+  id_bank     Int       @id @default(autoincrement())
+  name        String    @db.VarChar(30)
+  ShipmentPayments ShipmentPayment[]
+  
+  @@map("banks")
+}
+
 model ShipmentPayment {
   id_payment            Int       @id @default(autoincrement())
   id_shipment           Int
-  payment_date          DateTime
+  id_bank               Int
+  id_receipt_type       Int
+  payment_date          DateTime  @db.Date
   payment_amount        Decimal   @db.Decimal(14, 2)
   description           String?   @db.Text
-  is_credit_note        Boolean   @default(false) 
-  payment_receipt_number String?  
-  created_at            DateTime  @default(now())
-  updated_at            DateTime  @default(now()) @updatedAt
+  is_credit_note        Boolean   @default(false)
+  payment_receipt_number String    @db.VarChar(20) @default("-")
+  operation_number      String?    @db.VarChar(30) @default("-")
+  created_at            DateTime  @default(now()) @db.Timestamp
+  updated_at            DateTime  @default(now()) @updatedAt @db.Timestamp
 
   shipment              PurchaseShipment @relation(fields: [id_shipment], references: [id_shipment])
+  bank                  Bank             @relation(fields: [id_bank], references: [id_bank])
+  receiptType           ReceiptType      @relation(fields: [id_receipt_type], references: [id_type])
 
   @@index([id_shipment])
+  @@index([id_bank])
+  @@index([id_receipt_type])
+
+  @@map("shipment_payments")
 }
 
 

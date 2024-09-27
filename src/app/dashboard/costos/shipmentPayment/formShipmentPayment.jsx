@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { InputText } from "primereact/inputtext";
 import { Calendar } from "primereact/calendar";
 import { Button } from "primereact/button";
@@ -15,12 +15,38 @@ export default function ShipmentPaymentForm() {
     id_shipment: "",
     payment_date: null,
     payment_amount: "",
+    bank_type: 0,
+    receipt_type: 0,
+    operation_number: "",
   });
 
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [requests, setRequests] = useState({});
+  const [bank, setBank] = useState([]);
+  const [receiptType, setreceiptType] = useState([]);
   const toast = useRef(null); // Para mostrar mensajes de éxito o error
+
+  useEffect(() => {
+    const getBank = async () => {
+      const response = await fetch("/api/tablesType/getBank", {
+        method: "GET", // Corrección aquí
+      });
+      const result = await response.json();
+      console.log(result);
+      setBank(result);
+    };
+    const getReceipType = async () => {
+      const response = await fetch("/api/tablesType/getReceipType", {
+        method: "GET", // Corrección aquí
+      });
+      const result = await response.json();
+      console.log(result);
+      setreceiptType(result);
+    };
+    getBank();
+    getReceipType();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -28,6 +54,9 @@ export default function ShipmentPaymentForm() {
   };
 
   const handleDateChange = (e, name) => {
+    setFormData({ ...formData, [name]: e.value });
+  };
+  const handleDropdownChange = (e, name) => {
     setFormData({ ...formData, [name]: e.value });
   };
 
@@ -60,6 +89,9 @@ export default function ShipmentPaymentForm() {
             id_shipment: parseInt(requests.id_shipment),
             payment_date: formData.payment_date.toISOString().split("T")[0], // Solo la fecha
             payment_amount: parseFloat(formData.payment_amount),
+            id_bank: formData.bank_type,
+            operation_number: formData.operation_number,
+            id_receipt_type: formData.receipt_type,
           }),
         });
 
@@ -273,9 +305,9 @@ export default function ShipmentPaymentForm() {
           <Dropdown
             id="receipt_type"
             name="receipt_type"
-            options={TipoComprobanteLiquidez}
+            options={receiptType}
             value={formData.receipt_type}
-            onChange={handleInputChange}
+            onChange={(e) => handleDropdownChange(e, "receipt_type")}
             placeholder="Ingrese el tipo de recibo (Factura, Ticket, etc.)"
             className={classNames({
               "p-invalid": submitted && !formData.receipt_type,
@@ -299,9 +331,9 @@ export default function ShipmentPaymentForm() {
           <Dropdown
             id="bank_type"
             name="bank_type"
-            options={Entidades}
+            options={bank}
             value={formData.bank_type}
-            onChange={handleInputChange}
+            onChange={(e) => handleDropdownChange(e, "bank_type")}
             placeholder="Seleccione una Entidad"
             className={classNames({
               "p-invalid": submitted && !formData.bank_type,

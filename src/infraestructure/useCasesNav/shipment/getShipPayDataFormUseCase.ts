@@ -33,9 +33,9 @@ export async function getShipPayDataByIdUseCase(
     if (receipt_number) params.append("receipt_number", receipt_number);
 
     const url = `/api/shipment/getShipmentPayment?${params.toString()}`;
-
+    console.log(url);
     const response = await fetch(url);
-
+    console.log(response);
     if (!response.ok) {
       return {
         ...paymentData,

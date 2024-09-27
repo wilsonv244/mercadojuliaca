@@ -65,6 +65,9 @@ export default function DiscountPaymentCost() {
             payment_date: formData.payment_date.toISOString().split("T")[0], // Solo la fecha
             payment_amount: parseFloat(formData.payment_amount),
             payment_receipt_number: formData.payment_receipt_number,
+            id_bank: 1,
+            operation_number: "0",
+            id_receipt_type: 1,
           }),
         });
 

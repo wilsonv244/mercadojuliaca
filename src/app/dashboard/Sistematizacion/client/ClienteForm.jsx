@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 import { Calendar } from "primereact/calendar";
@@ -27,7 +27,20 @@ export default function ClienteForm() {
 
   const toast = useRef(null); // Referencia para el Toast
   const [submitted, setSubmitted] = useState(false);
+  const [channel, setChannel] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const getChannel = async () => {
+      const response = await fetch("/api/tablesType/getChannel", {
+        method: "GET", // Corrección aquí
+      });
+      const result = await response.json();
+      console.log(result);
+      setChannel(result);
+    };
+    getChannel();
+  }, []);
 
   const resetForm = () => {
     setFormData({
@@ -46,11 +59,6 @@ export default function ClienteForm() {
     });
     setSubmitted(false);
   };
-  const canales = [
-    { label: "Tradicional", value: "tradicional" },
-    { label: "Mayorista", value: "mayorista" },
-    { label: "Provincia", value: "provincia" },
-  ];
 
   const provinciasPuno = [
     { label: "Puno", value: "puno" },
@@ -331,7 +339,7 @@ export default function ClienteForm() {
               id="canal"
               name="canal"
               value={formData.canal}
-              options={canales}
+              options={channel}
               onChange={(e) => handleDropdownChange(e, "canal")}
               placeholder="Seleccione un canal"
               className={classNames({
