@@ -43,7 +43,7 @@ export async function getCuentasPorPagar(
     console.log(d_fecha_fin);
     console.log(d_fecha_inicio);
     const saleResponse = await fetch(
-      `/api/report/getAllReportPurchaseOrder?d_fecha_inicio=${d_fecha_inicio}&d_fecha_fin=${d_fecha_fin}`
+      `/api/report/getAllReportBaseCostos?d_fecha_inicio=${d_fecha_inicio}&d_fecha_fin=${d_fecha_fin}`
     );
     console.log(saleResponse);
     if (saleResponse.status === 204) {

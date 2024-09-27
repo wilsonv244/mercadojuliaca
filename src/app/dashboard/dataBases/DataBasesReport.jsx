@@ -24,15 +24,15 @@ export default function ReportDataBases({ action }) {
     let purchaseRequests = [];
     switch (action) {
       case "BASEDATOS":
-        const responseCuentasPagar = await getCuentasPorPagar(
-          formData.d_fecha_inicio,
-          formData.d_fecha_fin
+        const saleResponseBaseCostos = await fetch(
+          `/api/report/getAllReportBaseCostos?d_fecha_inicio=${formData.d_fecha_inicio}&d_fecha_fin=${formData.d_fecha_fin}`
         );
-        purchaseRequests = responseCuentasPagar.lsPurchaseDetail;
+        purchaseRequests = await saleResponseBaseCostos.json();
         break;
+
       case "CUENTASPAGAR":
         const saleResponse = await fetch(
-          `/api/report/getAllReportPurchaseOrder?d_fecha_inicio=${formData.d_fecha_inicio}&d_fecha_fin=${formData.d_fecha_fin}`
+          `/api/report/getAllReportCuentasPagar?d_fecha_inicio=${formData.d_fecha_inicio}&d_fecha_fin=${formData.d_fecha_fin}`
         );
         purchaseRequests = await saleResponse.json();
         break;
@@ -67,56 +67,34 @@ export default function ReportDataBases({ action }) {
       return;
     }
 
-    // Convertir los datos a formato JSON para Excel
-
-    const worksheetData = purchaseRequests.map((request) => ({
-      id_solicitud_compra: request.sol_num,
-      "Centro de Costo": request.sol_sub_cen_costo,
-      "Fecha de Solicitud": request.fecha_registro,
-      Articulo: request.sol_articulo,
-      Descripción: request.sol_descripcion,
-      Cantidad: request.sol_cantidad,
-      "Unidad de Medida": request.sol_unidad_medida,
-      "Costo Planificado": request.sol_costo_planificado,
-      Estado: request.sol_estado,
-      "Quien Aprobo": request.sol_aprobado_por,
-      ID_Nro_Orden_Compra: request.ord_nro,
-      Proveedor: request.ord_prov_razon,
-      RUC: request.ord_prov_ruc,
-      "RAZON SOCIAL": request.ord_prov_razon,
-      "FECHA ORDER COMPRA": request.ord_fecha,
-      "MONTO TOTAL": request.ord_monto_total,
-      "MONTO SIN IGV": request.ord_monto_sin_igv,
-      IGV: request.ord_monto_total - request.ord_monto_sin_igv,
-      "ID EMBARQUE": request.emb_nro,
-      "TIPO RECIBO": request.emb_tipo_recibo,
-      "FECHA VENCIMIENTO": request.emb_fecha_venc,
-      "ESTADO PAGO": request.emb_estado,
-      "FECHA NOTA CREDITO": request.ord_fecha,
-    }));
-
     // Crear hoja de cálculo
     let worksheet = "";
+    let nombreArchivoExcel = "";
     switch (action) {
       case "BASEDATOS":
-        worksheet = XLSX.utils.json_to_sheet(worksheetData);
+        worksheet = XLSX.utils.json_to_sheet(purchaseRequests);
+        nombreArchivoExcel = "Reporte_Base_de_costos";
         break;
       case "CUENTASPAGAR":
         worksheet = XLSX.utils.json_to_sheet(purchaseRequests);
+        nombreArchivoExcel = "Reporte_Cuentas_Pagar";
         break;
       case "BASEINGRESOS":
         worksheet = XLSX.utils.json_to_sheet(purchaseRequests);
+        nombreArchivoExcel = "Reporte_Base_Ingresos";
         break;
       case "CUENTASCOBRAR":
         worksheet = XLSX.utils.json_to_sheet(purchaseRequests);
+        nombreArchivoExcel = "Reporte_Cuentas_Cobrar";
         break;
       case "MOVBANCARIO":
         worksheet = XLSX.utils.json_to_sheet(purchaseRequests);
+        nombreArchivoExcel = "Reporte_Movimiento_Bancario";
         break;
     }
 
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Solicitudes");
+    XLSX.utils.book_append_sheet(workbook, worksheet, nombreArchivoExcel);
 
     // Guardar el archivo
     const excelBuffer = XLSX.write(workbook, {
@@ -126,7 +104,7 @@ export default function ReportDataBases({ action }) {
     const dataBlob = new Blob([excelBuffer], {
       type: "application/octet-stream",
     });
-    saveAs(dataBlob, "Solicitudes_de_Compra.xlsx");
+    saveAs(dataBlob, `${nombreArchivoExcel}.xlsx`);
 
     toast.current.show({
       severity: "success",
