@@ -38,13 +38,13 @@ export default function ReportDataBases({ action }) {
         break;
       case "BASEINGRESOS":
         const saleResponse2 = await fetch(
-          `/api/report/getAllReportBaseIngresos?d_fecha_inicio=${formData.d_fecha_inicio}&d_fecha_fin=${formData.d_fecha_fin}`
+          `/api/report/getAllReportCuentasCobrar?d_fecha_inicio=${formData.d_fecha_inicio}&d_fecha_fin=${formData.d_fecha_fin}`
         );
         purchaseRequests = await saleResponse2.json();
         break;
       case "CUENTASCOBRAR":
         const saleResponse3 = await fetch(
-          `/api/report/getAllReportCuentasCobrar?d_fecha_inicio=${formData.d_fecha_inicio}&d_fecha_fin=${formData.d_fecha_fin}`
+          `/api/report/getAllReportBaseIngresos?d_fecha_inicio=${formData.d_fecha_inicio}&d_fecha_fin=${formData.d_fecha_fin}`
         );
         purchaseRequests = await saleResponse3.json();
         break;
