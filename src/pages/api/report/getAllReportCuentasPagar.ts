@@ -19,7 +19,7 @@ export default async function handler(
     pr.id_request AS sol_num,
     cc2.cost_center_name AS sol_cen_costo,
     cc.cost_center_name AS sol_sub_cen_costo,    
-    pr.request_date AS sol_fecha,
+	to_char(pr.request_date, 'DD-MM-YYYY') AS sol_fecha,
     pr.item AS sol_articulo,
     pr.description AS sol_descripcion,
     pr.quantity AS sol_cantidad,
@@ -36,7 +36,7 @@ export default async function handler(
     
     --- ORDEN DE COMPRA
     po.id_order AS ord_nro,
-    po.order_date AS ord_fecha,
+	to_char(po.order_date, 'DD-MM-YYYY') AS ord_fecha,
     po.total_amount AS ord_monto_total,
     0 AS ord_monto_sin_igv,
     0 AS ord_igv,
@@ -45,10 +45,10 @@ export default async function handler(
 
     --- EMBARQUE
     ps.id_shipment AS emb_nro,   
-    ps.shipment_date AS emb_fecha,
+	to_char(ps.shipment_date, 'DD-MM-YYYY HH24:MI:SS') AS emb_fecha,
     ps.receipt_type AS emb_tipo_recibo,
     ps.receipt_number AS emb_nro_recibo,    
-    ps.payment_due_date AS emb_fecha_venc,  
+	to_char(ps.payment_due_date, 'DD-MM-YYYY') AS emb_fecha_venc,  
     ba.name AS nombre_banco,
     rt.name AS tipo_comprobante,
     sp.operation_number AS nro_operacion,
@@ -70,7 +70,7 @@ export default async function handler(
         WHEN sp.payment_receipt_number = '' THEN ps.receipt_number
         ELSE sp.payment_receipt_number
     END AS recibo_nro_pago,
-    sp.payment_date AS fecha_pago,
+	to_char(sp.payment_date, 'DD-MM-YYYY HH24:MI:SS') AS fecha_pago,
 CASE 
     WHEN ps.payment_due_date < CURRENT_DATE THEN EXTRACT(DAY FROM CURRENT_DATE - ps.payment_due_date)
     ELSE 0
@@ -99,6 +99,7 @@ WHERE
     AND pr.is_active = TRUE
 ORDER BY sol_num ASC;
 
+
   
         `;
       } else {
@@ -108,7 +109,7 @@ ORDER BY sol_num ASC;
     pr.id_request AS sol_num,
     cc2.cost_center_name AS sol_cen_costo,
     cc.cost_center_name AS sol_sub_cen_costo,    
-    pr.request_date AS sol_fecha,
+	to_char(pr.request_date, 'DD-MM-YYYY') AS sol_fecha,
     pr.item AS sol_articulo,
     pr.description AS sol_descripcion,
     pr.quantity AS sol_cantidad,
@@ -125,7 +126,7 @@ ORDER BY sol_num ASC;
     
     --- ORDEN DE COMPRA
     po.id_order AS ord_nro,
-    po.order_date AS ord_fecha,
+	to_char(po.order_date, 'DD-MM-YYYY') AS ord_fecha,
     po.total_amount AS ord_monto_total,
     0 AS ord_monto_sin_igv,
     0 AS ord_igv,
@@ -134,10 +135,10 @@ ORDER BY sol_num ASC;
 
     --- EMBARQUE
     ps.id_shipment AS emb_nro,   
-    ps.shipment_date AS emb_fecha,
+	to_char(ps.shipment_date, 'DD-MM-YYYY HH24:MI:SS') AS emb_fecha,
     ps.receipt_type AS emb_tipo_recibo,
     ps.receipt_number AS emb_nro_recibo,    
-    ps.payment_due_date AS emb_fecha_venc,  
+	to_char(ps.payment_due_date, 'DD-MM-YYYY') AS emb_fecha_venc,  
     ba.name AS nombre_banco,
     rt.name AS tipo_comprobante,
     sp.operation_number AS nro_operacion,
@@ -159,7 +160,7 @@ ORDER BY sol_num ASC;
         WHEN sp.payment_receipt_number = '' THEN ps.receipt_number
         ELSE sp.payment_receipt_number
     END AS recibo_nro_pago,
-    sp.payment_date AS fecha_pago,
+	to_char(sp.payment_date, 'DD-MM-YYYY HH24:MI:SS') AS fecha_pago,
 CASE 
     WHEN ps.payment_due_date < CURRENT_DATE THEN EXTRACT(DAY FROM CURRENT_DATE - ps.payment_due_date)
     ELSE 0
@@ -186,6 +187,7 @@ WHERE
     ps.is_active = TRUE 
     AND po.is_active = TRUE 
     AND pr.is_active = TRUE
+
           and pr.request_date between ${new Date(
             d_fecha_inicio as string
           ).toISOString()}::timestamp and ${new Date(

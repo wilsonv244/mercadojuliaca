@@ -1,8 +1,5 @@
-// pages/api/purchase-details/index.ts
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/infraestructure/postgressDB/prisma";
-import { isDate } from "date-fns";
-import { isString } from "formik";
 
 export default async function handler(
   req: NextApiRequest,
@@ -11,16 +8,12 @@ export default async function handler(
   if (req.method === "GET") {
     const { d_fecha_inicio, d_fecha_fin } = req.query;
     try {
-      console.log("triste");
-      console.log(typeof d_fecha_inicio);
-      console.log(d_fecha_inicio);
-      let result = "";
-      if (d_fecha_inicio == "null " || d_fecha_fin == "null") {
-        console.log("Sin rango de fechas");
+      let result: [] = [];
+      if (d_fecha_inicio === "null" || d_fecha_fin === "null") {
         result = await prisma.$queryRaw`
           SELECT 
     s.id_sale as nro_venta,
-    s.receipt_date as fecha_venta,
+	to_char(s.receipt_date, 'DD-MM-YYYY HH24:MI:SS') as fecha_venta,
     s.receipt_type as tipo_comprobante_venta,
     s.receipt_number as nro_comprobante_venta,    
     s.total_amount as monto_total_venta,
@@ -48,7 +41,44 @@ export default async function handler(
     		and sp.is_credit_note = true) AS nota_credito_total,
     (s.total_amount - (SELECT COALESCE(SUM(sp.payment_amount), 0)  
                         FROM public."SalePayment" sp 
-                        WHERE sp.id_sale = s.id_sale and sp.is_credit_note = false)) AS saldo_total
+                        WHERE sp.id_sale = s.id_sale and sp.is_credit_note = false)) AS saldo_total,
+	CASE
+        WHEN (SELECT COALESCE(SUM(sp.payment_amount), 0)  
+                        FROM public."SalePayment" sp
+                        WHERE sp.id_sale = s.id_sale and sp.is_credit_note = true) > 0
+                THEN (s.total_amount - (SELECT COALESCE(SUM(sp.payment_amount), 0)  
+                        FROM public."SalePayment" sp
+                        WHERE sp.id_sale = s.id_sale and sp.is_credit_note = true))
+                ELSE 0
+   END AS monto_total_desc_nota_cred,
+   CASE
+        WHEN (s.total_amount - (SELECT COALESCE(SUM(sp.payment_amount), 0)  
+                        FROM public."SalePayment" sp
+                        WHERE sp.id_sale = s.id_sale and sp.is_credit_note = false)) = 0
+                THEN 'Pagado'
+                ELSE 'Pendiente'
+    END AS estado_final_pago,    
+    CASE
+        WHEN (s.total_amount - (SELECT COALESCE(SUM(sp.payment_amount), 0)  
+                        FROM public."SalePayment" sp
+                        WHERE sp.id_sale = s.id_sale and sp.is_credit_note = false)) = 0
+                THEN 0
+                ELSE EXTRACT(DAY FROM CURRENT_DATE - s.receipt_date)
+    END as dias_atrazo,
+    (SELECT
+            COALESCE(COUNT(sp.*), 0)
+            FROM public."SalePayment" sp
+            WHERE sp.id_sale = s.id_sale
+                    and sp.is_credit_note = false) as nro_cuotas,
+    CASE
+        WHEN (s.total_amount - (SELECT COALESCE(SUM(sp.payment_amount), 0)  
+                        FROM public."SalePayment" sp
+                        WHERE sp.id_sale = s.id_sale and sp.is_credit_note = false)) = 0
+                THEN 'No tienes facturas por cobrar'
+                ELSE 'Factura pendiente por cobrar'
+    END AS notificacion
+
+	
 FROM 
    public."Sale"  s
 JOIN 
@@ -63,7 +93,7 @@ join
         result = await prisma.$queryRaw`
           SELECT 
     s.id_sale as nro_venta,
-    s.receipt_date as fecha_venta,
+	to_char(s.receipt_date, 'DD-MM-YYYY HH24:MI:SS') as fecha_venta,
     s.receipt_type as tipo_comprobante_venta,
     s.receipt_number as nro_comprobante_venta,    
     s.total_amount as monto_total_venta,
@@ -91,7 +121,44 @@ join
     		and sp.is_credit_note = true) AS nota_credito_total,
     (s.total_amount - (SELECT COALESCE(SUM(sp.payment_amount), 0)  
                         FROM public."SalePayment" sp 
-                        WHERE sp.id_sale = s.id_sale and sp.is_credit_note = false)) AS saldo_total
+                        WHERE sp.id_sale = s.id_sale and sp.is_credit_note = false)) AS saldo_total,
+	CASE
+        WHEN (SELECT COALESCE(SUM(sp.payment_amount), 0)  
+                        FROM public."SalePayment" sp
+                        WHERE sp.id_sale = s.id_sale and sp.is_credit_note = true) > 0
+                THEN (s.total_amount - (SELECT COALESCE(SUM(sp.payment_amount), 0)  
+                        FROM public."SalePayment" sp
+                        WHERE sp.id_sale = s.id_sale and sp.is_credit_note = true))
+                ELSE 0
+   END AS monto_total_desc_nota_cred,
+   CASE
+        WHEN (s.total_amount - (SELECT COALESCE(SUM(sp.payment_amount), 0)  
+                        FROM public."SalePayment" sp
+                        WHERE sp.id_sale = s.id_sale and sp.is_credit_note = false)) = 0
+                THEN 'Pagado'
+                ELSE 'Pendiente'
+    END AS estado_final_pago,    
+    CASE
+        WHEN (s.total_amount - (SELECT COALESCE(SUM(sp.payment_amount), 0)  
+                        FROM public."SalePayment" sp
+                        WHERE sp.id_sale = s.id_sale and sp.is_credit_note = false)) = 0
+                THEN 0
+                ELSE EXTRACT(DAY FROM CURRENT_DATE - s.receipt_date)
+    END as dias_atrazo,
+    (SELECT
+            COALESCE(COUNT(sp.*), 0)
+            FROM public."SalePayment" sp
+            WHERE sp.id_sale = s.id_sale
+                    and sp.is_credit_note = false) as nro_cuotas,
+    CASE
+        WHEN (s.total_amount - (SELECT COALESCE(SUM(sp.payment_amount), 0)  
+                        FROM public."SalePayment" sp
+                        WHERE sp.id_sale = s.id_sale and sp.is_credit_note = false)) = 0
+                THEN 'No tienes facturas por cobrar'
+                ELSE 'Factura pendiente por cobrar'
+    END AS notificacion
+
+	
 FROM 
    public."Sale"  s
 JOIN 
@@ -100,15 +167,25 @@ JOIN
    public."Employee"  e ON s.id_employee = e.id_employee
 join 
 	public."Channel" ch on e.id_channel = ch.id_channel
-       where s.receipt_date between ${new Date(
-         d_fecha_inicio as string
-       ).toISOString()}::timestamp and ${new Date(
+          WHERE s.receipt_date BETWEEN ${new Date(
+            d_fecha_inicio as string
+          ).toISOString()}::timestamp AND ${new Date(
           d_fecha_fin as string
         ).toISOString()}::timestamp;
         `;
       }
 
-      res.status(200).json(result);
+      // Map BigInt to String
+      const parsedResult = result.map((row: any) => {
+        return Object.fromEntries(
+          Object.entries(row).map(([key, value]) => [
+            key,
+            typeof value === "bigint" ? value.toString() : value,
+          ])
+        );
+      });
+
+      res.status(200).json(parsedResult);
     } catch (error) {
       console.error("Request error", error);
       res.status(500).json({ error: "Error al ejecutar la consulta" });

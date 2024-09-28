@@ -17,7 +17,7 @@ select
     pr.id_request as sol_num,
     cc2.cost_center_name as sol_cen_costo,
     cc.cost_center_name as sol_sub_cen_costo,    
-    pr.request_date as sol_fecha,
+    to_char(pr.request_date, 'DD-MM-YYYY HH24:MI:SS') as sol_fecha,
     pr.item as sol_articulo,
     pr.description as sol_descripcion,
     pr.quantity as sol_cantidad,
@@ -35,7 +35,7 @@ select
     END AS sol_aprobado_por,
     --- Orden de compra
     po.id_order as ord_nro,
-    po.order_date as ord_fecha,
+    to_char(po.order_date, 'DD-MM-YYYY HH24:MI:SS') as ord_fecha,
     po.total_amount as ord_monto_total,
     0 as ord_monto_sin_igv,
     0 as ord_igv,
@@ -43,10 +43,10 @@ select
     s.legal_name as ord_proveedor_razon,
     --- Embarque
     ps.id_shipment as emb_nro,   
-    ps.shipment_date as emb_fecha,
+    to_char(ps.shipment_date, 'DD-MM-YYYY HH24:MI:SS') as emb_fecha,
     ps.receipt_type as emb_tipo_recibo,
     ps.receipt_number as emb_nro_recibo,    
-    ps.payment_due_date as emb_fecha_venc,    
+    to_char(ps.payment_due_date , 'DD-MM-YYYY HH24:MI:SS') as emb_fecha_venc,    
     CASE
         WHEN ps.payment_status = TRUE 
         	THEN 'PAGADO'
@@ -65,7 +65,7 @@ select
     (po.total_amount - (SELECT COALESCE(SUM(sp.payment_amount), 0)  
                         FROM  public.shipment_payments sp 
                         WHERE sp.id_shipment = ps.id_shipment and sp.is_credit_note = false)) AS saldo_total,
-    ps.created_at as fecha_registro
+    to_char(ps.created_at, 'DD-MM-YYYY HH24:MI:SS') as fecha_registro
 FROM 
      public."PurchaseShipment" ps
 JOIN 
@@ -86,12 +86,12 @@ where
       `;
       } else {
         result = await prisma.$queryRaw`
-        select
+       select
 	-- SOLICITUD DE COMPRA
     pr.id_request as sol_num,
     cc2.cost_center_name as sol_cen_costo,
     cc.cost_center_name as sol_sub_cen_costo,    
-    pr.request_date as sol_fecha,
+    to_char(pr.request_date, 'DD-MM-YYYY HH24:MI:SS') as sol_fecha,
     pr.item as sol_articulo,
     pr.description as sol_descripcion,
     pr.quantity as sol_cantidad,
@@ -109,7 +109,7 @@ where
     END AS sol_aprobado_por,
     --- Orden de compra
     po.id_order as ord_nro,
-    po.order_date as ord_fecha,
+    to_char(po.order_date, 'DD-MM-YYYY HH24:MI:SS') as ord_fecha,
     po.total_amount as ord_monto_total,
     0 as ord_monto_sin_igv,
     0 as ord_igv,
@@ -117,10 +117,10 @@ where
     s.legal_name as ord_proveedor_razon,
     --- Embarque
     ps.id_shipment as emb_nro,   
-    ps.shipment_date as emb_fecha,
+    to_char(ps.shipment_date, 'DD-MM-YYYY HH24:MI:SS') as emb_fecha,
     ps.receipt_type as emb_tipo_recibo,
     ps.receipt_number as emb_nro_recibo,    
-    ps.payment_due_date as emb_fecha_venc,    
+    to_char(ps.payment_due_date , 'DD-MM-YYYY HH24:MI:SS') as emb_fecha_venc,    
     CASE
         WHEN ps.payment_status = TRUE 
         	THEN 'PAGADO'
@@ -139,7 +139,7 @@ where
     (po.total_amount - (SELECT COALESCE(SUM(sp.payment_amount), 0)  
                         FROM  public.shipment_payments sp 
                         WHERE sp.id_shipment = ps.id_shipment and sp.is_credit_note = false)) AS saldo_total,
-    ps.created_at as fecha_registro
+    to_char(ps.created_at, 'DD-MM-YYYY HH24:MI:SS') as fecha_registro
 FROM 
      public."PurchaseShipment" ps
 JOIN 

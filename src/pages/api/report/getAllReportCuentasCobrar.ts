@@ -14,7 +14,7 @@ export default async function handler(
         result = await prisma.$queryRaw`
           SELECT 
       s.id_sale AS nro_venta,
-      s.receipt_date AS fecha_venta,
+      to_char(s.receipt_date, 'DD-MM-YYYY HH24:MI:SS')AS fecha_venta,
       s.receipt_type AS tipo_comprobante_venta,
       s.receipt_number AS nro_comprobante_venta,    
       s.total_amount AS monto_total_venta,
@@ -62,7 +62,7 @@ export default async function handler(
       END AS recibo_nro_pago,
   
       -- Fecha de pago
-      sp.payment_registration_date AS fecha_pago
+      to_char(sp.payment_registration_date, 'DD-MM-YYYY HH24:MI:SS')AS fecha_pago
   FROM 
       public."Sale" s
   JOIN 
@@ -137,7 +137,11 @@ export default async function handler(
       public."Channel" ch ON e.id_channel = ch.id_channel
   JOIN 
       public."SalePayment" sp ON s.id_sale = sp.id_sale
-       where s.receipt_date between ${new Date(d_fecha_inicio as string).toISOString()}::timestamp and ${new Date(d_fecha_fin as string).toISOString()}::timestamp;
+       where s.receipt_date between ${new Date(
+         d_fecha_inicio as string
+       ).toISOString()}::timestamp and ${new Date(
+          d_fecha_fin as string
+        ).toISOString()}::timestamp;
         `;
       }
 
