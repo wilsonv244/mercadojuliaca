@@ -5,6 +5,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  console.log("Request body:", req.body);   
+  console.log("Request method:", req.method);
   if (req.method === "POST") {
     const { user_name, user_password } = req.body;
 
