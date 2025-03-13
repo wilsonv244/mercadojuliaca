@@ -22,6 +22,7 @@ export default async function handler(
           status: true,
         },
       });
+      console.log(user);
 
       // If the user exists
       if (user) {
