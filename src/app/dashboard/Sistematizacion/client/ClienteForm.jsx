@@ -113,7 +113,7 @@ export default function ClienteForm() {
           },
           body: JSON.stringify({
             id_entity: 1,
-            id_channel: 1,
+            id_channel: 2,
             document_type: 1,
             document_number: formData.dni,
             person_type: 1,

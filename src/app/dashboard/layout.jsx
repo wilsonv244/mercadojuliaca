@@ -24,7 +24,7 @@ export default function DashboardLayout({
         <PanelPrincipal />
         {children}
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </section>
   );
 }

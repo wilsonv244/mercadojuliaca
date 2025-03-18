@@ -21,7 +21,7 @@ export default async function handler(
       const newEmployee = await prisma.employee.create({
         data: {
           id_entity: 1, // Assuming the id_entity is constant
-          id_channel: 1,
+          id_channel: 2,
           document_type: 1, // Assuming document_type is constant
           document_number,
           first_name,

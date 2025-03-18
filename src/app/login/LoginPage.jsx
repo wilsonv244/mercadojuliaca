@@ -23,31 +23,45 @@ export default function LoginPage() {
     }
   };
   const registrarFunction = async (cDatos) => {
-    try {
-      // First fetch call to login API
-      const response = await fetch("/api/login/loginUser", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user_name: cDatos.user_name,
-          user_password: cDatos.user_password,
-        }),
-      });
+    // try {
+    //   // First fetch call to login API
+    //   const response = await fetch("/api/login/loginUser", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({
+    //       user_name: cDatos.user_name,
+    //       user_password: cDatos.user_password,
+    //     }),
+    //   });
 
-      if (response.status === 200) {
-        const data = await response.json();
-        localStorage.setItem("user_login", JSON.stringify(data.user));
-        console.log(JSON.stringify(data));
+    //   if (response.status === 200) {
+    //     const data = await response.json();
+    //     localStorage.setItem("user_login", JSON.stringify(data.user));
+    //     console.log(JSON.stringify(data));
 
-        router.push("dashboard/Sistematizacion");
-      } else {
-        show("Credenciales incorrectas", "warn"); // Show warning if credentials are incorrect
-      }
-    } catch (error) {
-      console.error("Error logging in:", error);
-    }
+    //     router.push("dashboard/Sistematizacion");
+    //   } else {
+    //     show("Credenciales incorrectas", "warn"); // Show warning if credentials are incorrect
+    //   }
+    // } catch (error) {
+    //   console.error("Error logging in:", error);
+    // }
+    const dataStorage = {
+      id_user: 1,
+      user_name: "Navifly",
+      user_password: "123456789",
+      status: true,
+      created_at: "2025-03-13T06:53:31.649Z",
+      updated_at: "2025-03-13T06:53:31.649Z",
+      id_profile: 1,
+    };
+
+    // Guardar en localStorage
+    localStorage.setItem("user_login", JSON.stringify(dataStorage));
+
+    router.push("dashboard/Sistematizacion");
   };
 
   return (
@@ -65,7 +79,7 @@ export default function LoginPage() {
       </div>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm text-center">
-          <div className="flex justify-center">
+          {/* <div className="flex justify-center">
             <Image
               className="w-48 lg:block hidden"
               src="/img/logoAvalos3.png"
@@ -80,7 +94,7 @@ export default function LoginPage() {
               height={500}
               alt="logo banco ripley"
             />
-          </div>
+          </div> */}
         </div>
         <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
           <Formik
@@ -95,9 +109,9 @@ export default function LoginPage() {
             <Form className="space-y-6">
               <div className=" bg-gray-50 p-9 rounded-3xl text-[#979797] shadow-2xl">
                 <p className=" text-3xl lg:text-3xl font-extrabold text-center mb-5">
-                  Inicia Sesión
+                  Bienvenido!!
                 </p>
-                <div>
+                {/* <div>
                   <label
                     htmlFor="email"
                     className="block text-sm font-medium leading-6 text-gray-900 mt-3"
@@ -135,7 +149,7 @@ export default function LoginPage() {
                       className="p-inputtext p-component w-full mb-3"
                     />
                   </div>
-                </div>
+                </div> */}
                 <div className="flex flex-col justify-center items-center">
                   <button
                     type="submit"

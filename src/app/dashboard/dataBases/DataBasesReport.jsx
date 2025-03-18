@@ -21,11 +21,23 @@ export default function ReportDataBases({ action }) {
 
   console.log(action);
   const exportToExcel = async () => {
+    const dFechaInicio = formData.d_fecha_inicio.toLocaleDateString("es-ES", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+    const dFechaFin = formData.d_fecha_fin.toLocaleDateString("es-ES", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+    console.log(dFechaInicio);
+    console.log(dFechaFin);
     let purchaseRequests = [];
     switch (action) {
       case "BASEDATOS":
         const saleResponseBaseCostos = await fetch(
-          `/api/report/getAllReportBaseCostos?d_fecha_inicio=${formData.d_fecha_inicio}&d_fecha_fin=${formData.d_fecha_fin}`
+          `/api/report/getAllReportBaseCostos?d_fecha_inicio=${dFechaInicio}&d_fecha_fin=${dFechaFin}`
         );
         purchaseRequests = await saleResponseBaseCostos.json();
         break;
@@ -56,7 +68,8 @@ export default function ReportDataBases({ action }) {
         break;
     }
     console.log(purchaseRequests.length);
-    if (purchaseRequests.length === 0) {
+    console.log(purchaseRequests);
+    if (purchaseRequests.length === 0 || purchaseRequests === undefined) {
       toast.current.show({
         severity: "warn",
         summary: "Atención",

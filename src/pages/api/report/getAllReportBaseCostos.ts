@@ -8,6 +8,8 @@ export default async function handler(
 ) {
   if (req.method === "GET") {
     const { d_fecha_inicio, d_fecha_fin } = req.query;
+    console.log("d_fecha_inicio", d_fecha_inicio);
+    console.log("d_fecha_fin", d_fecha_fin);
     try {
       let result: [] = [];
       if (d_fecha_inicio == "null " || d_fecha_fin == "null") {
@@ -200,14 +202,11 @@ WHERE
     ps.is_active = TRUE 
     AND po.is_active = TRUE 
     AND pr.is_active = TRUE
-
-          and pr.request_date between ${new Date(
-            d_fecha_inicio as string
-          ).toISOString()}::timestamp and ${new Date(
-          d_fecha_fin as string
-        ).toISOString()}::timestamp;
-      
-ORDER BY sol_num ASC; `;
+    AND pr.request_date BETWEEN 
+        TO_TIMESTAMP(${d_fecha_inicio}, 'DD-MM-YYYY') 
+        AND 
+        TO_TIMESTAMP(${d_fecha_fin}, 'DD-MM-YYYY')
+ORDER BY sol_num ASC`;
       }
 
       const parsedResult = result.map((row: any) => {
