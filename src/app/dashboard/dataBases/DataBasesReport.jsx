@@ -21,16 +21,21 @@ export default function ReportDataBases({ action }) {
 
   console.log(action);
   const exportToExcel = async () => {
-    const dFechaInicio = formData.d_fecha_inicio.toLocaleDateString("es-ES", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-    const dFechaFin = formData.d_fecha_fin.toLocaleDateString("es-ES", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
+    let dFechaInicio = null;
+    let dFechaFin = null;
+    if (formData.d_fecha_inicio || formData.d_fecha_fin) {
+      dFechaInicio = formData.d_fecha_inicio.toLocaleDateString("es-ES", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+      dFechaFin = formData.d_fecha_fin.toLocaleDateString("es-ES", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+      return;
+    }
     console.log(dFechaInicio);
     console.log(dFechaFin);
     let purchaseRequests = [];
