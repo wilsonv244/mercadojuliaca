@@ -70,7 +70,7 @@ export default function LoginPage() {
         <div className="grid min-h-screen items-stretch text-center">
           <Image
             className="w-full object-cover h-screen"
-            src="/img/LaysPapitas.png"
+            src="/img/ProductoPrincipal.png"
             alt="Logo"
             width={500}
             height={500}
